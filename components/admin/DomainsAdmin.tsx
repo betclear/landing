@@ -241,14 +241,14 @@ export function DomainsAdmin() {
       </div>
 
       {error ? (
-        <p className="mt-4 text-sm text-red-600 dark:text-red-400" role="alert">
+        <p className="mt-4 text-sm text-red-600" role="alert">
           {error}
         </p>
       ) : null}
 
       {warning ? (
         <p
-          className="mt-4 text-sm text-amber-700 dark:text-amber-400"
+          className="mt-4 text-sm text-amber-700"
           role="status"
         >
           {warning}

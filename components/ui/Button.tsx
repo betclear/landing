@@ -9,14 +9,9 @@ const variantStyles: Record<ButtonVariant, string> = {
   primary:
     "bg-primary text-primary-foreground shadow-soft hover:bg-primary-hover",
   secondary:
-    "bg-transparent text-foreground ring-1 ring-border hover:bg-white/[0.04] dark:hover:bg-white/[0.04]",
+    "bg-transparent text-foreground ring-1 ring-border hover:bg-foreground/[0.04]",
   ghost: "bg-transparent text-muted-foreground hover:text-foreground",
   soft: "bg-soft text-soft-foreground hover:opacity-95",
-};
-
-const sizeStyles: Record<ButtonSize, string> = {
-  md: "h-11 px-5 text-sm",
-  lg: "h-12 pl-6 pr-2 text-[15px]",
 };
 
 type CommonProps = {
@@ -50,23 +45,24 @@ export function Button({
   const withArrow = showArrow ?? (variant === "primary" && size === "lg");
 
   const classes = cn(
-    "group inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-[-0.01em]",
+    "group inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-[-0.01em] leading-none",
     "transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     "active:scale-[0.98]",
     variantStyles[variant],
-    sizeStyles[size],
-    !withArrow && size === "lg" && "px-6",
+    size === "md" && "h-11 px-5 text-sm",
+    size === "lg" && "h-12 text-[15px]",
+    size === "lg" && (withArrow ? "pl-6 pr-2" : "px-6"),
     className,
   );
 
   const content = (
     <>
-      <span>{children}</span>
+      <span className="inline-flex items-center leading-none">{children}</span>
       {withArrow ? (
         <span
           className={cn(
-            "inline-flex h-8 w-8 items-center justify-center rounded-full transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+            "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
             "group-hover:translate-x-0.5 group-hover:-translate-y-px",
             variant === "primary" || variant === "soft"
               ? "bg-black/10 text-inherit"

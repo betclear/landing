@@ -55,7 +55,7 @@ export function CheckoutCompleteActions({
       ) : null}
 
       {copyError ? (
-        <p className="text-sm text-red-600 dark:text-red-400">{copyError}</p>
+        <p className="text-sm text-red-600">{copyError}</p>
       ) : null}
 
       <p className="text-sm leading-relaxed text-muted-foreground">

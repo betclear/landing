@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { List, X } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/Button";
-import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { NAV_LINKS, SITE } from "@/lib/constants";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
@@ -57,7 +56,6 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
-          <ThemeToggle />
           <Button
             href={SITE.startHref}
             size="md"
@@ -77,7 +75,6 @@ export function Header() {
           >
             Start
           </Button>
-          <ThemeToggle />
           <button
             type="button"
             aria-expanded={open}

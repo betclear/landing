@@ -65,8 +65,8 @@ export function PaymentSuccess() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 overflow-hidden"
       >
-        <div className="absolute left-1/2 top-[-18%] h-[420px] w-[680px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(126,214,188,0.14),transparent_68%)]" />
-        <div className="absolute inset-0 marketing-grain opacity-30" />
+        <div className="absolute left-1/2 top-[-18%] h-[420px] w-[680px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,var(--glow),transparent_68%)]" />
+        <div className="absolute inset-0 marketing-grain opacity-20" />
       </div>
 
       <header className="relative z-10 border-b border-border/60">

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { FirebaseAnalytics } from "@/components/shared/FirebaseAnalytics";
-import { ThemeProvider } from "@/components/shared/ThemeProvider";
 import { SITE } from "@/lib/constants";
 import "./globals.css";
 
@@ -61,11 +60,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" className="light">
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('betclear-theme');if(t==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}}catch(e){document.documentElement.classList.add('dark')}})();`,
+            __html: `(function(){try{localStorage.removeItem('betclear-theme');document.documentElement.classList.remove('dark');document.documentElement.classList.add('light');}catch(e){}})();`,
           }}
         />
       </head>
@@ -78,10 +77,8 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <ThemeProvider>
-          <FirebaseAnalytics />
-          {children}
-        </ThemeProvider>
+        <FirebaseAnalytics />
+        {children}
         <Script id="microsoft-clarity" strategy="afterInteractive">
           {`
             (function(c,l,a,r,i,t,y){
