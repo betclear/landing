@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { refreshAdGuardBlocklist } from "@/lib/adguard/client";
 import { isAdminAuthenticated } from "@/lib/auth/admin";
 import { createServiceClient } from "@/lib/supabase/server";
 
@@ -57,7 +58,13 @@ export async function PATCH(request: Request, context: RouteContext) {
       );
     }
 
-    return NextResponse.json({ domain: data });
+    const refresh = await refreshAdGuardBlocklist();
+
+    return NextResponse.json({
+      domain: data,
+      dnsRefresh: refresh.ok,
+      refreshWarning: refresh.warning ?? null,
+    });
   } catch (error) {
     console.error("domains PATCH error", error);
     return NextResponse.json(
@@ -92,7 +99,13 @@ export async function DELETE(_request: Request, context: RouteContext) {
       );
     }
 
-    return NextResponse.json({ ok: true });
+    const refresh = await refreshAdGuardBlocklist();
+
+    return NextResponse.json({
+      ok: true,
+      dnsRefresh: refresh.ok,
+      refreshWarning: refresh.warning ?? null,
+    });
   } catch (error) {
     console.error("domains DELETE error", error);
     return NextResponse.json(

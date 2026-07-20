@@ -13,8 +13,13 @@ export function DomainsAdmin() {
   const [query, setQuery] = useState("");
   const [hostname, setHostname] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+
+  function applyRefreshWarning(data: { refreshWarning?: string | null }) {
+    setWarning(data.refreshWarning ?? null);
+  }
 
   const loadDomains = useCallback(async (search = query) => {
     setLoading(true);
@@ -59,6 +64,7 @@ export function DomainsAdmin() {
     event.preventDefault();
     setSaving(true);
     setError(null);
+    setWarning(null);
 
     const response = await fetch("/api/admin/domains", {
       method: "POST",
@@ -69,6 +75,7 @@ export function DomainsAdmin() {
     const data = (await response.json()) as {
       domain?: BlockedDomain;
       error?: string;
+      refreshWarning?: string | null;
     };
 
     if (!response.ok) {
@@ -77,6 +84,7 @@ export function DomainsAdmin() {
       return;
     }
 
+    applyRefreshWarning(data);
     setHostname("");
     setSaving(false);
     await loadDomains(query);
@@ -84,18 +92,24 @@ export function DomainsAdmin() {
 
   async function toggleEnabled(domain: BlockedDomain) {
     setError(null);
+    setWarning(null);
     const response = await fetch(`/api/admin/domains/${domain.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ enabled: !domain.enabled }),
     });
 
+    const data = (await response.json()) as {
+      error?: string;
+      refreshWarning?: string | null;
+    };
+
     if (!response.ok) {
-      const data = (await response.json()) as { error?: string };
       setError(data.error ?? "Failed to update domain");
       return;
     }
 
+    applyRefreshWarning(data);
     await loadDomains(query);
   }
 
@@ -103,16 +117,22 @@ export function DomainsAdmin() {
     if (!window.confirm(`Delete ${domain.hostname}?`)) return;
 
     setError(null);
+    setWarning(null);
     const response = await fetch(`/api/admin/domains/${domain.id}`, {
       method: "DELETE",
     });
 
+    const data = (await response.json()) as {
+      error?: string;
+      refreshWarning?: string | null;
+    };
+
     if (!response.ok) {
-      const data = (await response.json()) as { error?: string };
       setError(data.error ?? "Failed to delete domain");
       return;
     }
 
+    applyRefreshWarning(data);
     await loadDomains(query);
   }
 
@@ -131,7 +151,8 @@ export function DomainsAdmin() {
             Blocked domains
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            {enabledCount} enabled of {domains.length} total
+            {enabledCount} enabled of {domains.length} total. Changes refresh DNS
+            remotely; users do not reinstall the profile.
           </p>
         </div>
         <Button
@@ -212,6 +233,12 @@ export function DomainsAdmin() {
       {error ? (
         <p className="mt-4 text-sm text-red-600 dark:text-red-400" role="alert">
           {error}
+        </p>
+      ) : null}
+
+      {warning ? (
+        <p className="mt-4 text-sm text-amber-700 dark:text-amber-400" role="status">
+          {warning}
         </p>
       ) : null}
 

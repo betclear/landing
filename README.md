@@ -84,10 +84,13 @@ Documented in `.env.example`:
 | `SUPABASE_SERVICE_ROLE_KEY` | **Server only** | Admin + blocklist database access |
 | `ADMIN_PASSWORD` | **Server only** | Temporary password for `/admin` |
 | `BLOCKLIST_API_TOKEN` | **Server only** | Reserved / unused by the public AdGuard blocklist endpoint |
+| `ADGUARD_BASE_URL` | **Server only** | AdGuard Home base URL, e.g. `https://dns.betclear.app` |
+| `ADGUARD_USERNAME` | **Server only** | AdGuard Home admin username |
+| `ADGUARD_PASSWORD` | **Server only** | AdGuard Home admin password |
 
-Never put `SUPABASE_SERVICE_ROLE_KEY` or `ADMIN_PASSWORD` in client components.
+Never put `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PASSWORD`, or `ADGUARD_*` secrets in client components / `NEXT_PUBLIC_*` vars.
 
-`GET /api/blocklist` is intentionally public so AdGuard / DoH consumers can fetch it without auth.
+`GET /api/blocklist` is intentionally public so AdGuard can fetch it. After every successful admin domain create/update/delete, the server calls AdGuard `POST /control/filtering/refresh` so phones pick up the new list without reinstalling the profile. The server also ensures AdGuard `filters_update_interval` is **1 hour** as a fallback.
 
 ## Admin page
 
@@ -97,6 +100,8 @@ Never put `SUPABASE_SERVICE_ROLE_KEY` or `ADMIN_PASSWORD` in client components.
 4. Manage domains at [http://localhost:3000/admin/domains](http://localhost:3000/admin/domains).
 
 You can add values like `https://www.bet365.com/sports` — they are normalized to bare hostnames (`bet365.com`).
+
+After each successful change, the server refreshes AdGuard filters. If refresh fails, the DB change still sticks and the admin UI shows a warning.
 
 ## Test the blocklist API
 

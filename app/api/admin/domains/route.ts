@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { refreshAdGuardBlocklist } from "@/lib/adguard/client";
 import { isAdminAuthenticated } from "@/lib/auth/admin";
 import { normalizeHostname } from "@/lib/domains/normalize";
 import { createServiceClient } from "@/lib/supabase/server";
@@ -91,7 +92,16 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json({ domain: data }, { status: 201 });
+    const refresh = await refreshAdGuardBlocklist();
+
+    return NextResponse.json(
+      {
+        domain: data,
+        dnsRefresh: refresh.ok,
+        refreshWarning: refresh.warning ?? null,
+      },
+      { status: 201 },
+    );
   } catch (error) {
     console.error("domains POST error", error);
     return NextResponse.json(
