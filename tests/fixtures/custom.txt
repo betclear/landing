@@ -1,0 +1,5 @@
+# custom fixture
+custom-bet.example
+https://www.custom-casino.example/path?x=1
+*.custom-wild.example
+support@custom.example

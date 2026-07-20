@@ -1,0 +1,15 @@
+# BetClear allowlist
+#
+# Exact domain removal:
+#   support.example.com
+# removes only support.example.com
+#
+# Domain and subdomain removal (leading dot):
+#   .example.com
+# removes example.com, www.example.com, support.example.com
+#
+# One rule per line. Comments start with #.
+
+# Example false-positive protections (edit as needed)
+# support.gamblinghelp.org
+# .betclear.app

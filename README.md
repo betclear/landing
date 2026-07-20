@@ -134,6 +134,11 @@ The profile configures managed DNS-over-HTTPS to `https://dns.betclear.app/dns-q
 - `npm run build` - production build
 - `npm run start` - serve production build
 - `npm run lint` - ESLint
+- `npm test` - unit tests (includes blocklist pipeline)
+- `npm run blocklist:update` - refresh `output/gambling.txt` from providers
+- `npm run blocklist:check` - validate generated blocklist integrity
+
+See [blocklists/README.md](blocklists/README.md) for the gambling blocklist pipeline.
 
 ## Milestone check
 

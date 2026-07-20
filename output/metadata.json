@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-20T16:54:43.752Z",
+  "durationMs": 88231,
+  "success": true,
+  "usedStaleCache": false,
+  "sources": [
+    {
+      "id": "hagezi",
+      "name": "HaGeZi Gambling",
+      "sourceUrl": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/gambling-onlydomains.txt",
+      "status": "success",
+      "usedCache": false,
+      "rawEntries": 338516,
+      "validDomains": 338504,
+      "rejectedEntries": 12,
+      "uniqueContributions": 2174,
+      "warnings": []
+    },
+    {
+      "id": "block-list-project",
+      "name": "Block List Project Gambling",
+      "sourceUrl": "https://raw.githubusercontent.com/blocklistproject/Lists/master/gambling.txt",
+      "status": "success",
+      "usedCache": false,
+      "rawEntries": 342626,
+      "validDomains": 342623,
+      "rejectedEntries": 3,
+      "uniqueContributions": 6293,
+      "warnings": []
+    },
+    {
+      "id": "acma",
+      "name": "ACMA Illegal Gambling",
+      "sourceUrl": "https://www.acma.gov.au/blocked-gambling-websites",
+      "status": "failed",
+      "usedCache": false,
+      "rawEntries": 0,
+      "validDomains": 0,
+      "rejectedEntries": 0,
+      "uniqueContributions": 0,
+      "warnings": [
+        "error: This operation was aborted"
+      ]
+    },
+    {
+      "id": "custom",
+      "name": "BetClear Custom",
+      "status": "success",
+      "usedCache": false,
+      "rawEntries": 52,
+      "validDomains": 44,
+      "rejectedEntries": 8,
+      "uniqueContributions": 2,
+      "warnings": []
+    }
+  ],
+  "merge": {
+    "validEntriesBeforeDeduplication": 681171,
+    "duplicatesRemoved": 336372,
+    "domainsBeforeAllowlist": 344799,
+    "allowlistRules": 0,
+    "allowlistMatchesRemoved": 0,
+    "finalDomainCount": 344799
+  },
+  "output": {
+    "file": "output/gambling.txt",
+    "sha256": "43d0a6fa8e85b69a4319bc004f26908eb7cfc2136a049aca75a4c05b8af0807e"
+  }
+}
