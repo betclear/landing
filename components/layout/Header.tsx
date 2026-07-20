@@ -60,7 +60,9 @@ export function Header() {
             href={SITE.startHref}
             size="md"
             showArrow={false}
-            onClick={() => trackEvent("hero_cta_clicked", { source: "header" })}
+            onClick={() =>
+              trackEvent("hero_start_protection_clicked", { source: "header" })
+            }
           >
             Start Protection
           </Button>
@@ -72,6 +74,9 @@ export function Header() {
             size="md"
             showArrow={false}
             className="h-9 px-3 text-xs"
+            onClick={() =>
+              trackEvent("hero_start_protection_clicked", { source: "header_mobile" })
+            }
           >
             Start
           </Button>
@@ -116,7 +121,9 @@ export function Header() {
               showArrow={false}
               onClick={() => {
                 setOpen(false);
-                trackEvent("hero_cta_clicked", { source: "mobile_nav" });
+                trackEvent("hero_start_protection_clicked", {
+                  source: "mobile_nav",
+                });
               }}
             >
               Start Protection

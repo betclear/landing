@@ -8,15 +8,11 @@ export type ProductStats = {
   sourcesSucceeded: number;
 };
 
+/** Full formatted count for marketing copy, e.g. "344,000+" — never "300K+". */
 function formatDomainCount(count: number): string {
-  if (count >= 1_000_000) {
-    return `${(count / 1_000_000).toFixed(1).replace(/\.0$/, "")}M+`;
-  }
-  if (count >= 1_000) {
-    const rounded = Math.floor(count / 1_000) * 1_000;
-    return `${rounded.toLocaleString("en-US")}+`;
-  }
-  return count.toLocaleString("en-US");
+  if (count <= 0) return "Growing";
+  const rounded = count >= 1_000 ? Math.floor(count / 1_000) * 1_000 : count;
+  return `${rounded.toLocaleString("en-US")}+`;
 }
 
 export async function getProductStats(): Promise<ProductStats> {

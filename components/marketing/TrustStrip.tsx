@@ -1,5 +1,4 @@
 import { Container } from "@/components/ui/Container";
-import { TRUST_POINTS } from "@/lib/constants";
 
 type TrustStripProps = {
   domainCountLabel: string;
@@ -8,22 +7,33 @@ type TrustStripProps = {
 export function TrustStrip({ domainCountLabel }: TrustStripProps) {
   const items = [
     {
-      title: `${domainCountLabel} gambling domains identified`,
-      detail: "Coverage assembled from multiple gambling blocklist sources.",
+      title: `${domainCountLabel} sites blocked`,
+      detail: "Gambling-specific coverage from multiple blocklist sources.",
     },
-    ...TRUST_POINTS.slice(0, 3),
+    {
+      title: "Works across your iPhone",
+      detail: "Protection applies across Safari and supported apps using system DNS.",
+    },
+    {
+      title: "Updated automatically",
+      detail: "New gambling domains can be added without reinstalling.",
+    },
+    {
+      title: "Guided installation",
+      detail: "Clear step-by-step setup on iPhone.",
+    },
   ];
 
   return (
-    <section aria-label="Trust signals" className="border-y border-border/70 py-8">
+    <section aria-label="Product proof" className="border-y border-border/70 py-7">
       <Container>
-        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((item) => (
             <li key={item.title} className="min-w-0">
-              <p className="text-[14px] font-medium tracking-[-0.02em] text-foreground">
+              <p className="text-[14px] font-semibold tracking-[-0.02em] text-foreground">
                 {item.title}
               </p>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">
+              <p className="mt-1 text-[13px] leading-snug text-muted-foreground">
                 {item.detail}
               </p>
             </li>

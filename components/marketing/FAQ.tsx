@@ -13,18 +13,17 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="py-24 sm:py-32">
+    <section id="faq" className="py-20 sm:py-28">
       <Container>
         <Reveal>
           <SectionHeading
-            eyebrow="FAQ"
-            title="Clear answers before you install."
-            description="Straight talk about what BetClear does, what it cannot do, and how protection works on iPhone."
+            title="Questions before you install"
+            description="Clear answers about blocking, privacy, pricing, and cancellation."
           />
         </Reveal>
 
-        <Reveal delay={0.05}>
-          <div className="mx-auto mt-12 max-w-3xl divide-y divide-border rounded-[1.75rem] bg-card ring-1 ring-border">
+        <Reveal delay={0.04}>
+          <div className="mx-auto mt-10 max-w-3xl divide-y divide-border rounded-[1.5rem] bg-card ring-1 ring-border">
             {FAQ_ITEMS.map((item, index) => {
               const open = openIndex === index;
               const panelId = `faq-panel-${index}`;
@@ -45,14 +44,14 @@ export function FAQ() {
                           trackEvent("faq_opened", { question: item.question });
                         }
                       }}
-                      className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-surface/60 sm:px-6"
+                      className="flex min-h-12 w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-surface/60 sm:px-6"
                     >
                       <span className="text-[15px] font-medium tracking-[-0.015em] text-foreground">
                         {item.question}
                       </span>
                       <span
                         className={cn(
-                          "flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-surface text-muted-foreground transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                          "flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface text-muted-foreground transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
                           open && "rotate-45 text-primary",
                         )}
                         aria-hidden="true"

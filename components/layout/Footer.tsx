@@ -14,8 +14,8 @@ export function Footer() {
           <div>
             <p className="text-lg font-semibold tracking-[-0.04em]">{SITE.name}</p>
             <p className="mt-3 max-w-sm text-sm leading-relaxed text-[#a9bab6]">
-              Protects the decision you make today from the urge you may feel
-              tomorrow.
+              Gambling website blocker for iPhone. Install once and stay
+              protected automatically.
             </p>
             <a
               href={`mailto:${SITE.email}`}
