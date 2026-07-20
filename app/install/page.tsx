@@ -58,6 +58,11 @@ export default async function InstallPage() {
                 An active subscription is required before you can download the
                 protection profile.
               </p>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                If you just subscribed in Chrome or another browser, open your
+                payment confirmation link in Safari on this iPhone. iOS does not
+                share subscription access between browsers.
+              </p>
               <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                 <Button href="/pricing" size="lg">
                   View pricing

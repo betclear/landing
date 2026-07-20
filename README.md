@@ -127,7 +127,7 @@ npm run stripe:setup
 stripe listen --forward-to localhost:3000/api/webhooks/stripe
 ```
 
-Flow: `/pricing` → Stripe Checkout → `/install` with access cookie → `/api/profile` download. If Stripe env vars are missing, the paywall stays open for local development.
+Flow: `/pricing` → Stripe Checkout → `/install/complete?session_id=...` → open the same link in Safari on iPhone → `/install` with access cookie → `/api/profile` download. iOS browsers do not share cookies, so Chrome checkout requires copying the confirmation link into Safari. If Stripe env vars are missing, the paywall stays open for local development.
 
 ## Admin page
 

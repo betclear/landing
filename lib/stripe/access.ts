@@ -109,6 +109,42 @@ export async function hasPaywallAccess(): Promise<boolean> {
   return isCustomerSubscribed(access.customerId);
 }
 
+async function isCheckoutSessionSubscribed(
+  session: Awaited<
+    ReturnType<ReturnType<typeof getStripe>["checkout"]["sessions"]["retrieve"]>
+  >,
+): Promise<boolean> {
+  if (await isCustomerSubscribedFromStripeSession(session)) {
+    return true;
+  }
+
+  const customerId =
+    typeof session.customer === "string"
+      ? session.customer
+      : session.customer?.id;
+
+  if (!customerId) return false;
+
+  return isCustomerSubscribed(customerId);
+}
+
+async function isCustomerSubscribedFromStripeSession(
+  session: Awaited<
+    ReturnType<ReturnType<typeof getStripe>["checkout"]["sessions"]["retrieve"]>
+  >,
+): Promise<boolean> {
+  const subscription = session.subscription;
+  if (!subscription) return false;
+
+  if (typeof subscription === "object") {
+    return ACTIVE_STATUSES.has(subscription.status);
+  }
+
+  const stripe = getStripe();
+  const sub = await stripe.subscriptions.retrieve(subscription);
+  return ACTIVE_STATUSES.has(sub.status);
+}
+
 export async function grantAccessFromCheckoutSession(
   sessionId: string,
 ): Promise<string | null> {
@@ -128,9 +164,14 @@ export async function grantAccessFromCheckoutSession(
 
   if (!customerId) return null;
 
-  if (!(await isCustomerSubscribed(customerId))) {
+  if (!(await isCheckoutSessionSubscribed(session))) {
     return null;
   }
 
   return createAccessToken(customerId);
+}
+
+export async function setAccessCookie(token: string): Promise<void> {
+  const jar = await cookies();
+  jar.set(ACCESS_COOKIE, token, accessCookieOptions());
 }

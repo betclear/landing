@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import {
-  ACCESS_COOKIE,
-  accessCookieOptions,
   grantAccessFromCheckoutSession,
+  setAccessCookie,
 } from "@/lib/stripe/access";
 import { isStripeConfigured } from "@/lib/stripe/client";
 
@@ -25,9 +24,8 @@ export async function GET(request: Request) {
       return NextResponse.redirect(new URL("/pricing?error=checkout", request.url));
     }
 
-    const response = NextResponse.redirect(new URL("/install", request.url));
-    response.cookies.set(ACCESS_COOKIE, token, accessCookieOptions());
-    return response;
+    await setAccessCookie(token);
+    return NextResponse.redirect(new URL("/install", request.url));
   } catch (error) {
     console.error("checkout success error", error);
     return NextResponse.redirect(new URL("/pricing?error=checkout", request.url));
@@ -55,9 +53,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Subscription not active" }, { status: 403 });
     }
 
-    const response = NextResponse.json({ ok: true });
-    response.cookies.set(ACCESS_COOKIE, token, accessCookieOptions());
-    return response;
+    await setAccessCookie(token);
+    return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("checkout verify error", error);
     return NextResponse.json({ error: "Verification failed" }, { status: 500 });
