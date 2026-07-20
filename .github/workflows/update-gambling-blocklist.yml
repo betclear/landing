@@ -1,0 +1,74 @@
+name: Update gambling blocklist
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - "blocklists/**"
+      - "lib/blocklist/**"
+      - "config/blocklist.config.ts"
+      - "scripts/update-blocklist.ts"
+      - "scripts/check-blocklist.ts"
+      - "data/custom/**"
+      - ".github/workflows/update-gambling-blocklist.yml"
+      - "package.json"
+      - "package-lock.json"
+
+concurrency:
+  group: update-gambling-blocklist
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Avoid retrigger loops from bot commits where possible
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Update blocklist
+        run: npm run blocklist:update
+
+      - name: Check blocklist integrity
+        run: npm run blocklist:check
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gambling-blocklist
+          path: |
+            output/gambling.txt
+            output/metadata.json
+            output/source-report.json
+            output/rejected.txt
+
+      - name: Commit output if changed
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name "betclear-blocklist-bot"
+          git config user.email "bot@betclear.app"
+          git add output/gambling.txt output/metadata.json output/source-report.json output/rejected.txt
+          if git diff --staged --quiet; then
+            echo "No blocklist output changes"
+            exit 0
+          fi
+          git commit -m "chore(blocklist): update gambling domains"
+          git push

@@ -1,0 +1,9 @@
+# Title: fixture HaGeZi-style domains
+# comment line
+example-casino.com
+WWW.BET-FIXTURE.COM
+*.wildcard-bet.example
+0.0.0.0 hosts-style.example
+not a domain
+192.168.1.1
+localhost

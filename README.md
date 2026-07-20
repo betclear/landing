@@ -96,7 +96,14 @@ Documented in `.env.example`:
 
 Never put `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PASSWORD`, `ADGUARD_*`, or `STRIPE_*` secrets in client components / `NEXT_PUBLIC_*` vars.
 
-`GET /api/blocklist` is intentionally public so AdGuard can fetch it. After every successful admin domain create/update/delete, the server calls AdGuard `POST /control/filtering/refresh` so phones pick up the new list without reinstalling the profile. The server also ensures AdGuard `filters_update_interval` is **1 hour** as a fallback.
+`GET /api/blocklist` is intentionally public so AdGuard can fetch it. It merges:
+
+1. `output/gambling.txt` from the blocklist pipeline (primary, ~hundreds of thousands of domains)
+2. Enabled rows in Supabase `blocked_domains` (admin custom overrides only)
+
+Supabase is **not** meant to store the full pipeline list (that would make the admin UI unusable). An empty Supabase table is normal until you add custom domains in `/admin/domains`.
+
+After every successful admin domain create/update/delete, the server calls AdGuard `POST /control/filtering/refresh` so phones pick up overrides without reinstalling the profile. The server also ensures AdGuard `filters_update_interval` is **1 hour** as a fallback.
 
 ## Stripe paywall
 
@@ -164,6 +171,11 @@ The profile configures managed DNS-over-HTTPS to `https://dns.betclear.app/dns-q
 - `npm run build` - production build
 - `npm run start` - serve production build
 - `npm run lint` - ESLint
+- `npm test` - unit tests (includes blocklist pipeline)
+- `npm run blocklist:update` - refresh `output/gambling.txt` from providers
+- `npm run blocklist:check` - validate generated blocklist integrity
+
+See [blocklists/README.md](blocklists/README.md) for the gambling blocklist pipeline.
 
 ## Milestone check
 

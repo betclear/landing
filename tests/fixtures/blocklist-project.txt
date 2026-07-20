@@ -1,0 +1,7 @@
+# Block List Project style
+0.0.0.0 blp-casino.example
+127.0.0.1 blp-poker.example
+blp-plain.example
+0.0.0.0 localhost
+# comment
+127.0.0.1 local.test

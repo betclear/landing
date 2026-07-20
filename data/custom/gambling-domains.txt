@@ -1,0 +1,54 @@
+# BetClear custom gambling domains
+# One domain or URL per line. Comments start with #.
+# Examples of accepted forms:
+#   examplebet.ge
+#   https://casino.example.com/path
+#   *.crypto-casino.example
+
+# Georgian / regional operators (seed examples — expand as needed)
+adjarabet.com
+europe-bet.com
+crystalbet.com
+crocobet.com
+
+# Common international operators for baseline coverage
+bet365.com
+stake.com
+pokerstars.com
+1xbet.com
+bovada.lv
+draftkings.com
+fanduel.com
+pinnacle.com
+betfair.com
+williamhill.com
+unibet.com
+betway.com
+casumo.com
+leovegas.com
+partycasino.com
+888casino.com
+betonline.ag
+sportsbetting.ag
+mybookie.ag
+betrivers.com
+pointsbet.com
+caesars.com
+betmgm.com
+hardrock.bet
+roobet.com
+duelbits.com
+rollbit.com
+bc.game
+cloudbet.com
+gamdom.com
+csgoempire.com
+packdraw.com
+shuffle.com
+primedice.com
+nitrocasino.com
+vave.com
+bitcasino.io
+stake.us
+slick.global
+slick.studio
