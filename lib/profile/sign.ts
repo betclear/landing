@@ -20,7 +20,24 @@ pkijs.setEngine(
   }),
 );
 
-function pemBlocks(pem: string, label: string): Buffer[] {
+/**
+ * Copy bytes into a standalone ArrayBuffer.
+ * Needed because Node Buffer/Uint8Array generics are not assignable to DOM BufferSource under TS 5+.
+ */
+function toArrayBuffer(data: Buffer | ArrayBuffer | Uint8Array): ArrayBuffer {
+  if (data instanceof ArrayBuffer) {
+    return data.slice(0);
+  }
+  const copy = new Uint8Array(data.byteLength);
+  copy.set(
+    data instanceof Buffer
+      ? new Uint8Array(data.buffer, data.byteOffset, data.byteLength)
+      : data,
+  );
+  return copy.buffer;
+}
+
+function pemBlocks(pem: string, label: string): ArrayBuffer[] {
   const re = new RegExp(
     `-----BEGIN ${label}-----[\\s\\S]+?-----END ${label}-----`,
     "g",
@@ -34,7 +51,7 @@ function pemBlocks(pem: string, label: string): Buffer[] {
       .replace(new RegExp(`-----BEGIN ${label}-----`), "")
       .replace(new RegExp(`-----END ${label}-----`), "")
       .replace(/\s+/g, "");
-    return Buffer.from(b64, "base64");
+    return toArrayBuffer(Buffer.from(b64, "base64"));
   });
 }
 
@@ -54,7 +71,9 @@ async function importSigningKey(keyPem: string): Promise<CryptoKey> {
     );
   }
 
-  const pkcs8 = keyObject.export({ type: "pkcs8", format: "der" });
+  const pkcs8 = toArrayBuffer(
+    keyObject.export({ type: "pkcs8", format: "der" }),
+  );
   const type = keyObject.asymmetricKeyType;
 
   if (type === "rsa") {
@@ -126,7 +145,7 @@ export async function signMobileConfig(
       ? parseCertificates(credentials.chainPem)
       : [];
     const privateKey = await importSigningKey(credentials.keyPem);
-    const data = Buffer.from(unsignedXml, "utf8");
+    const data = toArrayBuffer(Buffer.from(unsignedXml, "utf8"));
 
     const cmsSigned = new pkijs.SignedData({
       version: 1,
@@ -173,7 +192,7 @@ export async function verifySignedMobileConfig(
   credentials?: ProfileSigningCredentials,
 ): Promise<void> {
   try {
-    const cms = pkijs.ContentInfo.fromBER(signedDer);
+    const cms = pkijs.ContentInfo.fromBER(toArrayBuffer(signedDer));
     if (cms.contentType !== pkijs.ContentInfo.SIGNED_DATA) {
       throw new ProfileSigningError("Profile is not CMS SignedData.");
     }
