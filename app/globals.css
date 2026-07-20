@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -19,10 +17,10 @@
   --color-soft-foreground: var(--soft-foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --shadow-soft: 0 1px 2px rgba(8, 20, 22, 0.24),
-    0 18px 40px rgba(8, 20, 22, 0.28);
-  --shadow-elevated: 0 2px 8px rgba(8, 20, 22, 0.3),
-    0 28px 64px rgba(8, 20, 22, 0.38);
+  --shadow-soft: 0 1px 2px rgba(16, 32, 34, 0.06),
+    0 14px 32px rgba(16, 32, 34, 0.08);
+  --shadow-elevated: 0 2px 8px rgba(16, 32, 34, 0.08),
+    0 24px 48px rgba(16, 32, 34, 0.1);
   --radius-md: 12px;
   --radius-lg: 18px;
   --radius-xl: 28px;
@@ -30,7 +28,6 @@
 }
 
 :root {
-  /* Light surfaces used for contrast sections */
   --background: #f2f4ef;
   --foreground: #102022;
   --primary: #1f6b5c;
@@ -45,26 +42,7 @@
   --ring: rgba(31, 107, 92, 0.35);
   --soft: #f2f4ef;
   --soft-foreground: #102022;
-}
-
-.dark {
-  --background: #0b1517;
-  --foreground: #f5f7f3;
-  --primary: #7ed6bc;
-  --primary-hover: #b7e9d9;
-  --primary-foreground: #102022;
-  --accent: #f4765a;
-  --muted: #122326;
-  --muted-foreground: #a9bab6;
-  --border: #24383c;
-  --surface: #122326;
-  --card: #193035;
-  --ring: rgba(126, 214, 188, 0.42);
-  --soft: #f2f4ef;
-  --soft-foreground: #102022;
-  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.28), 0 16px 36px rgba(0, 0, 0, 0.32);
-  --shadow-elevated: 0 2px 8px rgba(0, 0, 0, 0.34),
-    0 28px 64px rgba(0, 0, 0, 0.45);
+  color-scheme: light;
 }
 
 @layer base {

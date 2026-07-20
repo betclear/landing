@@ -52,7 +52,7 @@ export function PricingCards({ plans }: PricingCardsProps) {
   return (
     <div>
       {error ? (
-        <p className="mb-6 text-center text-sm text-red-600 dark:text-red-400">
+        <p className="mb-6 text-center text-sm text-red-600">
           {error}
         </p>
       ) : null}

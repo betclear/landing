@@ -36,7 +36,7 @@ export function InstallActions() {
         Need to update your card, switch plans, or cancel?
       </p>
       {error ? (
-        <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>
+        <p className="mt-2 text-sm text-red-600">{error}</p>
       ) : null}
       <div className="mt-4">
         <Button
