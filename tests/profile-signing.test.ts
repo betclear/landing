@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -33,39 +34,51 @@ afterEach(() => {
 });
 
 function generateSelfSignedPem(): { certPem: string; keyPem: string } {
-  const key = spawnSync(
-    "openssl",
-    ["genrsa", "2048"],
-    { encoding: "buffer", maxBuffer: 1024 * 1024 },
-  );
-  if (key.status !== 0) {
-    throw new Error(`openssl genrsa failed: ${key.stderr.toString()}`);
-  }
+  // Write the key to a temp file — OpenSSL on GitHub ubuntu runners cannot
+  // load private keys from /dev/stdin ("No such device or address").
+  const dir = mkdtempSync(path.join(tmpdir(), "betclear-openssl-"));
+  const keyPath = path.join(dir, "key.pem");
+  const certPath = path.join(dir, "cert.pem");
 
-  const cert = spawnSync(
-    "openssl",
-    [
-      "req",
-      "-new",
-      "-x509",
-      "-key",
-      "/dev/stdin",
-      "-sha256",
-      "-days",
-      "1",
-      "-subj",
-      "/CN=BetClear Test/O=BetClear/C=US",
-    ],
-    { input: key.stdout, encoding: "buffer", maxBuffer: 1024 * 1024 },
-  );
-  if (cert.status !== 0) {
-    throw new Error(`openssl req failed: ${cert.stderr.toString()}`);
-  }
+  try {
+    const key = spawnSync(
+      "openssl",
+      ["genrsa", "-out", keyPath, "2048"],
+      { encoding: "buffer", maxBuffer: 1024 * 1024 },
+    );
+    if (key.status !== 0) {
+      throw new Error(`openssl genrsa failed: ${key.stderr.toString()}`);
+    }
 
-  return {
-    keyPem: key.stdout.toString("utf8"),
-    certPem: cert.stdout.toString("utf8"),
-  };
+    const cert = spawnSync(
+      "openssl",
+      [
+        "req",
+        "-new",
+        "-x509",
+        "-key",
+        keyPath,
+        "-out",
+        certPath,
+        "-sha256",
+        "-days",
+        "1",
+        "-subj",
+        "/CN=BetClear Test/O=BetClear/C=US",
+      ],
+      { encoding: "buffer", maxBuffer: 1024 * 1024 },
+    );
+    if (cert.status !== 0) {
+      throw new Error(`openssl req failed: ${cert.stderr.toString()}`);
+    }
+
+    return {
+      keyPem: readFileSync(keyPath, "utf8"),
+      certPem: readFileSync(certPath, "utf8"),
+    };
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 }
 
 describe("profile signing", () => {
