@@ -74,22 +74,56 @@ export function AuthStep() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated]);
 
-  async function persistProfile() {
-    const response = await fetch("/api/onboarding/profile", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        currency: state.currency,
-        monthlyGamblingSpend: state.monthlyGamblingSpend,
-        weeklyGamblingHours: state.weeklyGamblingHours,
-        lastGamblingDate: state.lastGamblingDate,
-        lastGamblingDateIsApproximate: state.lastGamblingDateIsApproximate,
-        selectedPlan: state.selectedPlan,
-      }),
-    });
+  function messageForApiError(code: string | undefined): string {
+    switch (code) {
+      case "unauthorized":
+        return "Your session expired. Please sign in again.";
+      case "invalid_payload":
+        return "Some onboarding answers were missing. Go back to pricing and try again.";
+      case "save_failed":
+        return "We couldn't save your progress. Please try again in a moment.";
+      case "profile_required":
+        return "We couldn't find your saved answers. Go back to pricing and try again.";
+      case "invalid_plan":
+        return "Please choose a plan on the previous step.";
+      case "checkout_url_missing":
+      case "checkout_failed":
+        return "Checkout couldn't be started. Please try again.";
+      default:
+        return code
+          ? `Something went wrong (${code}). Please try again.`
+          : "We couldn't start checkout. Please check your connection and try again.";
+    }
+  }
 
-    if (!response.ok) {
-      throw new Error("persist_failed");
+  async function persistProfile() {
+    const payload = {
+      currency: state.currency,
+      monthlyGamblingSpend: state.monthlyGamblingSpend,
+      weeklyGamblingHours: state.weeklyGamblingHours,
+      lastGamblingDate: state.lastGamblingDate,
+      lastGamblingDateIsApproximate: state.lastGamblingDateIsApproximate,
+      selectedPlan: state.selectedPlan,
+    };
+
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      const response = await fetch("/api/onboarding/profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) return;
+
+      if (response.status === 401 && attempt < 2) {
+        await new Promise((resolve) => setTimeout(resolve, 400 * (attempt + 1)));
+        continue;
+      }
+
+      const data = (await response.json().catch(() => ({}))) as {
+        error?: string;
+      };
+      throw new Error(data.error ?? "persist_failed");
     }
   }
 
@@ -121,11 +155,11 @@ export function AuthStep() {
 
       clear();
       window.location.href = data.url;
-    } catch {
+    } catch (cause) {
       setBusy(false);
-      setError(
-        "We couldn’t start checkout. Please check your connection and try again.",
-      );
+      const code =
+        cause instanceof Error ? cause.message : "checkout_failed";
+      setError(messageForApiError(code));
     }
   }
 

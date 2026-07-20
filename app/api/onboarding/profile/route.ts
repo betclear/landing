@@ -77,12 +77,19 @@ export async function POST(request: Request) {
       selectedPlan: profile.selected_plan,
     });
   } catch (error) {
+    const detail = error instanceof Error ? error.message : "save_failed";
+    const missingTable =
+      detail.includes("user_recovery_profiles") &&
+      (detail.includes("does not exist") || detail.includes("Could not find"));
+
     const message =
       process.env.NODE_ENV === "production"
-        ? "save_failed"
-        : error instanceof Error
-          ? error.message
-          : "save_failed";
+        ? missingTable
+          ? "save_failed"
+          : "save_failed"
+        : missingTable
+          ? "Database migration missing: run npm run db:push -- --include-all"
+          : detail;
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

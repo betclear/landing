@@ -16,7 +16,7 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/auth/callback";
     if (!url.searchParams.has("next")) {
-      url.searchParams.set("next", "/pricing");
+      url.searchParams.set("next", "/auth");
     }
     return NextResponse.redirect(url);
   }
