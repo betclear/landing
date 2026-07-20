@@ -38,7 +38,7 @@ export function Header() {
 
         <div className="hidden items-center gap-2 md:flex">
           <ThemeToggle />
-          <Button href="/pricing" size="md" showArrow={false}>
+          <Button href="/install" size="md" showArrow={false}>
             Get Protected
           </Button>
         </div>
@@ -77,7 +77,7 @@ export function Header() {
             </Link>
           ))}
           <div className="pt-1">
-            <Button href="/pricing" className="w-full" size="md" showArrow={false}>
+            <Button href="/install" className="w-full" size="md" showArrow={false}>
               Get Protected
             </Button>
           </div>

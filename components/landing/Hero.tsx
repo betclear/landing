@@ -25,7 +25,7 @@ export function Hero() {
               {SITE.description}
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Button href="/pricing" size="lg">
+              <Button href="/install" size="lg">
                 Get Protected
               </Button>
               <Button

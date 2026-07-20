@@ -21,7 +21,7 @@ export function CTA() {
                 day after.
               </p>
               <div className="mt-8 flex justify-center">
-                <Button href="/pricing" size="lg">
+                <Button href="/install" size="lg">
                   Get Protected
                 </Button>
               </div>
