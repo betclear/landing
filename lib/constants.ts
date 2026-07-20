@@ -2,7 +2,9 @@ export const SITE = {
   name: "BetClear",
   tagline: "Stop Gambling. Without Fighting Yourself.",
   description:
-    "BetClear blocks gambling websites on your iPhone using Apple's built-in configuration profiles—helping you remove temptation before it starts.",
+    "Block gambling sites on your iPhone with Apple configuration profiles. Temptation gone before it starts.",
+  longDescription:
+    "BetClear blocks gambling websites on your iPhone using Apple's built-in configuration profiles, helping you remove temptation before it starts.",
   email: "hello@betclear.app",
   url: "https://betclear.app",
 } as const;
@@ -22,48 +24,48 @@ export const FOOTER_LINKS = [
 
 export const HOW_IT_WORKS = [
   {
-    step: "01",
     title: "Download",
-    description: "Download your personalized protection profile.",
+    description: "Get your personalized protection profile.",
   },
   {
-    step: "02",
     title: "Install",
-    description: "Install it in Settings in less than a minute.",
+    description: "Add it in Settings in under a minute.",
   },
   {
-    step: "03",
-    title: "Stay Protected",
-    description: "Gambling websites become inaccessible across your iPhone.",
+    title: "Stay protected",
+    description: "Gambling sites stay blocked across your iPhone.",
   },
 ] as const;
 
 export const FEATURES = [
   {
-    title: "Blocks thousands of gambling domains",
+    title: "Thousands of domains blocked",
     description:
-      "A curated blocklist that covers sportsbooks, casinos, and betting apps—updated as new sites appear.",
+      "Sportsbooks, casinos, and betting apps stay covered as new sites appear.",
+    tone: "primary" as const,
   },
   {
-    title: "Works system-wide",
+    title: "System-wide",
     description:
-      "Protection applies across Safari and apps that open the web, not just a single browser extension.",
+      "Works in Safari and apps that open the web, not just one browser.",
+    tone: "surface" as const,
   },
   {
-    title: "Fast installation",
-    description:
-      "Install once through Apple Settings. No accounts to babysit and no complicated setup flow.",
+    title: "Fast install",
+    description: "One profile through Apple Settings. No accounts to manage.",
+    tone: "surface" as const,
   },
   {
-    title: "No VPN required",
+    title: "No VPN",
     description:
-      "Uses Apple configuration profiles—not a VPN—so your connection stays fast and private.",
+      "Uses Apple configuration profiles, not a VPN. Your connection stays fast.",
+    tone: "dark" as const,
   },
 ] as const;
 
 export const INSTALLATION_STEPS = [
-  { label: "Purchase", detail: "Choose protection that fits your goals." },
-  { label: "Download Profile", detail: "Get your personalized .mobileconfig file." },
+  { label: "Purchase", detail: "Choose the protection that fits your goals." },
+  { label: "Download profile", detail: "Receive your personalized .mobileconfig file." },
   { label: "Install", detail: "Confirm in Settings with a few taps." },
   { label: "Protected", detail: "Gambling sites stay out of reach." },
 ] as const;
@@ -72,12 +74,12 @@ export const FAQ_ITEMS = [
   {
     question: "How does it work?",
     answer:
-      "BetClear provides an Apple configuration profile that instructs your iPhone to block known gambling domains. Once installed, those sites become inaccessible system-wide—removing temptation at the network level instead of relying on willpower alone.",
+      "BetClear provides an Apple configuration profile that tells your iPhone to block known gambling domains. Once installed, those sites become inaccessible system-wide, so temptation is removed at the network level instead of relying on willpower alone.",
   },
   {
     question: "Can I uninstall it?",
     answer:
-      "Yes. You can remove the profile anytime from Settings → General → VPN & Device Management. Protection ends as soon as the profile is deleted.",
+      "Yes. Remove the profile anytime from Settings → General → VPN & Device Management. Protection ends as soon as the profile is deleted.",
   },
   {
     question: "Does it collect browsing history?",
@@ -87,6 +89,6 @@ export const FAQ_ITEMS = [
   {
     question: "Does it slow my internet?",
     answer:
-      "No. Because BetClear is not a VPN and does not route your traffic through a third-party server, normal browsing stays as fast as usual. Only blocked domains are prevented from loading.",
+      "No. BetClear is not a VPN and does not route your traffic through a third-party server. Normal browsing stays as fast as usual. Only blocked domains are prevented from loading.",
   },
 ] as const;

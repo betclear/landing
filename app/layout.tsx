@@ -16,21 +16,21 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: `${SITE.name} — ${SITE.tagline}`,
-    template: `%s · ${SITE.name}`,
+    default: `${SITE.name} - ${SITE.tagline}`,
+    template: `%s - ${SITE.name}`,
   },
-  description: SITE.description,
+  description: SITE.longDescription,
   metadataBase: new URL(SITE.url),
   openGraph: {
     title: SITE.name,
-    description: SITE.description,
+    description: SITE.longDescription,
     siteName: SITE.name,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: SITE.name,
-    description: SITE.description,
+    description: SITE.longDescription,
   },
 };
 
@@ -51,6 +51,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
       >
+        <a
+          href="#how-it-works"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:text-white"
+        >
+          Skip to content
+        </a>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Plus } from "@phosphor-icons/react";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/shared/Reveal";
 import { FAQ_ITEMS } from "@/lib/constants";
@@ -12,13 +13,11 @@ export function FAQ() {
   return (
     <Section
       id="faq"
-      className="bg-surface/60"
-      eyebrow="FAQ"
       title="Questions, answered clearly"
       description="Straightforward answers about how BetClear works on your iPhone."
     >
       <Reveal>
-        <div className="mx-auto max-w-2xl divide-y divide-border rounded-[var(--radius-lg)] border border-border bg-card shadow-soft">
+        <div className="mx-auto max-w-2xl divide-y divide-border rounded-[var(--radius-xl)] border border-border bg-card shadow-soft">
           {FAQ_ITEMS.map((item, index) => {
             const open = openIndex === index;
 
@@ -40,28 +39,18 @@ export function FAQ() {
                     </span>
                     <span
                       className={cn(
-                        "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition-transform duration-200",
+                        "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
                         open && "rotate-45",
                       )}
                       aria-hidden="true"
                     >
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                      >
-                        <path d="M6 1v10M1 6h10" />
-                      </svg>
+                      <Plus size={12} weight="bold" />
                     </span>
                   </button>
                 </h3>
                 <div
                   className={cn(
-                    "grid transition-[grid-template-rows] duration-300 ease-out",
+                    "grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
                     open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
                   )}
                 >

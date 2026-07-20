@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { List, X } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/Button";
-import { Container } from "@/components/ui/Container";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { NAV_LINKS, SITE } from "@/lib/constants";
 import { cn } from "@/lib/cn";
@@ -12,18 +12,18 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/70 bg-background/80 backdrop-blur-xl">
-      <Container className="flex h-16 items-center justify-between">
+    <header className="sticky top-0 z-40 px-4 pt-4 sm:px-6 sm:pt-5">
+      <div className="mx-auto flex h-14 max-w-[1120px] items-center justify-between rounded-full border border-border/80 bg-background/75 px-3 pl-5 shadow-soft backdrop-blur-xl sm:h-16 sm:px-4 sm:pl-6">
         <Link
           href="/"
-          className="text-[17px] font-semibold tracking-[-0.03em] text-foreground transition-opacity hover:opacity-80"
+          className="text-[15px] font-semibold tracking-[-0.03em] text-foreground transition-opacity hover:opacity-70"
         >
           {SITE.name}
         </Link>
 
         <nav
           aria-label="Primary"
-          className="hidden items-center gap-8 md:flex"
+          className="hidden items-center gap-7 md:flex"
         >
           {NAV_LINKS.map((link) => (
             <Link
@@ -36,9 +36,9 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-2 md:flex">
           <ThemeToggle />
-          <Button href="/pricing" size="md">
+          <Button href="/pricing" size="md" showArrow={false}>
             Get Protected
           </Button>
         </div>
@@ -53,55 +53,35 @@ export function Header() {
             onClick={() => setOpen((value) => !value)}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-foreground"
           >
-            <span className="sr-only">Menu</span>
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-              aria-hidden="true"
-            >
-              {open ? (
-                <path d="M6 6l12 12M18 6L6 18" />
-              ) : (
-                <>
-                  <path d="M4 7h16" />
-                  <path d="M4 12h16" />
-                  <path d="M4 17h16" />
-                </>
-              )}
-            </svg>
+            {open ? <X size={18} /> : <List size={18} />}
           </button>
         </div>
-      </Container>
+      </div>
 
       <div
         id="mobile-nav"
         className={cn(
-          "border-t border-border md:hidden",
+          "mx-auto mt-2 max-w-[1120px] overflow-hidden rounded-[var(--radius-xl)] border border-border bg-card shadow-elevated md:hidden",
           open ? "block" : "hidden",
         )}
       >
-        <Container className="flex flex-col gap-1 py-4">
+        <div className="flex flex-col gap-1 p-3">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="rounded-xl px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-surface hover:text-foreground"
+              className="rounded-[var(--radius-md)] px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-surface hover:text-foreground"
             >
               {link.label}
             </Link>
           ))}
-          <div className="pt-2">
-            <Button href="/pricing" className="w-full" size="md">
+          <div className="pt-1">
+            <Button href="/pricing" className="w-full" size="md" showArrow={false}>
               Get Protected
             </Button>
           </div>
-        </Container>
+        </div>
       </div>
     </header>
   );

@@ -6,33 +6,25 @@ export function InstallationPreview() {
   return (
     <Section
       id="installation"
-      eyebrow="Installation preview"
       title="From purchase to protected"
       description="A clear path with no mystery steps. Most people finish setup in under a minute."
     >
       <Reveal>
-        <ol className="relative mx-auto max-w-xl">
-          <div
-            aria-hidden="true"
-            className="absolute bottom-4 left-5 top-4 w-px bg-border"
-          />
-
+        <ol className="grid gap-px overflow-hidden rounded-[var(--radius-xl)] bg-border sm:grid-cols-4">
           {INSTALLATION_STEPS.map((step, index) => (
             <li
               key={step.label}
-              className="relative grid grid-cols-[40px_1fr] items-start gap-4 py-4"
+              className="bg-card p-6 sm:min-h-[220px] sm:p-7"
             >
-              <div className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-sm font-semibold tracking-[-0.02em] text-foreground shadow-soft">
-                {index + 1}
-              </div>
-              <div className="pt-1.5">
-                <h3 className="text-base font-semibold tracking-[-0.02em] text-foreground">
-                  {step.label}
-                </h3>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  {step.detail}
-                </p>
-              </div>
+              <span className="font-mono text-xs tabular-nums text-primary">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <h3 className="mt-8 text-base font-semibold tracking-[-0.02em] text-foreground">
+                {step.label}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {step.detail}
+              </p>
             </li>
           ))}
         </ol>

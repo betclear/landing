@@ -4,8 +4,8 @@ import { FOOTER_LINKS, SITE } from "@/lib/constants";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border py-12">
-      <Container className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
+    <footer className="border-t border-border py-14">
+      <Container className="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-[15px] font-semibold tracking-[-0.02em] text-foreground">
             {SITE.name}
@@ -31,7 +31,7 @@ export function Footer() {
         </nav>
       </Container>
 
-      <Container className="mt-8">
+      <Container className="mt-10">
         <p className="text-xs text-muted-foreground">
           © {new Date().getFullYear()} {SITE.name}. All rights reserved.
         </p>
