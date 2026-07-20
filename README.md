@@ -90,7 +90,14 @@ Documented in `.env.example`:
 
 Never put `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PASSWORD`, or `ADGUARD_*` secrets in client components / `NEXT_PUBLIC_*` vars.
 
-`GET /api/blocklist` is intentionally public so AdGuard can fetch it. After every successful admin domain create/update/delete, the server calls AdGuard `POST /control/filtering/refresh` so phones pick up the new list without reinstalling the profile. The server also ensures AdGuard `filters_update_interval` is **1 hour** as a fallback.
+`GET /api/blocklist` is intentionally public so AdGuard can fetch it. It merges:
+
+1. `output/gambling.txt` from the blocklist pipeline (primary, ~hundreds of thousands of domains)
+2. Enabled rows in Supabase `blocked_domains` (admin custom overrides only)
+
+Supabase is **not** meant to store the full pipeline list (that would make the admin UI unusable). An empty Supabase table is normal until you add custom domains in `/admin/domains`.
+
+After every successful admin domain create/update/delete, the server calls AdGuard `POST /control/filtering/refresh` so phones pick up overrides without reinstalling the profile. The server also ensures AdGuard `filters_update_interval` is **1 hour** as a fallback.
 
 ## Admin page
 

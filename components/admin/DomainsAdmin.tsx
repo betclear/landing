@@ -151,8 +151,10 @@ export function DomainsAdmin() {
             Blocked domains
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            {enabledCount} enabled of {domains.length} total. Changes refresh DNS
-            remotely; users do not reinstall the profile.
+            {enabledCount} enabled of {domains.length} custom overrides. The main
+            list (~345k domains) comes from the blocklist pipeline file, not this
+            table. Changes here refresh DNS remotely; users do not reinstall the
+            profile.
           </p>
         </div>
         <Button
