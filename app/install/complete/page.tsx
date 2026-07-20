@@ -67,7 +67,7 @@ export default async function InstallCompletePage({ searchParams }: PageProps) {
 
           <CheckoutCompleteActions
             safariHandoffUrl={handoffUrl}
-            showIosHint={isIosUserAgent(userAgent)}
+            requireCopyHandoff={isIosUserAgent(userAgent) && !isSafariUserAgent(userAgent)}
           />
 
           <ol className="mt-12 space-y-4 text-[15px] leading-relaxed text-muted-foreground">
@@ -76,8 +76,8 @@ export default async function InstallCompletePage({ searchParams }: PageProps) {
                 1. Open Safari
               </span>
               {" - "}
-              Tap Continue in Safari above, or paste the copied link into Safari
-              on your iPhone.
+              Tap Copy link for Safari above, open the Safari app, paste the
+              link into the address bar, and press Go.
             </li>
             <li>
               <span className="font-medium text-foreground">2. Install</span>

@@ -9,8 +9,10 @@ import { isStripeConfigured } from "@/lib/stripe/client";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-function redirectWithAccess(request: Request, token: string, path: string) {
-  const response = NextResponse.redirect(new URL(path, request.url));
+function redirectWithAccess(request: Request, token: string) {
+  const url = new URL("/install", request.url);
+  url.searchParams.set("access", token);
+  const response = NextResponse.redirect(url);
   response.cookies.set(ACCESS_COOKIE, token, accessCookieOptions());
   return response;
 }
@@ -33,7 +35,7 @@ export async function GET(request: Request) {
       );
     }
 
-    return redirectWithAccess(request, token, "/install");
+    return redirectWithAccess(request, token);
   } catch (error) {
     console.error("checkout success error", error);
     return NextResponse.redirect(

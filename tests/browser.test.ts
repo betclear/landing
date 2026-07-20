@@ -1,5 +1,18 @@
 import { describe, expect, it } from "vitest";
+import { profileDownloadPath } from "@/lib/stripe/access";
 import { isIosUserAgent, isSafariUserAgent } from "@/lib/stripe/browser";
+
+describe("profileDownloadPath", () => {
+  it("returns bare profile path without token", () => {
+    expect(profileDownloadPath()).toBe("/api/profile");
+    expect(profileDownloadPath(null)).toBe("/api/profile");
+  });
+
+  it("appends encoded access token", () => {
+    expect(profileDownloadPath("abc.def")).toBe("/api/profile?access=abc.def");
+  });
+});
+
 
 describe("isSafariUserAgent", () => {
   it("detects iOS Safari", () => {

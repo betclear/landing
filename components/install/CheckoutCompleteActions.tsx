@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/Button";
 
 type CheckoutCompleteActionsProps = {
   safariHandoffUrl: string;
-  showIosHint: boolean;
+  requireCopyHandoff: boolean;
 };
 
 export function CheckoutCompleteActions({
   safariHandoffUrl,
-  showIosHint,
+  requireCopyHandoff,
 }: CheckoutCompleteActionsProps) {
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState<string | null>(null);
@@ -31,31 +31,39 @@ export function CheckoutCompleteActions({
 
   return (
     <div className="mt-8 space-y-4">
-      <Button href={safariHandoffUrl} size="lg">
-        Continue in Safari
-      </Button>
-
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <Button
-          variant="secondary"
-          size="lg"
-          showArrow={false}
-          onClick={copyLink}
-        >
-          {copied ? "Link copied" : "Copy Safari link"}
+      {requireCopyHandoff ? (
+        <Button size="lg" showArrow={false} onClick={copyLink}>
+          {copied ? "Link copied — open Safari" : "Copy link for Safari"}
         </Button>
-      </div>
+      ) : (
+        <Button href={safariHandoffUrl} size="lg">
+          Continue in Safari
+        </Button>
+      )}
+
+      {!requireCopyHandoff ? (
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Button
+            variant="secondary"
+            size="lg"
+            showArrow={false}
+            onClick={copyLink}
+          >
+            {copied ? "Link copied" : "Copy Safari link"}
+          </Button>
+        </div>
+      ) : null}
 
       {copyError ? (
         <p className="text-sm text-red-600 dark:text-red-400">{copyError}</p>
       ) : null}
 
       <p className="text-sm leading-relaxed text-muted-foreground">
-        {showIosHint ? (
+        {requireCopyHandoff ? (
           <>
-            iPhone profiles must be installed in Safari. If you paid in Chrome,
-            copy the link below, open Safari, paste it into the address bar, and
-            press Go.
+            On iPhone, Chrome cannot hand off to the Safari app from a link
+            tap. Copy the link, open the Safari app, paste it into the address
+            bar, and press Go.
           </>
         ) : (
           <>

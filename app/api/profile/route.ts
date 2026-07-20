@@ -6,9 +6,10 @@ import { generateMobileConfig } from "@/lib/profile/generate";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-export async function GET() {
+export async function GET(request: Request) {
   if (isStripeConfigured()) {
-    const allowed = await hasPaywallAccess();
+    const accessToken = new URL(request.url).searchParams.get("access");
+    const allowed = await hasPaywallAccess(accessToken);
     if (!allowed) {
       return NextResponse.json(
         {

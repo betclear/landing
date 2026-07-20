@@ -4,7 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { InstallActions } from "@/components/install/InstallActions";
-import { hasPaywallAccess } from "@/lib/stripe/access";
+import { hasPaywallAccess, profileDownloadPath } from "@/lib/stripe/access";
 import { isStripeConfigured } from "@/lib/stripe/client";
 
 export const metadata: Metadata = {
@@ -13,9 +13,15 @@ export const metadata: Metadata = {
     "Download and install the BetClear iPhone configuration profile for encrypted DNS protection.",
 };
 
-export default async function InstallPage() {
+type PageProps = {
+  searchParams: Promise<{ access?: string }>;
+};
+
+export default async function InstallPage({ searchParams }: PageProps) {
+  const { access } = await searchParams;
   const paywallEnabled = isStripeConfigured();
-  const hasAccess = paywallEnabled ? await hasPaywallAccess() : true;
+  const hasAccess = paywallEnabled ? await hasPaywallAccess(access) : true;
+  const profileUrl = profileDownloadPath(access);
 
   return (
     <>
@@ -35,7 +41,7 @@ export default async function InstallPage() {
           {hasAccess ? (
             <>
               <div className="mt-8">
-                <Button href="/api/profile" size="lg">
+                <Button href={profileUrl} size="lg">
                   Download Profile
                 </Button>
               </div>
@@ -43,10 +49,10 @@ export default async function InstallPage() {
               <p className="mt-4 text-sm text-muted-foreground">
                 Or open directly:{" "}
                 <a
-                  href="/api/profile"
+                  href={profileUrl}
                   className="font-medium text-foreground underline-offset-4 hover:underline"
                 >
-                  /api/profile
+                  {profileUrl}
                 </a>
               </p>
 

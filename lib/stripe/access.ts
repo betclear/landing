@@ -103,14 +103,28 @@ export async function isCustomerSubscribed(
   return true;
 }
 
-export async function hasPaywallAccess(): Promise<boolean> {
+export async function hasPaywallAccess(
+  accessToken?: string | null,
+): Promise<boolean> {
   if (!isStripeConfigured()) return true;
 
   const jar = await cookies();
-  const access = verifyAccessToken(jar.get(ACCESS_COOKIE)?.value);
-  if (!access) return false;
+  const candidates = [accessToken, jar.get(ACCESS_COOKIE)?.value];
 
-  return isCustomerSubscribed(access.customerId);
+  for (const raw of candidates) {
+    const access = verifyAccessToken(raw ?? undefined);
+    if (!access) continue;
+    if (await isCustomerSubscribed(access.customerId)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+export function profileDownloadPath(accessToken?: string | null): string {
+  if (!accessToken) return "/api/profile";
+  return `/api/profile?access=${encodeURIComponent(accessToken)}`;
 }
 
 async function isCheckoutSessionSubscribed(
