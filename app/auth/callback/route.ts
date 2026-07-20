@@ -8,14 +8,14 @@ export const runtime = "nodejs";
 
 function safeNextPath(value: string | null): string {
   if (!value || !value.startsWith("/") || value.startsWith("//")) {
-    return "/pricing";
+    return "/auth";
   }
   return value;
 }
 
 export async function GET(request: Request) {
   if (!isSupabaseAuthConfigured()) {
-    return NextResponse.redirect(new URL("/pricing", request.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   const url = new URL(request.url);
@@ -38,9 +38,7 @@ export async function GET(request: Request) {
 
   if (error) {
     console.error("auth callback error", error);
-    return NextResponse.redirect(
-      new URL("/login?error=auth", getSiteUrl()),
-    );
+    return NextResponse.redirect(new URL("/login?error=auth", getSiteUrl()));
   }
 
   return NextResponse.redirect(new URL(next, getSiteUrl()));

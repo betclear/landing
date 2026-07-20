@@ -11,20 +11,20 @@ Premium iPhone gambling-block product. This repo currently includes:
 
 **Not implemented yet:** the DNS-over-HTTPS resolver at `dns.betclear.app`.
 
+**Implemented in this repo:** personalized onboarding, Supabase Auth, Stripe Checkout (7-day trial), Stripe webhooks, paywall-gated profile download, and post-payment redirect to `/install`.
+
 ## Architecture
 
 ```
-Admin UI (/admin/domains)
-        │
-        ▼
-Next.js API routes (service role)
-        │
-        ▼
-Supabase table: blocked_domains
-        │
-        ▼
-GET /api/blocklist  ──►  future DoH resolver at dns.betclear.app
-GET /api/profile    ──►  iPhone installs managed DNS settings payload
+Landing CTA → /onboarding/* → /auth → Stripe Checkout → /payment/success → /install
+                                                     │
+                                                     ▼
+                                         user_recovery_profiles (Supabase)
+                                                     ▲
+                                         Stripe webhooks + verify-session
+
+Admin UI (/admin/domains) → blocked_domains → GET /api/blocklist
+GET /api/profile → signed .mobileconfig for iPhone install
 ```
 
 The configuration profile does **not** embed blocked domains. It only configures encrypted DNS. The future resolver will fetch `/api/blocklist` and enforce the list dynamically.
@@ -65,7 +65,7 @@ npx supabase login
 npx supabase link --project-ref <your-project-ref>
 ```
 
-`<your-project-ref>` is the subdomain from `NEXT_PUBLIC_SUPABASE_URL`, e.g. `sznbidzvquwinoplbumv`.
+`<your-project-ref>` is the subdomain from `NEXT_PUBLIC_SUPABASE_URL`.
 
 Push all files in `supabase/migrations/`:
 
@@ -100,7 +100,50 @@ This applies any migration not yet recorded in `public.schema_migrations`.
 
 Paste and run each file under `supabase/migrations/` in order in the Supabase SQL Editor.
 
-Migrations create `blocked_domains`, `subscriptions` (Stripe), and link subscriptions to auth users. RLS is enabled with no public policies; the app uses the service role key server-side.
+Migrations create `blocked_domains`, `subscriptions` (Stripe), `user_recovery_profiles` (onboarding), and link subscriptions to auth users. RLS is enabled; privileged writes use the service role key.
+
+### Supabase Auth
+
+1. In Supabase → **Authentication → Providers**, enable **Email** and **Google**.
+2. Add redirect URLs:
+   - `http://localhost:3000/auth/callback`
+   - `https://your-domain.com/auth/callback`
+3. Copy the anon key into `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+
+## Stripe setup
+
+1. Create a Stripe product (for example “BetClear Protection”).
+2. Create two recurring prices:
+   - Annual: `$29.99` / year → put the Price ID in `STRIPE_PRICE_ANNUAL`
+   - Monthly: `$3.99` / month → put the Price ID in `STRIPE_PRICE_MONTHLY`
+3. Add `STRIPE_SECRET_KEY` and `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`.
+4. Set `NEXT_PUBLIC_APP_URL` (and optionally `NEXT_PUBLIC_SITE_URL`) to your deployed origin.
+5. Create webhook endpoints for:
+   - `POST /api/webhooks/stripe` (paywall / subscriptions table)
+   - `POST /api/stripe/webhook` (onboarding recovery profile sync)
+
+   Subscribe at least to:
+   - `checkout.session.completed`
+   - `customer.subscription.created`
+   - `customer.subscription.updated`
+   - `customer.subscription.deleted`
+   - `invoice.payment_failed`
+
+6. Put the signing secret in `STRIPE_WEBHOOK_SECRET`.
+
+Local webhook forwarding:
+
+```bash
+stripe listen --forward-to localhost:3000/api/webhooks/stripe
+```
+
+Onboarding checkout is created by `POST /api/stripe/create-checkout-session` with `{ "plan": "annual" | "monthly" }`. Prices are resolved server-side from env Price IDs. Both plans use a 7-day trial.
+
+## Onboarding flow
+
+Landing CTA → `/onboarding/spend` → time → last gamble → confirm date → impact → pricing → `/auth` → Stripe Checkout → `/payment/success` → `/install`.
+
+Incomplete answers are stored in `localStorage` so OAuth redirects and refreshes keep progress. After authentication, answers are saved to `user_recovery_profiles`. Temporary local state is cleared once Checkout is created.
 
 ## Environment variables
 
@@ -110,21 +153,31 @@ Documented in `.env.example`:
 |---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Public | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public | Supabase Auth (browser) |
-| `SUPABASE_SERVICE_ROLE_KEY` | **Server only** | Admin + blocklist database access |
+| `SUPABASE_SERVICE_ROLE_KEY` | **Server only** | Admin + privileged profile/billing writes |
 | `SUPABASE_DB_PASSWORD` | **Server only** | Postgres password for `npm run db:migrate` |
 | `DATABASE_URL` | **Server only** | Optional full Postgres URL (overrides `SUPABASE_DB_PASSWORD`) |
+| `NEXT_PUBLIC_APP_URL` | Public | Canonical app URL for auth + Stripe redirects |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Public | Stripe.js publishable key |
+| `STRIPE_SECRET_KEY` | **Server only** | Stripe API secret |
+| `STRIPE_WEBHOOK_SECRET` | **Server only** | Stripe webhook signing secret |
+| `STRIPE_PRICE_ANNUAL` | **Server only** | Stripe Price ID for $29.99/year |
+| `STRIPE_PRICE_MONTHLY` | **Server only** | Stripe Price ID for $3.99/month |
 | `ADMIN_PASSWORD` | **Server only** | Temporary password for `/admin` |
 | `BLOCKLIST_API_TOKEN` | **Server only** | Reserved / unused by the public AdGuard blocklist endpoint |
 | `ADGUARD_BASE_URL` | **Server only** | AdGuard Home base URL, e.g. `https://dns.betclear.app` |
 | `ADGUARD_USERNAME` | **Server only** | AdGuard Home admin username |
 | `ADGUARD_PASSWORD` | **Server only** | AdGuard Home admin password |
-| `NEXT_PUBLIC_SITE_URL` | Public | Canonical site URL for Stripe redirects (no trailing slash) |
-| `STRIPE_SECRET_KEY` | **Server only** | Stripe secret key (`sk_test_...` or `sk_live_...`) |
-| `STRIPE_WEBHOOK_SECRET` | **Server only** | Stripe webhook signing secret (`whsec_...`) |
-| `STRIPE_PRICE_MONTHLY` | **Server only** | Monthly subscription price ID (`price_...`) |
-| `STRIPE_PRICE_ANNUAL` | **Server only** | Annual subscription price ID (`price_...`) |
+| `NEXT_PUBLIC_SITE_URL` | Public | Alias for site URL used by existing paywall helpers |
+| `STRIPE_PRICE_TEST` | **Server only** | Optional low-cost test price ID |
+| `PROFILE_SIGNING_CERT` | **Server only** | Leaf certificate PEM used to CMS-sign `.mobileconfig` |
+| `PROFILE_SIGNING_KEY` | **Server only** | Matching private key PEM (**never expose**) |
+| `PROFILE_SIGNING_CHAIN` | **Server only** | Optional intermediate/root chain PEM |
+| `PROFILE_SIGNING_CERT_PATH` | **Server only** | Absolute path to leaf cert PEM (alternative to env PEM) |
+| `PROFILE_SIGNING_KEY_PATH` | **Server only** | Absolute path to private key PEM |
+| `PROFILE_SIGNING_CHAIN_PATH` | **Server only** | Absolute path to chain PEM (optional) |
+| `PROFILE_SIGNING_DIR` | **Server only** | Directory containing `cert.pem` / `key.pem` / optional `chain.pem` (default: `secrets/profile-signing`) |
 
-Never put `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PASSWORD`, `ADGUARD_*`, or `STRIPE_*` secrets in client components / `NEXT_PUBLIC_*` vars.
+Never put `SUPABASE_SERVICE_ROLE_KEY`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `ADMIN_PASSWORD`, `ADGUARD_*`, or `PROFILE_SIGNING_*` secrets in client components / `NEXT_PUBLIC_*` vars.
 
 `GET /api/blocklist` is intentionally public so AdGuard can fetch it. It merges:
 
@@ -227,6 +280,43 @@ Expected: HTTP 200, `Content-Type: text/plain; charset=utf-8`, rules like:
 - Legacy alias: `/install-test` redirects to `/install`
 
 The profile configures managed DNS-over-HTTPS to `https://dns.betclear.app/dns-query`. That endpoint is **not implemented yet**. Installing the profile today only validates the install path.
+
+`GET /api/profile` generates the same DNS payload as before, then **CMS/PKCS#7-signs** it with OpenSSL (DER, non-detached) before returning:
+
+- `Content-Type: application/x-apple-aspen-config`
+- `Content-Disposition: attachment; filename="BetClear.mobileconfig"`
+
+The signature is verified with OpenSSL before the response is sent. If credentials are missing or signing/verification fails, the API returns JSON (`503` / `500`) instead of an unsigned profile. The private key is never logged or returned.
+
+This route uses the **Node.js** runtime (not Edge) so the OpenSSL CLI can be invoked. Do not move `/api/profile` to Supabase Edge Functions or the Next.js Edge runtime without replacing OpenSSL with a compatible signing service.
+
+### Profile signing setup
+
+See also [`secrets/profile-signing/README.md`](secrets/profile-signing/README.md).
+
+**Option A — mounted files (local / VM / container):**
+
+```bash
+mkdir -p secrets/profile-signing
+# place cert.pem, key.pem, and optional chain.pem there
+chmod 600 secrets/profile-signing/key.pem
+```
+
+**Option B — absolute paths:**
+
+```bash
+PROFILE_SIGNING_CERT_PATH=/secure/betclear/cert.pem
+PROFILE_SIGNING_KEY_PATH=/secure/betclear/key.pem
+PROFILE_SIGNING_CHAIN_PATH=/secure/betclear/chain.pem   # optional
+```
+
+**Option C — PEM in environment (e.g. Vercel):**
+
+Set `PROFILE_SIGNING_CERT`, `PROFILE_SIGNING_KEY`, and optional `PROFILE_SIGNING_CHAIN` to full PEM text (literal `\n` newlines are accepted).
+
+**Precedence:** explicit `*_PATH` env vars → PEM env vars → `PROFILE_SIGNING_DIR` / `secrets/profile-signing`.
+
+With a certificate trusted on iOS (plus intermediates in the chain), Settings shows the signer identity instead of **Not Signed**. Self-signed certs are fine for local crypto tests but will not appear as a trusted signer on device.
 
 ## Scripts
 

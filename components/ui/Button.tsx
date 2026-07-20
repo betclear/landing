@@ -2,15 +2,16 @@ import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/cn";
 
-type ButtonVariant = "primary" | "secondary" | "ghost";
+type ButtonVariant = "primary" | "secondary" | "ghost" | "soft";
 type ButtonSize = "md" | "lg";
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-primary text-white shadow-soft hover:bg-primary-hover hover:shadow-elevated",
+    "bg-primary text-primary-foreground shadow-soft hover:bg-primary-hover",
   secondary:
-    "bg-card text-foreground border border-border shadow-soft hover:bg-surface",
+    "bg-transparent text-foreground ring-1 ring-border hover:bg-white/[0.04] dark:hover:bg-white/[0.04]",
   ghost: "bg-transparent text-muted-foreground hover:text-foreground",
+  soft: "bg-soft text-soft-foreground hover:opacity-95",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -33,6 +34,7 @@ type ButtonAsButton = CommonProps &
 
 type ButtonAsLink = CommonProps & {
   href: string;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 };
 
 export type ButtonProps = ButtonAsButton | ButtonAsLink;
@@ -66,8 +68,8 @@ export function Button({
           className={cn(
             "inline-flex h-8 w-8 items-center justify-center rounded-full transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
             "group-hover:translate-x-0.5 group-hover:-translate-y-px",
-            variant === "primary"
-              ? "bg-white/15 text-white"
+            variant === "primary" || variant === "soft"
+              ? "bg-black/10 text-inherit"
               : "bg-foreground/5 text-foreground",
           )}
           aria-hidden="true"
@@ -80,23 +82,30 @@ export function Button({
 
   if ("href" in props && props.href) {
     const href = props.href;
-    // Native anchors for API/file downloads so Safari gets a real navigation
-    // (Next.js Link client routing can break .mobileconfig installs).
+    const onClick = props.onClick;
     const useNativeAnchor =
       href.startsWith("/api/") ||
       href.endsWith(".mobileconfig") ||
-      href.startsWith("mailto:");
+      href.startsWith("mailto:") ||
+      href.startsWith("https://");
 
     if (useNativeAnchor) {
       return (
-        <a href={href} className={classes}>
+        <a
+          href={href}
+          className={classes}
+          onClick={onClick}
+          {...(href.startsWith("https://")
+            ? { target: "_blank", rel: "noopener noreferrer" }
+            : {})}
+        >
           {content}
         </a>
       );
     }
 
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} className={classes} onClick={onClick}>
         {content}
       </Link>
     );

@@ -11,7 +11,8 @@ import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Choose monthly or annual BetClear protection for your iPhone.",
+    "Choose monthly or annual BetClear protection for your iPhone. Start with a 7-day free trial.",
+  alternates: { canonical: "/pricing" },
 };
 
 export default async function PricingPage() {
@@ -44,8 +45,15 @@ export default async function PricingPage() {
           </div>
 
           <p className="mx-auto mt-10 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground">
-            Already subscribed? Open the install page in Safari and sign in with
-            the same email, or use Manage billing there to update payment
+            Prefer a guided start?{" "}
+            <a
+              href="/onboarding/spend"
+              className="font-medium text-foreground underline-offset-4 hover:underline"
+            >
+              Begin personalized onboarding
+            </a>
+            . Already subscribed? Open the install page in Safari and sign in
+            with the same email, or use Manage billing there to update payment
             details.
           </p>
         </Container>

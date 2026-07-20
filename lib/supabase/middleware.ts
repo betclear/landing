@@ -40,6 +40,8 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
+  // Refresh the auth session without trusting getSession() alone.
   await supabase.auth.getUser();
+
   return supabaseResponse;
 }

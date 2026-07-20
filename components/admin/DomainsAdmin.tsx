@@ -1,16 +1,20 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MagnifyingGlass, SignOut, Trash } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import type { BlockedDomain } from "@/lib/supabase/types";
 
+const PAGE_SIZE = 100;
+
 export function DomainsAdmin() {
   const router = useRouter();
   const [domains, setDomains] = useState<BlockedDomain[]>([]);
   const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [hostname, setHostname] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
@@ -21,44 +25,50 @@ export function DomainsAdmin() {
     setWarning(data.refreshWarning ?? null);
   }
 
-  const loadDomains = useCallback(async (search = query) => {
-    setLoading(true);
-    setError(null);
+  const loadDomains = useCallback(
+    async (search = query, nextPage = page) => {
+      setLoading(true);
+      setError(null);
 
-    const params = new URLSearchParams();
-    if (search.trim()) params.set("q", search.trim());
+      const params = new URLSearchParams();
+      if (search.trim()) params.set("q", search.trim());
+      params.set("page", String(nextPage));
+      params.set("pageSize", String(PAGE_SIZE));
 
-    const response = await fetch(`/api/admin/domains?${params.toString()}`);
-    if (response.status === 401) {
-      router.replace("/admin/login");
-      return;
-    }
+      const response = await fetch(`/api/admin/domains?${params.toString()}`);
+      if (response.status === 401) {
+        router.replace("/admin/login");
+        return;
+      }
 
-    const data = (await response.json()) as {
-      domains?: BlockedDomain[];
-      error?: string;
-    };
+      const data = (await response.json()) as {
+        domains?: BlockedDomain[];
+        total?: number;
+        page?: number;
+        error?: string;
+      };
 
-    if (!response.ok) {
-      setError(data.error ?? "Failed to load domains");
+      if (!response.ok) {
+        setError(data.error ?? "Failed to load domains");
+        setLoading(false);
+        return;
+      }
+
+      setDomains(data.domains ?? []);
+      setTotal(data.total ?? 0);
+      setPage(data.page ?? nextPage);
       setLoading(false);
-      return;
-    }
-
-    setDomains(data.domains ?? []);
-    setLoading(false);
-  }, [query, router]);
+    },
+    [query, page, router],
+  );
 
   useEffect(() => {
-    void loadDomains("");
+    void loadDomains("", 1);
     // Initial load only
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const enabledCount = useMemo(
-    () => domains.filter((domain) => domain.enabled).length,
-    [domains],
-  );
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   async function onAdd(event: FormEvent) {
     event.preventDefault();
@@ -87,7 +97,7 @@ export function DomainsAdmin() {
     applyRefreshWarning(data);
     setHostname("");
     setSaving(false);
-    await loadDomains(query);
+    await loadDomains(query, 1);
   }
 
   async function toggleEnabled(domain: BlockedDomain) {
@@ -110,7 +120,7 @@ export function DomainsAdmin() {
     }
 
     applyRefreshWarning(data);
-    await loadDomains(query);
+    await loadDomains(query, page);
   }
 
   async function removeDomain(domain: BlockedDomain) {
@@ -133,7 +143,7 @@ export function DomainsAdmin() {
     }
 
     applyRefreshWarning(data);
-    await loadDomains(query);
+    await loadDomains(query, page);
   }
 
   async function logout() {
@@ -151,10 +161,8 @@ export function DomainsAdmin() {
             Blocked domains
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            {enabledCount} enabled of {domains.length} custom overrides. The main
-            list (~345k domains) comes from the blocklist pipeline file, not this
-            table. Changes here refresh DNS remotely; users do not reinstall the
-            profile.
+            {total.toLocaleString()} domains in Supabase. Showing page {page} of{" "}
+            {totalPages}. Use search to find hosts.
           </p>
         </div>
         <Button
@@ -215,7 +223,7 @@ export function DomainsAdmin() {
             onKeyDown={(event) => {
               if (event.key === "Enter") {
                 event.preventDefault();
-                void loadDomains(query);
+                void loadDomains(query, 1);
               }
             }}
             className="h-11 w-full rounded-[var(--radius-md)] border border-border bg-card pl-9 pr-3 text-sm outline-none ring-ring focus:ring-2"
@@ -226,7 +234,7 @@ export function DomainsAdmin() {
           variant="secondary"
           size="md"
           showArrow={false}
-          onClick={() => void loadDomains(query)}
+          onClick={() => void loadDomains(query, 1)}
         >
           Search
         </Button>
@@ -239,7 +247,10 @@ export function DomainsAdmin() {
       ) : null}
 
       {warning ? (
-        <p className="mt-4 text-sm text-amber-700 dark:text-amber-400" role="status">
+        <p
+          className="mt-4 text-sm text-amber-700 dark:text-amber-400"
+          role="status"
+        >
           {warning}
         </p>
       ) : null}
@@ -272,7 +283,7 @@ export function DomainsAdmin() {
                     colSpan={5}
                     className="px-4 py-10 text-center text-muted-foreground"
                   >
-                    No domains yet. Add stake.com to get started.
+                    No domains on this page. Import the pipeline list or add one.
                   </td>
                 </tr>
               ) : (
@@ -323,6 +334,32 @@ export function DomainsAdmin() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <Button
+          type="button"
+          variant="secondary"
+          size="md"
+          showArrow={false}
+          disabled={page <= 1 || loading}
+          onClick={() => void loadDomains(query, page - 1)}
+        >
+          Previous
+        </Button>
+        <p className="text-sm text-muted-foreground">
+          Page {page} / {totalPages}
+        </p>
+        <Button
+          type="button"
+          variant="secondary"
+          size="md"
+          showArrow={false}
+          disabled={page >= totalPages || loading}
+          onClick={() => void loadDomains(query, page + 1)}
+        >
+          Next
+        </Button>
       </div>
     </Container>
   );

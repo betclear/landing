@@ -12,6 +12,7 @@
     "db:migrate": "node scripts/run-migrations.mjs",
     "blocklist:update": "tsx scripts/update-blocklist.ts",
     "blocklist:check": "tsx scripts/check-blocklist.ts",
+    "blocklist:import-supabase": "tsx scripts/import-blocklist-to-supabase.ts",
     "test": "vitest run"
   },
   "dependencies": {
@@ -31,6 +32,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/stripe": "^8.0.416",
     "eslint": "^9",
     "eslint-config-next": "15.5.20",
     "pg": "^8.22.0",

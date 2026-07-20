@@ -19,18 +19,28 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const q = (searchParams.get("q") ?? "").trim().toLowerCase();
+    const page = Math.max(1, Number(searchParams.get("page") ?? "1") || 1);
+    const pageSize = Math.min(
+      200,
+      Math.max(1, Number(searchParams.get("pageSize") ?? "100") || 100),
+    );
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
 
     const supabase = createServiceClient();
     let query = supabase
       .from("blocked_domains")
-      .select("id, hostname, category, enabled, created_at, updated_at")
-      .order("created_at", { ascending: false });
+      .select("id, hostname, category, enabled, created_at, updated_at", {
+        count: "exact",
+      })
+      .order("hostname", { ascending: true })
+      .range(from, to);
 
     if (q) {
       query = query.ilike("hostname", `%${q}%`);
     }
 
-    const { data, error } = await query;
+    const { data, error, count } = await query;
 
     if (error) {
       console.error("domains list failed", error);
@@ -40,7 +50,12 @@ export async function GET(request: Request) {
       );
     }
 
-    return NextResponse.json({ domains: data ?? [] });
+    return NextResponse.json({
+      domains: data ?? [],
+      page,
+      pageSize,
+      total: count ?? 0,
+    });
   } catch (error) {
     console.error("domains GET error", error);
     return NextResponse.json(

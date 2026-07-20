@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
 import {
   getSupabaseAnonKey,
   getSupabaseUrl,
@@ -30,4 +30,19 @@ export async function createServerSupabaseClient(): Promise<SupabaseClient> {
       },
     },
   });
+}
+
+export async function getAuthenticatedUser(): Promise<User | null> {
+  if (!isSupabaseAuthConfigured()) {
+    return null;
+  }
+
+  const supabase = await createServerSupabaseClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user) return null;
+  return user;
 }

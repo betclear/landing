@@ -4,6 +4,8 @@ import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { InstallActions } from "@/components/install/InstallActions";
+import { InstallDownloadButton } from "@/components/install/InstallDownloadButton";
+import { InstallPageTracker } from "@/components/onboarding/InstallPageTracker";
 import { getAuthUser } from "@/lib/auth/user";
 import { hasPaywallAccess, profileDownloadPath } from "@/lib/stripe/access";
 import { isStripeConfigured } from "@/lib/stripe/client";
@@ -13,6 +15,7 @@ export const metadata: Metadata = {
   title: "Install Protection",
   description:
     "Download and install the BetClear iPhone configuration profile for encrypted DNS protection.",
+  alternates: { canonical: "/install" },
 };
 
 type PageProps = {
@@ -29,35 +32,24 @@ export default async function InstallPage({ searchParams }: PageProps) {
   return (
     <>
       <Header />
+      <InstallPageTracker />
       <main className="py-16 sm:py-24">
         <Container className="max-w-2xl">
-          <p className="text-sm font-medium text-primary">iPhone</p>
-          <h1 className="mt-2 text-4xl font-semibold tracking-[-0.04em] text-foreground">
+          <p className="text-[12px] font-medium uppercase tracking-[0.16em] text-primary">
+            iPhone setup
+          </p>
+          <h1 className="mt-3 text-4xl font-semibold tracking-[-0.045em] text-foreground sm:text-5xl">
             Install BetClear Protection
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-            This downloads an Apple configuration profile that points your iPhone
-            at encrypted DNS on dns.betclear.app. Open this page in Safari on
-            your iPhone, then tap the button below.
+            This downloads an Apple configuration profile that points your
+            iPhone at encrypted DNS on dns.betclear.app. Open this page in
+            Safari on your iPhone, then tap the button below.
           </p>
 
           {hasAccess ? (
             <>
-              <div className="mt-8">
-                <Button href={profileUrl} size="lg">
-                  Download Profile
-                </Button>
-              </div>
-
-              <p className="mt-4 text-sm text-muted-foreground">
-                Or open directly:{" "}
-                <a
-                  href={profileUrl}
-                  className="font-medium text-foreground underline-offset-4 hover:underline"
-                >
-                  {profileUrl}
-                </a>
-              </p>
+              <InstallDownloadButton profileUrl={profileUrl} />
 
               {paywallEnabled ? <InstallActions /> : null}
             </>
@@ -76,9 +68,9 @@ export default async function InstallPage({ searchParams }: PageProps) {
                   </>
                 ) : (
                   <>
-                    If you just subscribed in Chrome or another browser, open your
-                    payment confirmation link in Safari on this iPhone. iOS does
-                    not share subscription access between browsers.
+                    If you just subscribed in Chrome or another browser, open
+                    your payment confirmation link in Safari on this iPhone. iOS
+                    does not share subscription access between browsers.
                   </>
                 )}
               </p>
@@ -88,11 +80,11 @@ export default async function InstallPage({ searchParams }: PageProps) {
                     Sign in
                   </Button>
                 ) : null}
-                <Button href="/pricing" size="lg">
-                  View pricing
+                <Button href="/onboarding/pricing" size="lg" variant="secondary">
+                  Choose a plan
                 </Button>
-                <Button href="/pricing" variant="secondary" size="lg">
-                  Subscribe now
+                <Button href="/pricing" variant="ghost" size="lg">
+                  View pricing
                 </Button>
               </div>
               {authUser?.email ? (
@@ -104,38 +96,46 @@ export default async function InstallPage({ searchParams }: PageProps) {
             </div>
           )}
 
-          <ol className="mt-12 space-y-4 text-[15px] leading-relaxed text-muted-foreground">
+          <ol className="mt-12 space-y-5 text-[15px] leading-relaxed text-muted-foreground">
             <li>
               <span className="font-medium text-foreground">1. Subscribe</span>
-              {" - "}
-              Choose monthly or annual protection on the pricing page.
+              {" — "}
+              Complete onboarding and start your 7-day free trial.
             </li>
             <li>
               <span className="font-medium text-foreground">2. Download</span>
-              {" - "}
+              {" — "}
               Tap Download Profile in Safari. Allow the configuration profile
               download when prompted.
             </li>
             <li>
               <span className="font-medium text-foreground">3. Open Settings</span>
-              {" - "}
+              {" — "}
               iOS shows Profile Downloaded. Open Settings, or go to Settings →
               General → VPN & Device Management.
             </li>
             <li>
               <span className="font-medium text-foreground">4. Install</span>
-              {" - "}
+              {" — "}
               Tap BetClear Protection, then Install. Enter your passcode if
               asked.
             </li>
             <li>
-              <span className="font-medium text-foreground">5. Confirm DNS</span>
-              {" - "}
+              <span className="font-medium text-foreground">5. Confirm</span>
+              {" — "}
               The profile configures DNS-over-HTTPS to
-              https://dns.betclear.app/dns-query. Blocking works once that
-              resolver is live.
+              https://dns.betclear.app/dns-query. Try a known gambling website
+              to verify that protection is active.
             </li>
           </ol>
+
+          <div className="mt-10 rounded-[1.5rem] bg-card p-5 ring-1 ring-border">
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              BetClear does not gain access to your photos, messages, passwords,
+              or personal files. You can remove the profile anytime from iPhone
+              Settings.
+            </p>
+          </div>
         </Container>
       </main>
       <Footer />

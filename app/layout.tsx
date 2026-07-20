@@ -9,30 +9,49 @@ import "./globals.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
-    default: `${SITE.name} - ${SITE.tagline}`,
-    template: `%s - ${SITE.name}`,
+    default: "BetClear — Block Gambling Websites on Your iPhone",
+    template: `%s — ${SITE.name}`,
   },
   description: SITE.longDescription,
   metadataBase: new URL(SITE.url),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: SITE.name,
+    title: "BetClear — Block Gambling Websites on Your iPhone",
     description: SITE.longDescription,
     siteName: SITE.name,
     type: "website",
+    url: SITE.url,
+    images: [
+      {
+        url: "/images/hero-iphone.png",
+        width: 900,
+        height: 1200,
+        alt: "BetClear protection on iPhone",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: SITE.name,
+    title: "BetClear — Block Gambling Websites on Your iPhone",
     description: SITE.longDescription,
+    images: ["/images/hero-iphone.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
@@ -42,11 +61,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('betclear-theme');if(t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('betclear-theme');if(t==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}}catch(e){document.documentElement.classList.add('dark')}})();`,
           }}
         />
       </head>
@@ -55,7 +74,7 @@ export default function RootLayout({
       >
         <a
           href="#how-it-works"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:text-white"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:text-primary-foreground"
         >
           Skip to content
         </a>
