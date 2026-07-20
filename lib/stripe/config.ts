@@ -80,3 +80,8 @@ export function getSiteUrl(): string {
 
   return "http://localhost:3000";
 }
+
+/** Route Handler that sets the access cookie (not usable from Server Components). */
+export function checkoutSuccessUrl(sessionId: string): string {
+  return `${getSiteUrl()}/api/checkout/success?session_id=${encodeURIComponent(sessionId)}`;
+}

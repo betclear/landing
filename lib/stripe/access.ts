@@ -35,7 +35,9 @@ export function createAccessToken(customerId: string): string {
   return `${payload}.${signature}`;
 }
 
-export function verifyAccessToken(token: string | undefined): AccessPayload | null {
+export function verifyAccessToken(
+  token: string | undefined,
+): AccessPayload | null {
   if (!token || !process.env.STRIPE_SECRET_KEY) return null;
 
   const [payload, signature] = token.split(".");
@@ -76,7 +78,9 @@ export function accessCookieOptions(maxAgeSeconds = ACCESS_TTL_MS / 1000) {
 
 const ACTIVE_STATUSES = new Set(["active", "trialing"]);
 
-export async function isCustomerSubscribed(customerId: string): Promise<boolean> {
+export async function isCustomerSubscribed(
+  customerId: string,
+): Promise<boolean> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("subscriptions")

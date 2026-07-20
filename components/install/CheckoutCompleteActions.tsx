@@ -23,7 +23,9 @@ export function CheckoutCompleteActions({
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2500);
     } catch {
-      setCopyError("Unable to copy. Long-press the link below and choose Copy.");
+      setCopyError(
+        "Unable to copy. Long-press the link below and choose Copy.",
+      );
     }
   }
 
@@ -34,7 +36,12 @@ export function CheckoutCompleteActions({
       </Button>
 
       <div className="flex flex-col gap-3 sm:flex-row">
-        <Button variant="secondary" size="lg" showArrow={false} onClick={copyLink}>
+        <Button
+          variant="secondary"
+          size="lg"
+          showArrow={false}
+          onClick={copyLink}
+        >
           {copied ? "Link copied" : "Copy Safari link"}
         </Button>
       </div>

@@ -1,12 +1,19 @@
 import { NextResponse } from "next/server";
 import {
+  ACCESS_COOKIE,
+  accessCookieOptions,
   grantAccessFromCheckoutSession,
-  setAccessCookie,
 } from "@/lib/stripe/access";
 import { isStripeConfigured } from "@/lib/stripe/client";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+
+function redirectWithAccess(request: Request, token: string, path: string) {
+  const response = NextResponse.redirect(new URL(path, request.url));
+  response.cookies.set(ACCESS_COOKIE, token, accessCookieOptions());
+  return response;
+}
 
 export async function GET(request: Request) {
   if (!isStripeConfigured()) {
@@ -21,14 +28,17 @@ export async function GET(request: Request) {
   try {
     const token = await grantAccessFromCheckoutSession(sessionId);
     if (!token) {
-      return NextResponse.redirect(new URL("/pricing?error=checkout", request.url));
+      return NextResponse.redirect(
+        new URL("/pricing?error=checkout", request.url),
+      );
     }
 
-    await setAccessCookie(token);
-    return NextResponse.redirect(new URL("/install", request.url));
+    return redirectWithAccess(request, token, "/install");
   } catch (error) {
     console.error("checkout success error", error);
-    return NextResponse.redirect(new URL("/pricing?error=checkout", request.url));
+    return NextResponse.redirect(
+      new URL("/pricing?error=checkout", request.url),
+    );
   }
 }
 
@@ -50,11 +60,15 @@ export async function POST(request: Request) {
 
     const token = await grantAccessFromCheckoutSession(sessionId);
     if (!token) {
-      return NextResponse.json({ error: "Subscription not active" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Subscription not active" },
+        { status: 403 },
+      );
     }
 
-    await setAccessCookie(token);
-    return NextResponse.json({ ok: true });
+    const response = NextResponse.json({ ok: true });
+    response.cookies.set(ACCESS_COOKIE, token, accessCookieOptions());
+    return response;
   } catch (error) {
     console.error("checkout verify error", error);
     return NextResponse.json({ error: "Verification failed" }, { status: 500 });

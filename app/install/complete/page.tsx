@@ -7,10 +7,9 @@ import { Container } from "@/components/ui/Container";
 import { CheckoutCompleteActions } from "@/components/install/CheckoutCompleteActions";
 import {
   grantAccessFromCheckoutSession,
-  setAccessCookie,
 } from "@/lib/stripe/access";
 import { isSafariUserAgent, isIosUserAgent } from "@/lib/stripe/browser";
-import { getSiteUrl } from "@/lib/stripe/config";
+import { checkoutSuccessUrl } from "@/lib/stripe/config";
 import { isStripeConfigured } from "@/lib/stripe/client";
 
 export const metadata: Metadata = {
@@ -24,7 +23,7 @@ type PageProps = {
 };
 
 function safariHandoffUrl(sessionId: string): string {
-  return `${getSiteUrl()}/install/complete?session_id=${encodeURIComponent(sessionId)}`;
+  return checkoutSuccessUrl(sessionId);
 }
 
 export default async function InstallCompletePage({ searchParams }: PageProps) {
@@ -46,8 +45,7 @@ export default async function InstallCompletePage({ searchParams }: PageProps) {
   const userAgent = requestHeaders.get("user-agent") ?? "";
 
   if (isSafariUserAgent(userAgent)) {
-    await setAccessCookie(token);
-    redirect("/install");
+    redirect(checkoutSuccessUrl(sessionId));
   }
 
   const handoffUrl = safariHandoffUrl(sessionId);
@@ -74,7 +72,9 @@ export default async function InstallCompletePage({ searchParams }: PageProps) {
 
           <ol className="mt-12 space-y-4 text-[15px] leading-relaxed text-muted-foreground">
             <li>
-              <span className="font-medium text-foreground">1. Open Safari</span>
+              <span className="font-medium text-foreground">
+                1. Open Safari
+              </span>
               {" - "}
               Tap Continue in Safari above, or paste the copied link into Safari
               on your iPhone.
