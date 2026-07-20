@@ -79,8 +79,24 @@ export function Button({
   );
 
   if ("href" in props && props.href) {
+    const href = props.href;
+    // Native anchors for API/file downloads so Safari gets a real navigation
+    // (Next.js Link client routing can break .mobileconfig installs).
+    const useNativeAnchor =
+      href.startsWith("/api/") ||
+      href.endsWith(".mobileconfig") ||
+      href.startsWith("mailto:");
+
+    if (useNativeAnchor) {
+      return (
+        <a href={href} className={classes}>
+          {content}
+        </a>
+      );
+    }
+
     return (
-      <Link href={props.href} className={classes}>
+      <Link href={href} className={classes}>
         {content}
       </Link>
     );

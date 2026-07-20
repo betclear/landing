@@ -117,8 +117,9 @@ Expected: HTTP 200, `Content-Type: text/plain; charset=utf-8`, rules like:
 
 ## Download the iOS profile
 
-- Browser: [http://localhost:3000/install-test](http://localhost:3000/install-test)
-- Direct: [http://localhost:3000/api/profile](http://localhost:3000/api/profile)
+- Install page: [https://www.betclear.app/install](https://www.betclear.app/install)
+- Direct API: [https://www.betclear.app/api/profile](https://www.betclear.app/api/profile)
+- Legacy alias: `/install-test` redirects to `/install`
 
 The profile configures managed DNS-over-HTTPS to `https://dns.betclear.app/dns-query`. That endpoint is **not implemented yet**. Installing the profile today only validates the install path.
 
@@ -135,4 +136,4 @@ After setup you should be able to:
 
 1. Add `stake.com` in `/admin/domains`
 2. See it in `GET /api/blocklist`
-3. Download an iPhone profile from `/install-test` that points at `dns.betclear.app`
+3. Download an iPhone profile from `/install` that points at `dns.betclear.app`
