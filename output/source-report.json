@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-20T18:59:35.688Z",
+  "generatedAt": "2026-07-20T20:24:24.898Z",
   "sources": [
     {
       "id": "hagezi",
@@ -7,10 +7,10 @@
       "sourceUrl": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/gambling-onlydomains.txt",
       "status": "success",
       "usedCache": false,
-      "rawEntries": 338516,
-      "validDomains": 338504,
+      "rawEntries": 339801,
+      "validDomains": 339789,
       "rejectedEntries": 12,
-      "uniqueContributions": 2174,
+      "uniqueContributions": 3346,
       "warnings": []
     },
     {
@@ -22,7 +22,7 @@
       "rawEntries": 342626,
       "validDomains": 342623,
       "rejectedEntries": 3,
-      "uniqueContributions": 6293,
+      "uniqueContributions": 6180,
       "warnings": []
     },
     {
@@ -52,15 +52,19 @@
     }
   ],
   "overlap": {
-    "domainsInOneSourceOnly": 8469,
-    "domainsInMultipleSources": 336330,
+    "domainsInOneSourceOnly": 9528,
+    "domainsInMultipleSources": 336443,
     "pairwiseOverlap": {
-      "block-list-project|hagezi": 336330,
+      "block-list-project|hagezi": 336443,
       "block-list-project|custom": 42,
       "custom|hagezi": 42
     },
     "uniqueSamplesByProvider": {
       "hagezi": [
+        "vfng.0tf5s13x.com",
+        "cdn.assetcsn.site",
+        "y6d9.b0o5u1j.com",
+        "j0d9.c9b7y8a.com",
         "247betcasino.co.nl",
         "beepbeepcasino.co.za",
         "casino-golden.co.uk",
@@ -80,6 +84,7 @@
         "rizziocasinos.co.nl",
         "slotscapital.co.za",
         "spinationalcasino.co.nl",
+        "spincity.co.mz",
         "spinimaxcasino.co.nl",
         "truefortunecasino.co.za",
         "wild-casino.co.za",
@@ -98,13 +103,23 @@
         "x1casino.com.ec",
         "yep-casino-online.com.de",
         "hotslots-casino.net.pl",
+        "mwcash.net.ph",
         "play-casino.org.uk",
+        "h6k8.u7u9r8t.com",
         "sbobetsport.us.com",
+        "0693.casino",
+        "0822.casino",
+        "0j0casino.xyz",
         "1-b-k-q.com",
         "101bet365.com",
+        "10betcasino.best",
+        "10cric2026.com",
         "11-slots.com",
+        "1121slotsign.shop",
         "1131gg.biz",
+        "11betsx.net",
         "123bbetz.com",
+        "123betcasino.click",
         "1350vdcasino.com",
         "1639imajbet.com",
         "188mega.sbs",
@@ -113,6 +128,8 @@
         "1996bet19.com",
         "19slot.world",
         "1casinowon.com",
+        "1tykupv.com",
+        "1uckyduckcasinos.org",
         "1xbet-2ix0j.xyz",
         "1xbet-37c2m.cyou",
         "1xbet-4nkwn.icu",
@@ -143,24 +160,7 @@
         "1xbet-fhak.top",
         "1xbet-fmjk.top",
         "1xbet-fxs.top",
-        "1xbet-fzlx.top",
-        "1xbet-ghkf.top",
-        "1xbet-gol2.top",
-        "1xbet-grko.top",
-        "1xbet-gslb.top",
-        "1xbet-gxgl3.xyz",
-        "1xbet-gzwz.top",
-        "1xbet-hmkd.top",
-        "1xbet-hngn.top",
-        "1xbet-hxqj.top",
-        "1xbet-idsu.top",
-        "1xbet-ig0s.top",
-        "1xbet-ipuw.top",
-        "1xbet-ixyo.top",
-        "1xbet-jcrh.top",
-        "1xbet-ka1q.top",
-        "1xbet-kasyno.pl",
-        "1xbet-kclc.top"
+        "1xbet-fzlx.top"
       ],
       "block-list-project": [
         "009casino.help",
@@ -189,7 +189,6 @@
         "11laki.com",
         "123873c.com",
         "123873d.com",
-        "123win.fit",
         "1240best10.com",
         "1263best10.com",
         "1266best10.com",
@@ -217,7 +216,6 @@
         "1tambet-giris.icu",
         "1win-obzor3.top",
         "1win-rus.ru",
-        "1win360.casino",
         "1win5126.casino",
         "1winscasino.online",
         "1xbet-29w4d.top",
@@ -262,7 +260,9 @@
         "1xbet-itqejtv.top",
         "1xbet-jbyyimv.top",
         "1xbet-jhpgwkf.top",
-        "1xbet-jilyold.top"
+        "1xbet-jilyold.top",
+        "1xbet-jjudwiy.top",
+        "1xbet-jlbrpyu.top"
       ],
       "custom": [
         "slick.global",
