@@ -130,8 +130,12 @@ export function SignInForm({ nextPath }: SignInFormProps) {
         disabled={busy}
         onClick={signInWithGoogle}
       >
-        <GoogleIcon />
-        {googleLoading ? "Redirecting to Google..." : "Continue with Google"}
+        <span className="inline-flex items-center justify-center gap-3">
+          <GoogleIcon />
+          <span>
+            {googleLoading ? "Redirecting to Google..." : "Continue with Google"}
+          </span>
+        </span>
       </Button>
 
       <div className="relative">

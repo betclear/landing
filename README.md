@@ -140,17 +140,29 @@ After every successful admin domain create/update/delete, the server calls AdGua
 End-user sign-in uses Supabase Auth before checkout: **Google** or **email magic link**.
 
 1. Ensure `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set.
-2. In Supabase Dashboard → Authentication → URL Configuration, add redirect URLs:
-   - `http://localhost:3000/auth/callback` (local)
-   - `https://www.betclear.app/auth/callback` (production)
+2. In Supabase Dashboard → Authentication → URL Configuration:
+   - **Site URL:** `http://localhost:3000` (local) or `https://www.betclear.app` (prod)
+   - **Redirect URLs** (add all):
+     - `http://localhost:3000/auth/callback**`
+     - `https://www.betclear.app/auth/callback**`
+   Without these, Supabase sends the auth `code` to `/` instead of `/auth/callback`.
 3. Enable the **Email** provider (magic link / OTP).
 4. Enable the **Google** provider using OAuth credentials from your Firebase Google Cloud project:
    - Firebase Console → Project settings → Your apps → Web app (or Google Cloud Console → APIs & Services → Credentials)
    - Copy the OAuth 2.0 **Client ID** and **Client secret**
    - Supabase Dashboard → Authentication → Providers → Google → paste both
-   - In Google Cloud Console, add authorized redirect URI:
-     - `https://<project-ref>.supabase.co/auth/v1/callback` (from Supabase Google provider settings)
+   - In Google Cloud Console, add authorized redirect URIs:
+     - `https://<project-ref>.supabase.co/auth/v1/callback` (required)
+     - `https://auth.betclear.app/auth/v1/callback` (after custom domain; see below)
 5. Apply migrations: `npm run db:push` (CLI) or `npm run db:migrate` (see Supabase setup).
+
+**Google shows `*.supabase.co` on the consent screen** — that is normal with the default Supabase auth URL. To show `betclear.app` instead:
+
+1. Supabase Dashboard → **Project Settings → Custom Domains** → add e.g. `auth.betclear.app`
+2. DNS: CNAME `auth.betclear.app` → value shown by Supabase
+3. After activation, set `NEXT_PUBLIC_SUPABASE_URL=https://auth.betclear.app` in production env
+4. Google Cloud Console → add redirect URI `https://auth.betclear.app/auth/v1/callback`
+5. Optional: Google Cloud → **Branding** → set app name “BetClear”, logo, homepage `https://www.betclear.app` (verification can take a few days)
 
 Flow: `/login` → Google or email → `/auth/callback` → `/pricing` → Stripe Checkout → install.
 
