@@ -6,9 +6,13 @@ import { Reveal } from "@/components/shared/Reveal";
 import { SITE } from "@/lib/constants";
 import { trackEvent } from "@/lib/analytics";
 
-export function FinalCTA() {
+type FinalCTAProps = {
+  domainCountLabel: string;
+};
+
+export function FinalCTA({ domainCountLabel }: FinalCTAProps) {
   return (
-    <section className="relative overflow-hidden py-24 sm:py-32">
+    <section className="relative overflow-hidden pb-24 pt-8 sm:pb-32 sm:pt-12">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--glow),transparent_65%)]"
@@ -16,14 +20,14 @@ export function FinalCTA() {
       <Container className="relative">
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-balance text-3xl font-semibold tracking-[-0.05em] text-foreground sm:text-5xl lg:text-[3.3rem] lg:leading-[1.05]">
-              Protect the decision you are making today.
+            <h2 className="text-balance text-3xl font-semibold tracking-[-0.05em] text-foreground sm:text-5xl lg:text-[3.1rem] lg:leading-[1.05]">
+              Make your next bet harder to reach.
             </h2>
-            <p className="mx-auto mt-5 max-w-[36rem] text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Put BetClear in place before the next difficult moment arrives.
-              You do not have to rely on willpower every time.
+            <p className="mx-auto mt-4 max-w-[36rem] text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+              Install BetClear before the next urge arrives and block access to{" "}
+              {domainCountLabel} gambling websites across your iPhone.
             </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button
                 href={SITE.startHref}
                 size="lg"
@@ -31,11 +35,17 @@ export function FinalCTA() {
               >
                 {SITE.ctaPrimary}
               </Button>
-              <Button href="/install" variant="secondary" size="lg" showArrow={false}>
-                View installation guide
+              <Button
+                href={SITE.installHref}
+                variant="secondary"
+                size="lg"
+                showArrow={false}
+                onClick={() => trackEvent("installation_guide_opened")}
+              >
+                View Installation Guide
               </Button>
             </div>
-            <p className="mt-4 text-sm text-muted-foreground">{SITE.ctaMicrocopy}</p>
+            <p className="mt-3 text-sm text-muted-foreground">{SITE.ctaMicrocopy}</p>
           </div>
         </Reveal>
       </Container>

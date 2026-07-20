@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "BetClear — Block Gambling Websites on Your iPhone",
+    default: "BetClear — Block Gambling Websites on iPhone",
     template: `%s — ${SITE.name}`,
   },
   description: SITE.longDescription,
@@ -27,8 +27,16 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  keywords: [
+    "gambling website blocker",
+    "block gambling websites",
+    "gambling blocker",
+    "betting site blocker",
+    "stop gambling online",
+    "block betting sites on iPhone",
+  ],
   openGraph: {
-    title: "BetClear — Block Gambling Websites on Your iPhone",
+    title: "BetClear — Block Gambling Websites on iPhone",
     description: SITE.longDescription,
     siteName: SITE.name,
     type: "website",
@@ -38,13 +46,13 @@ export const metadata: Metadata = {
         url: "/images/hero-iphone.png",
         width: 900,
         height: 1200,
-        alt: "BetClear protection on iPhone",
+        alt: "BetClear gambling website blocker on iPhone",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "BetClear — Block Gambling Websites on Your iPhone",
+    title: "BetClear — Block Gambling Websites on iPhone",
     description: SITE.longDescription,
     images: ["/images/hero-iphone.png"],
   },

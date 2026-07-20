@@ -23,9 +23,9 @@ export function FaqJsonLd() {
     description: SITE.longDescription,
     offers: {
       "@type": "Offer",
-      price: "0",
+      price: "29.99",
       priceCurrency: "USD",
-      description: "Free protection download while paid plans are prepared",
+      description: "Annual plan with 7-day free trial; monthly plan available at $3.99",
     },
   };
 
