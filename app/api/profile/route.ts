@@ -1,0 +1,18 @@
+import { NextResponse } from "next/server";
+import { generateMobileConfig } from "@/lib/profile/generate";
+
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
+export async function GET() {
+  const profile = generateMobileConfig();
+
+  return new NextResponse(profile, {
+    status: 200,
+    headers: {
+      "Content-Type": "application/x-apple-aspen-config",
+      "Content-Disposition": 'attachment; filename="BetClear.mobileconfig"',
+      "Cache-Control": "no-store",
+    },
+  });
+}
