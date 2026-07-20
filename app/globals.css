@@ -42,12 +42,22 @@
   --ring: rgba(31, 107, 92, 0.35);
   --soft: #f2f4ef;
   --soft-foreground: #102022;
+  --glow: rgba(31, 107, 92, 0.14);
   color-scheme: light;
 }
 
 @layer base {
   html {
+    color-scheme: light;
     scroll-behavior: smooth;
+  }
+
+  /* Keep native controls on light UI even if the OS is in dark mode. */
+  input,
+  select,
+  textarea,
+  button {
+    color-scheme: light;
   }
 
   body {

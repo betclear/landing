@@ -11,7 +11,7 @@ export function FinalCTA() {
     <section className="relative overflow-hidden py-24 sm:py-32">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(126,214,188,0.14),transparent_65%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--glow),transparent_65%)]"
       />
       <Container className="relative">
         <Reveal>

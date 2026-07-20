@@ -60,7 +60,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="light">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{localStorage.removeItem('betclear-theme');document.documentElement.classList.remove('dark');document.documentElement.classList.add('light');}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
       >

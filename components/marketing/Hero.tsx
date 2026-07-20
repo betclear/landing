@@ -25,8 +25,8 @@ export function Hero() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
       >
-        <div className="absolute left-1/2 top-[-10%] h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(126,214,188,0.16),transparent_68%)]" />
-        <div className="absolute inset-0 marketing-grain opacity-40" />
+        <div className="absolute left-1/2 top-[-10%] h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,var(--glow),transparent_68%)]" />
+        <div className="absolute inset-0 marketing-grain opacity-25" />
       </div>
 
       <Container className="relative grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
