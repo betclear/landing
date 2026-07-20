@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
+import { FirebaseAnalytics } from "@/components/shared/FirebaseAnalytics";
 import { ThemeProvider } from "@/components/shared/ThemeProvider";
 import { SITE } from "@/lib/constants";
 import "./globals.css";
@@ -58,7 +59,10 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <FirebaseAnalytics />
+          {children}
+        </ThemeProvider>
         <Script id="microsoft-clarity" strategy="afterInteractive">
           {`
             (function(c,l,a,r,i,t,y){

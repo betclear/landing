@@ -7,8 +7,9 @@ Premium iPhone gambling-block product. This repo currently includes:
 - Authenticated plain-text blocklist API for the future DNS resolver
 - iOS `.mobileconfig` generator that points devices at `https://dns.betclear.app/dns-query`
 - Local install-test page for downloading the profile
+- Stripe subscription paywall (Checkout, webhooks, profile gating)
 
-**Not implemented yet:** the DNS-over-HTTPS resolver at `dns.betclear.app`, Stripe, user accounts, or subscriptions.
+**Not implemented yet:** the DNS-over-HTTPS resolver at `dns.betclear.app` or user accounts beyond subscription access cookies.
 
 ## Architecture
 
@@ -87,10 +88,39 @@ Documented in `.env.example`:
 | `ADGUARD_BASE_URL` | **Server only** | AdGuard Home base URL, e.g. `https://dns.betclear.app` |
 | `ADGUARD_USERNAME` | **Server only** | AdGuard Home admin username |
 | `ADGUARD_PASSWORD` | **Server only** | AdGuard Home admin password |
+| `NEXT_PUBLIC_SITE_URL` | Public | Canonical site URL for Stripe redirects (no trailing slash) |
+| `STRIPE_SECRET_KEY` | **Server only** | Stripe secret key (`sk_test_...` or `sk_live_...`) |
+| `STRIPE_WEBHOOK_SECRET` | **Server only** | Stripe webhook signing secret (`whsec_...`) |
+| `STRIPE_PRICE_MONTHLY` | **Server only** | Monthly subscription price ID (`price_...`) |
+| `STRIPE_PRICE_ANNUAL` | **Server only** | Annual subscription price ID (`price_...`) |
 
-Never put `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PASSWORD`, or `ADGUARD_*` secrets in client components / `NEXT_PUBLIC_*` vars.
+Never put `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PASSWORD`, `ADGUARD_*`, or `STRIPE_*` secrets in client components / `NEXT_PUBLIC_*` vars.
 
 `GET /api/blocklist` is intentionally public so AdGuard can fetch it. After every successful admin domain create/update/delete, the server calls AdGuard `POST /control/filtering/refresh` so phones pick up the new list without reinstalling the profile. The server also ensures AdGuard `filters_update_interval` is **1 hour** as a fallback.
+
+## Stripe paywall
+
+1. Add `STRIPE_SECRET_KEY` to `.env.local` (test mode recommended while developing).
+2. Create BetClear products/prices and print price IDs:
+
+```bash
+npm run stripe:setup
+```
+
+3. Copy the printed `STRIPE_PRICE_*` values into `.env.local`.
+4. Run the Supabase migration `supabase/migrations/20260720194500_stripe_subscriptions.sql`.
+5. Configure a webhook endpoint in the Stripe Dashboard:
+   - URL: `https://www.betclear.app/api/webhooks/stripe`
+   - Events: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`
+   - Copy the signing secret to `STRIPE_WEBHOOK_SECRET`
+6. Enable the [Customer Portal](https://dashboard.stripe.com/settings/billing/portal) so `/api/billing/portal` works.
+7. Local webhook forwarding:
+
+```bash
+stripe listen --forward-to localhost:3000/api/webhooks/stripe
+```
+
+Flow: `/pricing` → Stripe Checkout → `/install` with access cookie → `/api/profile` download. If Stripe env vars are missing, the paywall stays open for local development.
 
 ## Admin page
 

@@ -1,10 +1,25 @@
 import { NextResponse } from "next/server";
+import { hasPaywallAccess } from "@/lib/stripe/access";
+import { isStripeConfigured } from "@/lib/stripe/client";
 import { generateMobileConfig } from "@/lib/profile/generate";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export async function GET() {
+  if (isStripeConfigured()) {
+    const allowed = await hasPaywallAccess();
+    if (!allowed) {
+      return NextResponse.json(
+        {
+          error: "Active subscription required",
+          checkoutUrl: "/pricing",
+        },
+        { status: 402 },
+      );
+    }
+  }
+
   const profile = generateMobileConfig();
 
   return new NextResponse(profile, {

@@ -6,15 +6,19 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "stripe:setup": "node scripts/setup-stripe.mjs",
+    "db:migrate": "node scripts/run-migrations.mjs"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
     "@supabase/supabase-js": "^2.110.7",
+    "firebase": "^12.16.0",
     "motion": "^12.42.2",
     "next": "15.5.20",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "stripe": "^22.3.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -24,6 +28,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.20",
+    "pg": "^8.22.0",
+    "supabase": "^2.109.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
