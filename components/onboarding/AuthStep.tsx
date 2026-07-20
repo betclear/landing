@@ -19,7 +19,7 @@ type Mode = "choose" | "email";
 export function AuthStep() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { state, hydrated, clear } = useOnboarding();
+  const { state, hydrated } = useOnboarding();
   const [mode, setMode] = useState<Mode>("choose");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -153,8 +153,12 @@ export function AuthStep() {
         throw new Error(data.error ?? "checkout_failed");
       }
 
-      clear();
-      window.location.href = data.url;
+      // Keep onboarding answers in localStorage so cancelling Stripe returns
+      // the user to a populated flow; they're cleared only after a verified
+      // payment on /payment/success. Use replace() so the /auth step is taken
+      // out of history — pressing back on Stripe returns to the packages step
+      // instead of re-triggering the auth/checkout redirect.
+      window.location.replace(data.url);
     } catch (cause) {
       setBusy(false);
       const code =

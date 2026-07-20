@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { trackEvent } from "@/lib/analytics";
+import { clearOnboardingState } from "@/lib/onboarding/storage";
 import { SITE } from "@/lib/constants";
 import Link from "next/link";
 
@@ -43,6 +44,8 @@ export function PaymentSuccess() {
 
         if (!cancelled) {
           setStatus("ready");
+          // Payment is verified: safe to clear the local onboarding answers now.
+          clearOnboardingState();
           trackEvent("stripe_checkout_completed", { step: "payment-success" });
         }
       } catch {

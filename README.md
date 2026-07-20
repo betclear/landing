@@ -73,6 +73,12 @@ Push all files in `supabase/migrations/`:
 npm run db:push
 ```
 
+If Supabase reports a migration that must be inserted before the latest remote migration, use:
+
+```bash
+supabase db push --include-all
+```
+
 ### Option B: Direct Postgres (`npm run db:migrate`)
 
 Add your database password to `.env` or `.env.local`:
