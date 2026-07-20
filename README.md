@@ -287,14 +287,14 @@ Expected: HTTP 200, `Content-Type: text/plain; charset=utf-8`, rules like:
 
 The profile configures managed DNS-over-HTTPS to `https://dns.betclear.app/dns-query`. That endpoint is **not implemented yet**. Installing the profile today only validates the install path.
 
-`GET /api/profile` generates the same DNS payload as before, then **CMS/PKCS#7-signs** it with OpenSSL (DER, non-detached) before returning:
+`GET /api/profile` generates the same DNS payload as before, then **CMS/PKCS#7-signs** it in-process with WebCrypto/pkijs (DER, non-detached) before returning:
 
 - `Content-Type: application/x-apple-aspen-config`
 - `Content-Disposition: attachment; filename="BetClear.mobileconfig"`
 
-The signature is verified with OpenSSL before the response is sent. If credentials are missing or signing/verification fails, the API returns JSON (`503` / `500`) instead of an unsigned profile. The private key is never logged or returned.
+The signature is verified before the response is sent. If credentials are missing or signing/verification fails, the API returns JSON (`503` / `500`) instead of an unsigned profile. The private key is never logged or returned.
 
-This route uses the **Node.js** runtime (not Edge) so the OpenSSL CLI can be invoked. Do not move `/api/profile` to Supabase Edge Functions or the Next.js Edge runtime without replacing OpenSSL with a compatible signing service.
+This route uses the **Node.js** runtime (not Edge). Signing does not depend on the system OpenSSL CLI, so it works on Vercel serverless.
 
 ### Profile signing setup
 
