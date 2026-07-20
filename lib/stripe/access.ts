@@ -174,8 +174,3 @@ export async function grantAccessFromCheckoutSession(
 
   return createAccessToken(customerId);
 }
-
-export async function setAccessCookie(token: string): Promise<void> {
-  const jar = await cookies();
-  jar.set(ACCESS_COOKIE, token, accessCookieOptions());
-}
