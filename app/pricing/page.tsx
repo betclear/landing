@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/ui/Container";
+import { AccountActions } from "@/components/auth/AccountActions";
 import { PricingCards } from "@/components/pricing/PricingCards";
+import { requireAuthUser } from "@/lib/auth/user";
 import { BILLING_PLANS } from "@/lib/stripe/config";
+import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -11,7 +14,11 @@ export const metadata: Metadata = {
     "Choose monthly or annual BetClear protection for your iPhone.",
 };
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const user = isSupabaseAuthConfigured()
+    ? await requireAuthUser("/pricing")
+    : null;
+
   return (
     <>
       <Header />
@@ -30,13 +37,15 @@ export default function PricingPage() {
             </p>
           </div>
 
+          {user?.email ? <AccountActions email={user.email} /> : null}
+
           <div className="mx-auto mt-12 max-w-4xl">
             <PricingCards plans={BILLING_PLANS} />
           </div>
 
           <p className="mx-auto mt-10 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground">
-            Already subscribed? Install your profile from the install page after
-            checkout, or use Manage billing on that page to update payment
+            Already subscribed? Open the install page in Safari and sign in with
+            the same email, or use Manage billing there to update payment
             details.
           </p>
         </Container>

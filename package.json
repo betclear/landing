@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "stripe:setup": "node scripts/setup-stripe.mjs",
+    "db:push": "supabase db push",
     "db:migrate": "node scripts/run-migrations.mjs",
     "blocklist:update": "tsx scripts/update-blocklist.ts",
     "blocklist:check": "tsx scripts/check-blocklist.ts",
@@ -15,6 +16,7 @@
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
+    "@supabase/ssr": "^0.12.3",
     "@supabase/supabase-js": "^2.110.7",
     "firebase": "^12.16.0",
     "motion": "^12.42.2",

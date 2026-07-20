@@ -4,8 +4,10 @@ import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { InstallActions } from "@/components/install/InstallActions";
+import { getAuthUser } from "@/lib/auth/user";
 import { hasPaywallAccess, profileDownloadPath } from "@/lib/stripe/access";
 import { isStripeConfigured } from "@/lib/stripe/client";
+import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
 
 export const metadata: Metadata = {
   title: "Install Protection",
@@ -20,6 +22,7 @@ type PageProps = {
 export default async function InstallPage({ searchParams }: PageProps) {
   const { access } = await searchParams;
   const paywallEnabled = isStripeConfigured();
+  const authUser = await getAuthUser();
   const hasAccess = paywallEnabled ? await hasPaywallAccess(access) : true;
   const profileUrl = profileDownloadPath(access);
 
@@ -65,11 +68,26 @@ export default async function InstallPage({ searchParams }: PageProps) {
                 protection profile.
               </p>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                If you just subscribed in Chrome or another browser, open your
-                payment confirmation link in Safari on this iPhone. iOS does not
-                share subscription access between browsers.
+                {isSupabaseAuthConfigured() ? (
+                  <>
+                    Sign in with the email you used at checkout. On iPhone, open
+                    the sign-in link in Safari so your subscription and profile
+                    download use the same browser.
+                  </>
+                ) : (
+                  <>
+                    If you just subscribed in Chrome or another browser, open your
+                    payment confirmation link in Safari on this iPhone. iOS does
+                    not share subscription access between browsers.
+                  </>
+                )}
               </p>
               <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                {isSupabaseAuthConfigured() ? (
+                  <Button href="/login?next=/install" size="lg">
+                    Sign in
+                  </Button>
+                ) : null}
                 <Button href="/pricing" size="lg">
                   View pricing
                 </Button>
@@ -77,6 +95,12 @@ export default async function InstallPage({ searchParams }: PageProps) {
                   Subscribe now
                 </Button>
               </div>
+              {authUser?.email ? (
+                <p className="mt-4 text-sm text-muted-foreground">
+                  Signed in as {authUser.email}, but no active subscription was
+                  found for this account.
+                </p>
+              ) : null}
             </div>
           )}
 

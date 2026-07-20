@@ -23,7 +23,16 @@ export function PricingCards({ plans }: PricingCardsProps) {
         body: JSON.stringify({ plan: planId }),
       });
 
-      const data = (await response.json()) as { url?: string; error?: string };
+      const data = (await response.json()) as {
+        url?: string;
+        error?: string;
+        loginUrl?: string;
+      };
+
+      if (response.status === 401 && data.loginUrl) {
+        window.location.href = data.loginUrl;
+        return;
+      }
 
       if (!response.ok || !data.url) {
         throw new Error(data.error ?? "Checkout failed");

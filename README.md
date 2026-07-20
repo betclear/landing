@@ -9,7 +9,7 @@ Premium iPhone gambling-block product. This repo currently includes:
 - Local install-test page for downloading the profile
 - Stripe subscription paywall (Checkout, webhooks, profile gating)
 
-**Not implemented yet:** the DNS-over-HTTPS resolver at `dns.betclear.app` or user accounts beyond subscription access cookies.
+**Not implemented yet:** the DNS-over-HTTPS resolver at `dns.betclear.app`.
 
 ## Architecture
 
@@ -53,26 +53,54 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Supabase setup
 
 1. Create a Supabase project.
-2. Copy the project URL, anon key, and **service role** key into `.env.local`.
-3. Run the migration in the Supabase SQL Editor, or with the Supabase CLI:
+2. Copy the project URL, anon key, and **service role** key into `.env.local` (see `.env.example`).
+3. Apply migrations using **one** of the options below.
 
-### Option A: SQL Editor
+### Option A: Supabase CLI (recommended)
 
-Open **SQL → New query**, paste the contents of:
-
-`supabase/migrations/20260720120000_blocked_domains.sql`
-
-Run it.
-
-### Option B: Supabase CLI
+Link the repo to your remote project once:
 
 ```bash
-npx supabase db push
-# or
-npx supabase migration up
+npx supabase login
+npx supabase link --project-ref <your-project-ref>
 ```
 
-The migration creates `blocked_domains` with an `updated_at` trigger and enables RLS with no public policies (server uses the service role key).
+`<your-project-ref>` is the subdomain from `NEXT_PUBLIC_SUPABASE_URL`, e.g. `sznbidzvquwinoplbumv`.
+
+Push all files in `supabase/migrations/`:
+
+```bash
+npm run db:push
+```
+
+### Option B: Direct Postgres (`npm run db:migrate`)
+
+Add your database password to `.env` or `.env.local`:
+
+```bash
+SUPABASE_DB_PASSWORD=...
+NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
+```
+
+Or set a full connection string instead:
+
+```bash
+DATABASE_URL=postgresql://postgres:...@db.<project-ref>.supabase.co:5432/postgres
+```
+
+Then run:
+
+```bash
+npm run db:migrate
+```
+
+This applies any migration not yet recorded in `public.schema_migrations`.
+
+### Option C: SQL Editor
+
+Paste and run each file under `supabase/migrations/` in order in the Supabase SQL Editor.
+
+Migrations create `blocked_domains`, `subscriptions` (Stripe), and link subscriptions to auth users. RLS is enabled with no public policies; the app uses the service role key server-side.
 
 ## Environment variables
 
@@ -81,8 +109,10 @@ Documented in `.env.example`:
 | Variable | Exposure | Purpose |
 |---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Public | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public | Reserved for future client use; admin APIs use the service role |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public | Supabase Auth (browser) |
 | `SUPABASE_SERVICE_ROLE_KEY` | **Server only** | Admin + blocklist database access |
+| `SUPABASE_DB_PASSWORD` | **Server only** | Postgres password for `npm run db:migrate` |
+| `DATABASE_URL` | **Server only** | Optional full Postgres URL (overrides `SUPABASE_DB_PASSWORD`) |
 | `ADMIN_PASSWORD` | **Server only** | Temporary password for `/admin` |
 | `BLOCKLIST_API_TOKEN` | **Server only** | Reserved / unused by the public AdGuard blocklist endpoint |
 | `ADGUARD_BASE_URL` | **Server only** | AdGuard Home base URL, e.g. `https://dns.betclear.app` |
@@ -105,6 +135,27 @@ Supabase is **not** meant to store the full pipeline list (that would make the a
 
 After every successful admin domain create/update/delete, the server calls AdGuard `POST /control/filtering/refresh` so phones pick up overrides without reinstalling the profile. The server also ensures AdGuard `filters_update_interval` is **1 hour** as a fallback.
 
+## Auth (Supabase)
+
+End-user sign-in uses Supabase Auth before checkout: **Google** or **email magic link**.
+
+1. Ensure `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set.
+2. In Supabase Dashboard → Authentication → URL Configuration, add redirect URLs:
+   - `http://localhost:3000/auth/callback` (local)
+   - `https://www.betclear.app/auth/callback` (production)
+3. Enable the **Email** provider (magic link / OTP).
+4. Enable the **Google** provider using OAuth credentials from your Firebase Google Cloud project:
+   - Firebase Console → Project settings → Your apps → Web app (or Google Cloud Console → APIs & Services → Credentials)
+   - Copy the OAuth 2.0 **Client ID** and **Client secret**
+   - Supabase Dashboard → Authentication → Providers → Google → paste both
+   - In Google Cloud Console, add authorized redirect URI:
+     - `https://<project-ref>.supabase.co/auth/v1/callback` (from Supabase Google provider settings)
+5. Apply migrations: `npm run db:push` (CLI) or `npm run db:migrate` (see Supabase setup).
+
+Flow: `/login` → Google or email → `/auth/callback` → `/pricing` → Stripe Checkout → install.
+
+On iPhone, users can sign in again in Safari with the same Google account or email to access their subscription without relying on cross-browser cookies.
+
 ## Stripe paywall
 
 1. Add `STRIPE_SECRET_KEY` to `.env.local` (test mode recommended while developing).
@@ -115,7 +166,7 @@ npm run stripe:setup
 ```
 
 3. Copy the printed `STRIPE_PRICE_*` values into `.env.local`.
-4. Run the Supabase migration `supabase/migrations/20260720194500_stripe_subscriptions.sql`.
+4. Apply Supabase migrations (`npm run db:push` or `npm run db:migrate`).
 5. Configure a webhook endpoint in the Stripe Dashboard:
    - URL: `https://www.betclear.app/api/webhooks/stripe`
    - Events: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`
@@ -127,7 +178,7 @@ npm run stripe:setup
 stripe listen --forward-to localhost:3000/api/webhooks/stripe
 ```
 
-Flow: `/pricing` → Stripe Checkout → `/install/complete?session_id=...` → copy/open `/api/checkout/success?session_id=...` in Safari on iPhone → `/install` with access cookie → `/api/profile` download. iOS browsers do not share cookies, so Chrome checkout requires the Safari handoff link. If Stripe env vars are missing, the paywall stays open for local development.
+Flow: `/login` → `/pricing` → Stripe Checkout → `/install/complete?session_id=...` → copy/open `/api/checkout/success?session_id=...` in Safari on iPhone → `/install?access=token` → `/api/profile` download. Signed-in users can also open `/install` in Safari and sign in with the same email. If Stripe env vars are missing, the paywall stays open for local development.
 
 ## Admin page
 

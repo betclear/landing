@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import { verifyAccessToken, ACCESS_COOKIE } from "@/lib/stripe/access";
+import { getStripeCustomerIdForAccess } from "@/lib/stripe/access";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/client";
 import { getSiteUrl } from "@/lib/stripe/config";
-import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -15,9 +14,8 @@ export async function POST() {
     );
   }
 
-  const jar = await cookies();
-  const access = verifyAccessToken(jar.get(ACCESS_COOKIE)?.value);
-  if (!access) {
+  const customerId = await getStripeCustomerIdForAccess();
+  if (!customerId) {
     return NextResponse.json(
       { error: "Sign in with an active subscription first." },
       { status: 401 },
@@ -27,7 +25,7 @@ export async function POST() {
   try {
     const stripe = getStripe();
     const portalSession = await stripe.billingPortal.sessions.create({
-      customer: access.customerId,
+      customer: customerId,
       return_url: `${getSiteUrl()}/install`,
     });
 

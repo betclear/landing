@@ -1,10 +1,17 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
+import { getAuthUser } from "@/lib/auth/user";
 import { createServiceClient } from "@/lib/supabase/server";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/client";
 
 export const ACCESS_COOKIE = "betclear_access";
 const ACCESS_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
+
+type SubscriptionRecord = {
+  stripe_customer_id: string;
+  status: string;
+  current_period_end: string | null;
+};
 
 type AccessPayload = {
   customerId: string;
@@ -78,6 +85,63 @@ export function accessCookieOptions(maxAgeSeconds = ACCESS_TTL_MS / 1000) {
 
 const ACTIVE_STATUSES = new Set(["active", "trialing"]);
 
+function isActiveSubscription(record: {
+  status: string;
+  current_period_end: string | null;
+}): boolean {
+  if (!ACTIVE_STATUSES.has(record.status)) return false;
+
+  if (record.current_period_end) {
+    return new Date(record.current_period_end).getTime() > Date.now();
+  }
+
+  return true;
+}
+
+export async function getSubscriptionForUser(
+  userId: string,
+  email?: string | null,
+): Promise<SubscriptionRecord | null> {
+  const supabase = createServiceClient();
+
+  const { data: byUser, error: byUserError } = await supabase
+    .from("subscriptions")
+    .select("stripe_customer_id, status, current_period_end")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (byUserError) {
+    console.error("subscription lookup by user failed", byUserError);
+    return null;
+  }
+
+  if (byUser) return byUser;
+
+  if (!email) return null;
+
+  const { data: byEmail, error: byEmailError } = await supabase
+    .from("subscriptions")
+    .select("stripe_customer_id, status, current_period_end")
+    .eq("email", email)
+    .maybeSingle();
+
+  if (byEmailError) {
+    console.error("subscription lookup by email failed", byEmailError);
+    return null;
+  }
+
+  return byEmail;
+}
+
+export async function isUserSubscribed(
+  userId: string,
+  email?: string | null,
+): Promise<boolean> {
+  const record = await getSubscriptionForUser(userId, email);
+  if (!record) return false;
+  return isActiveSubscription(record);
+}
+
 export async function isCustomerSubscribed(
   customerId: string,
 ): Promise<boolean> {
@@ -94,19 +158,36 @@ export async function isCustomerSubscribed(
   }
 
   if (!data) return false;
-  if (!ACTIVE_STATUSES.has(data.status)) return false;
+  return isActiveSubscription(data);
+}
 
-  if (data.current_period_end) {
-    return new Date(data.current_period_end).getTime() > Date.now();
+export async function getStripeCustomerIdForAccess(): Promise<string | null> {
+  const user = await getAuthUser();
+  if (user) {
+    const record = await getSubscriptionForUser(user.id, user.email);
+    if (record && isActiveSubscription(record)) {
+      return record.stripe_customer_id;
+    }
   }
 
-  return true;
+  const jar = await cookies();
+  const access = verifyAccessToken(jar.get(ACCESS_COOKIE)?.value);
+  if (access && (await isCustomerSubscribed(access.customerId))) {
+    return access.customerId;
+  }
+
+  return null;
 }
 
 export async function hasPaywallAccess(
   accessToken?: string | null,
 ): Promise<boolean> {
   if (!isStripeConfigured()) return true;
+
+  const user = await getAuthUser();
+  if (user && (await isUserSubscribed(user.id, user.email))) {
+    return true;
+  }
 
   const jar = await cookies();
   const candidates = [accessToken, jar.get(ACCESS_COOKIE)?.value];

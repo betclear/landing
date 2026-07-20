@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPriceId, getSiteUrl, type BillingPlan } from "@/lib/stripe/config";
+import { getAuthUser } from "@/lib/auth/user";
+import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/client";
 
 export const dynamic = "force-dynamic";
@@ -11,6 +13,16 @@ export async function POST(request: Request) {
       { error: "Stripe is not configured yet. Run npm run stripe:setup." },
       { status: 503 },
     );
+  }
+
+  if (isSupabaseAuthConfigured()) {
+    const user = await getAuthUser();
+    if (!user) {
+      return NextResponse.json(
+        { error: "Sign in required before checkout.", loginUrl: "/login?next=/pricing" },
+        { status: 401 },
+      );
+    }
   }
 
   try {
@@ -31,6 +43,7 @@ export async function POST(request: Request) {
 
     const stripe = getStripe();
     const siteUrl = getSiteUrl();
+    const user = await getAuthUser();
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -39,9 +52,12 @@ export async function POST(request: Request) {
       cancel_url: `${siteUrl}/pricing`,
       allow_promotion_codes: true,
       billing_address_collection: "auto",
+      customer_email: user?.email ?? undefined,
+      client_reference_id: user?.id,
       metadata: {
         app: "betclear",
         plan,
+        ...(user ? { user_id: user.id } : {}),
       },
     });
 

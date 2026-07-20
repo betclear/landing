@@ -6,6 +6,7 @@ type SubscriptionRow = {
   stripe_customer_id: string;
   stripe_subscription_id: string | null;
   email: string | null;
+  user_id: string | null;
   status: string;
   price_id: string | null;
   plan: BillingPlan | null;
@@ -38,6 +39,30 @@ async function upsertSubscription(row: SubscriptionRow) {
   }
 }
 
+async function updateSubscriptionByCustomerId(
+  customerId: string,
+  patch: Partial<
+    Pick<
+      SubscriptionRow,
+      | "stripe_subscription_id"
+      | "status"
+      | "price_id"
+      | "plan"
+      | "current_period_end"
+    >
+  >,
+) {
+  const supabase = createServiceClient();
+  const { error } = await supabase
+    .from("subscriptions")
+    .update(patch)
+    .eq("stripe_customer_id", customerId);
+
+  if (error) {
+    throw new Error(`Failed to update subscription: ${error.message}`);
+  }
+}
+
 export async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session,
 ) {
@@ -58,11 +83,14 @@ export async function handleCheckoutSessionCompleted(
   const stripe = (await import("@/lib/stripe/client")).getStripe();
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
   const priceId = subscription.items.data[0]?.price.id ?? null;
+  const email = session.customer_details?.email ?? session.customer_email ?? null;
+  const userId = session.metadata?.user_id ?? null;
 
   await upsertSubscription({
     stripe_customer_id: customerId,
     stripe_subscription_id: subscription.id,
-    email: session.customer_details?.email ?? session.customer_email ?? null,
+    email,
+    user_id: userId,
     status: subscription.status,
     price_id: priceId,
     plan: planFromPriceId(priceId),
@@ -80,10 +108,8 @@ export async function handleSubscriptionUpdated(
 
   const priceId = subscription.items.data[0]?.price.id ?? null;
 
-  await upsertSubscription({
-    stripe_customer_id: customerId,
+  await updateSubscriptionByCustomerId(customerId, {
     stripe_subscription_id: subscription.id,
-    email: null,
     status: subscription.status,
     price_id: priceId,
     plan: planFromPriceId(priceId),
@@ -99,10 +125,8 @@ export async function handleSubscriptionDeleted(
       ? subscription.customer
       : subscription.customer.id;
 
-  await upsertSubscription({
-    stripe_customer_id: customerId,
+  await updateSubscriptionByCustomerId(customerId, {
     stripe_subscription_id: subscription.id,
-    email: null,
     status: "canceled",
     price_id: subscription.items.data[0]?.price.id ?? null,
     plan: planFromPriceId(subscription.items.data[0]?.price.id),
