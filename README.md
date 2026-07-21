@@ -124,15 +124,15 @@ Migrations create `blocked_domains`, `subscriptions` (Stripe), `user_recovery_pr
    - Monthly: `$3.99` / month → put the Price ID in `STRIPE_PRICE_MONTHLY`
 3. Add `STRIPE_SECRET_KEY` and `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`.
 4. Set `NEXT_PUBLIC_APP_URL` (and optionally `NEXT_PUBLIC_SITE_URL`) to your deployed origin.
-5. Create webhook endpoints for:
-   - `POST /api/webhooks/stripe` (paywall / subscriptions table)
-   - `POST /api/stripe/webhook` (onboarding recovery profile sync)
+5. Create a webhook endpoint for:
+   - `POST /api/webhooks/stripe` (paywall / subscriptions table + recovery profile sync)
 
    Subscribe at least to:
    - `checkout.session.completed`
    - `customer.subscription.created`
    - `customer.subscription.updated`
    - `customer.subscription.deleted`
+   - `invoice.paid`
    - `invoice.payment_failed`
 
 6. Put the signing secret in `STRIPE_WEBHOOK_SECRET`.

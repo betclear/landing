@@ -3,7 +3,9 @@ import Stripe from "stripe";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/client";
 import {
   handleCheckoutSessionCompleted,
+  handleInvoicePaid,
   handleInvoicePaymentFailed,
+  handleSubscriptionCreated,
   handleSubscriptionDeleted,
   handleSubscriptionUpdated,
 } from "@/lib/stripe/webhooks";
@@ -49,11 +51,17 @@ export async function POST(request: Request) {
           event.data.object as Stripe.Checkout.Session,
         );
         break;
+      case "customer.subscription.created":
+        await handleSubscriptionCreated(event.data.object as Stripe.Subscription);
+        break;
       case "customer.subscription.updated":
         await handleSubscriptionUpdated(event.data.object as Stripe.Subscription);
         break;
       case "customer.subscription.deleted":
         await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
+        break;
+      case "invoice.paid":
+        await handleInvoicePaid(event.data.object as Stripe.Invoice);
         break;
       case "invoice.payment_failed":
         await handleInvoicePaymentFailed(event.data.object as Stripe.Invoice);

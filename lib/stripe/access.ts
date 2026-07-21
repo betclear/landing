@@ -8,6 +8,7 @@ import {
 } from "@/lib/onboarding/profile";
 import { createServiceClient } from "@/lib/supabase/server";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/client";
+import { isPremiumStatus } from "@/lib/stripe/webhooks";
 
 export const ACCESS_COOKIE = "betclear_access";
 const ACCESS_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
@@ -166,6 +167,56 @@ export async function isCustomerSubscribed(
   return isActiveSubscription(data);
 }
 
+export async function isUserPremium(
+  userId: string,
+  email?: string | null,
+): Promise<boolean> {
+  const supabase = createServiceClient();
+
+  const { data: byUser, error: byUserError } = await supabase
+    .from("subscriptions")
+    .select("is_premium")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (byUserError) {
+    console.error("premium lookup by user failed", byUserError);
+  } else if (byUser) {
+    return byUser.is_premium === true;
+  }
+
+  if (!email) return false;
+
+  const { data: byEmail, error: byEmailError } = await supabase
+    .from("subscriptions")
+    .select("is_premium")
+    .eq("email", email)
+    .maybeSingle();
+
+  if (byEmailError) {
+    console.error("premium lookup by email failed", byEmailError);
+    return false;
+  }
+
+  return byEmail?.is_premium === true;
+}
+
+export async function isCustomerPremium(customerId: string): Promise<boolean> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("subscriptions")
+    .select("is_premium")
+    .eq("stripe_customer_id", customerId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("premium lookup by customer failed", error);
+    return false;
+  }
+
+  return data?.is_premium === true;
+}
+
 export async function getStripeCustomerIdForAccess(): Promise<string | null> {
   const user = await getAuthUser();
   if (user) {
@@ -191,7 +242,7 @@ export async function hasPaywallAccess(
 
   const user = await getAuthUser();
   if (user) {
-    if (await isUserSubscribed(user.id, user.email)) {
+    if (await isUserPremium(user.id, user.email)) {
       return true;
     }
 
@@ -207,7 +258,7 @@ export async function hasPaywallAccess(
   for (const raw of candidates) {
     const access = verifyAccessToken(raw ?? undefined);
     if (!access) continue;
-    if (await isCustomerSubscribed(access.customerId)) {
+    if (await isCustomerPremium(access.customerId)) {
       return true;
     }
 
@@ -255,12 +306,12 @@ async function isCustomerSubscribedFromStripeSession(
   if (!subscription) return false;
 
   if (typeof subscription === "object") {
-    return ACTIVE_STATUSES.has(subscription.status);
+    return isPremiumStatus(subscription.status);
   }
 
   const stripe = getStripe();
   const sub = await stripe.subscriptions.retrieve(subscription);
-  return ACTIVE_STATUSES.has(sub.status);
+  return isPremiumStatus(sub.status);
 }
 
 export async function grantAccessFromCheckoutSession(

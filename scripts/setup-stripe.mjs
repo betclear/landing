@@ -7,8 +7,10 @@ const WEBHOOK_URL =
 
 const WEBHOOK_EVENTS = [
   "checkout.session.completed",
+  "customer.subscription.created",
   "customer.subscription.updated",
   "customer.subscription.deleted",
+  "invoice.paid",
   "invoice.payment_failed",
 ];
 

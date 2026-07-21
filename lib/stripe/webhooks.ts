@@ -11,13 +11,41 @@ type SubscriptionRow = {
   price_id: string | null;
   plan: BillingPlan | null;
   current_period_end: string | null;
+  is_premium: boolean;
 };
+
+/** Subscription states that grant premium access (active, trial, and grace). */
+const PREMIUM_STATUSES = new Set(["active", "trialing", "past_due"]);
+
+export function isPremiumStatus(status: string | null | undefined): boolean {
+  if (!status) return false;
+  return PREMIUM_STATUSES.has(status);
+}
 
 function planFromPriceId(priceId: string | null | undefined): BillingPlan | null {
   if (!priceId) return null;
   if (priceId === process.env.STRIPE_PRICE_MONTHLY) return "monthly";
   if (priceId === process.env.STRIPE_PRICE_ANNUAL) return "annual";
   return null;
+}
+
+/**
+ * Best-effort mirror of the subscription status onto the auth-linked recovery
+ * profile so onboarding UI and the access fallback do not read stale state.
+ */
+async function mirrorStatusToRecoveryProfile(
+  customerId: string,
+  status: string,
+) {
+  const supabase = createServiceClient();
+  const { error } = await supabase
+    .from("user_recovery_profiles")
+    .update({ subscription_status: status })
+    .eq("stripe_customer_id", customerId);
+
+  if (error) {
+    console.error("failed to mirror subscription status to profile", error);
+  }
 }
 
 function subscriptionPeriodEnd(
@@ -48,6 +76,7 @@ async function updateSubscriptionByCustomerId(
       | "price_id"
       | "plan"
       | "current_period_end"
+      | "is_premium"
     >
   >,
 ) {
@@ -59,6 +88,10 @@ async function updateSubscriptionByCustomerId(
 
   if (error) {
     throw new Error(`Failed to update subscription: ${error.message}`);
+  }
+
+  if (patch.status) {
+    await mirrorStatusToRecoveryProfile(customerId, patch.status);
   }
 }
 
@@ -94,7 +127,10 @@ export async function handleCheckoutSessionCompleted(
     price_id: priceId,
     plan: planFromPriceId(priceId),
     current_period_end: subscriptionPeriodEnd(subscription),
+    is_premium: isPremiumStatus(subscription.status),
   });
+
+  await mirrorStatusToRecoveryProfile(customerId, subscription.status);
 }
 
 export async function handleSubscriptionUpdated(
@@ -113,7 +149,14 @@ export async function handleSubscriptionUpdated(
     price_id: priceId,
     plan: planFromPriceId(priceId),
     current_period_end: subscriptionPeriodEnd(subscription),
+    is_premium: isPremiumStatus(subscription.status),
   });
+}
+
+export async function handleSubscriptionCreated(
+  subscription: Stripe.Subscription,
+) {
+  await handleSubscriptionUpdated(subscription);
 }
 
 export async function handleSubscriptionDeleted(
@@ -130,6 +173,7 @@ export async function handleSubscriptionDeleted(
     price_id: subscription.items.data[0]?.price.id ?? null,
     plan: planFromPriceId(subscription.items.data[0]?.price.id),
     current_period_end: subscriptionPeriodEnd(subscription),
+    is_premium: false,
   });
 }
 
@@ -157,6 +201,16 @@ function getInvoiceSubscriptionId(invoice: Stripe.Invoice): string | null {
 }
 
 export async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
+  const subscriptionId = getInvoiceSubscriptionId(invoice);
+
+  if (!subscriptionId) return;
+
+  const stripe = (await import("@/lib/stripe/client")).getStripe();
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+  await handleSubscriptionUpdated(subscription);
+}
+
+export async function handleInvoicePaid(invoice: Stripe.Invoice) {
   const subscriptionId = getInvoiceSubscriptionId(invoice);
 
   if (!subscriptionId) return;
