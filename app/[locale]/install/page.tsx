@@ -82,13 +82,21 @@ export default async function InstallPage({ params, searchParams }: PageProps) {
               <p className="text-sm leading-relaxed text-muted-foreground">
                 {dict.install.subscribeRequired}
               </p>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                {isSupabaseAuthConfigured()
-                  ? dict.install.signInSafariNote
-                  : dict.install.otherBrowserNote}
-              </p>
+              {authUser?.email ? (
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  {interpolate(dict.install.signedInNoSub, {
+                    email: authUser.email,
+                  })}
+                </p>
+              ) : (
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  {isSupabaseAuthConfigured()
+                    ? dict.install.signInSafariNote
+                    : dict.install.otherBrowserNote}
+                </p>
+              )}
               <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                {isSupabaseAuthConfigured() ? (
+                {!authUser && isSupabaseAuthConfigured() ? (
                   <Button
                     href={`${localizePath(locale, "/login")}?next=${encodeURIComponent(localizePath(locale, "/install"))}`}
                     size="lg"
@@ -97,27 +105,13 @@ export default async function InstallPage({ params, searchParams }: PageProps) {
                   </Button>
                 ) : null}
                 <Button
-                  href={localizePath(locale, "/onboarding/pricing")}
+                  href={localizePath(locale, "/pricing")}
                   size="lg"
-                  variant="secondary"
+                  variant={authUser ? "primary" : "secondary"}
                 >
                   {dict.install.choosePlan}
                 </Button>
-                <Button
-                  href={localizePath(locale, "/pricing")}
-                  variant="ghost"
-                  size="lg"
-                >
-                  {dict.install.viewPricing}
-                </Button>
               </div>
-              {authUser?.email ? (
-                <p className="mt-4 text-sm text-muted-foreground">
-                  {interpolate(dict.install.signedInNoSub, {
-                    email: authUser.email,
-                  })}
-                </p>
-              ) : null}
             </div>
           )}
         </Container>
