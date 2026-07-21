@@ -31,8 +31,11 @@ export default async function PaymentSuccessPage({ params }: PageProps) {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-dvh items-center justify-center bg-background text-sm text-muted-foreground">
-          {dict.paymentSuccess.loadingTitle}
+        <div className="flex min-h-dvh items-center justify-center bg-background">
+          <div
+            className="h-8 w-8 animate-spin rounded-full border-2 border-muted-foreground/25 border-t-primary"
+            aria-hidden="true"
+          />
         </div>
       }
     >

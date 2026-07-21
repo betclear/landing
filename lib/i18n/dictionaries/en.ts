@@ -511,8 +511,8 @@ export const en = {
     eyebrow: "iPhone setup",
     title: "Install BetClear Protection",
     description:
-      "This downloads an Apple configuration profile that points your iPhone at encrypted DNS on dns.betclear.app. Open this page in Safari on your iPhone, then tap the button below.",
-    downloadCta: "Download Profile",
+      "Open this page in Safari on your iPhone, then tap Protect me to download the profile and see step-by-step install instructions.",
+    downloadCta: "Protect me",
     openDirectly: "Or open directly:",
     subscribeRequired:
       "An active subscription is required before you can download the protection profile.",
@@ -538,7 +538,7 @@ export const en = {
       {
         title: "Download",
         detail:
-          "Tap Download Profile in Safari. Allow the configuration profile download when prompted.",
+          "Tap Protect me in Safari. Allow the configuration profile download when prompted.",
       },
       {
         title: "Open Settings",
@@ -652,7 +652,7 @@ export const en = {
       {
         title: "Install",
         detail:
-          "You will land on the install page. Tap Download Profile and follow the iOS prompts.",
+          "You will land on the install page. Tap Protect me and follow the iOS prompts.",
       },
     ],
   },

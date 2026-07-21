@@ -70,6 +70,12 @@ export default async function InstallPage({ params, searchParams }: PageProps) {
               />
 
               {paywallEnabled ? <InstallActions /> : null}
+
+              <div className="mt-10 rounded-[1.5rem] bg-card p-5 ring-1 ring-border">
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {dict.install.privacyNote}
+                </p>
+              </div>
             </>
           ) : (
             <div className="mt-8 rounded-[var(--radius-xl)] border border-border bg-surface p-6">
@@ -114,24 +120,6 @@ export default async function InstallPage({ params, searchParams }: PageProps) {
               ) : null}
             </div>
           )}
-
-          <ol className="mt-12 space-y-5 text-[15px] leading-relaxed text-muted-foreground">
-            {dict.install.steps.map((step, index) => (
-              <li key={step.title}>
-                <span className="font-medium text-foreground">
-                  {index + 1}. {step.title}
-                </span>
-                {" — "}
-                {step.detail}
-              </li>
-            ))}
-          </ol>
-
-          <div className="mt-10 rounded-[1.5rem] bg-card p-5 ring-1 ring-border">
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {dict.install.privacyNote}
-            </p>
-          </div>
         </Container>
       </main>
       <Footer />

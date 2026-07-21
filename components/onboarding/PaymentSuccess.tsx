@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { useLocale } from "@/components/i18n/LocaleProvider";
@@ -10,12 +10,13 @@ import { clearOnboardingState } from "@/lib/onboarding/storage";
 import { SITE } from "@/lib/constants";
 import Link from "next/link";
 
-type Status = "loading" | "ready" | "error";
+type Status = "loading" | "error";
 
 export function PaymentSuccess() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const { t, href } = useLocale();
+  const router = useRouter();
   const [status, setStatus] = useState<Status>("loading");
   const [retryToken, setRetryToken] = useState(0);
 
@@ -37,7 +38,6 @@ export function PaymentSuccess() {
           throw new Error("verify_failed");
         }
 
-        // Grant Safari-compatible access cookie used by the profile paywall.
         await fetch("/api/checkout/success", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -45,10 +45,9 @@ export function PaymentSuccess() {
         });
 
         if (!cancelled) {
-          setStatus("ready");
-          // Payment is verified: safe to clear the local onboarding answers now.
           clearOnboardingState();
           trackEvent("stripe_checkout_completed", { step: "payment-success" });
+          router.replace(href("/install"));
         }
       } catch {
         if (!cancelled) setStatus("error");
@@ -59,7 +58,22 @@ export function PaymentSuccess() {
     return () => {
       cancelled = true;
     };
-  }, [sessionId, retryToken]);
+  }, [sessionId, retryToken, router, href]);
+
+  if (status === "loading") {
+    return (
+      <div
+        className="flex min-h-dvh items-center justify-center bg-background"
+        role="status"
+      >
+        <div
+          className="h-8 w-8 animate-spin rounded-full border-2 border-muted-foreground/25 border-t-primary"
+          aria-hidden="true"
+        />
+        <span className="sr-only">{t("common.loading")}</span>
+      </div>
+    );
+  }
 
   return (
     <div className="relative flex min-h-dvh flex-col bg-background">
@@ -84,60 +98,31 @@ export function PaymentSuccess() {
 
       <main className="relative z-10 flex flex-1 items-center">
         <Container className="max-w-lg py-16">
-          {status === "loading" ? (
-            <div role="status">
-              <h1 className="text-[1.75rem] font-semibold tracking-[-0.04em] text-foreground sm:text-[2rem]">
-                {t("paymentSuccess.loadingTitle")}
-              </h1>
-              <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
-                {t("paymentSuccess.loadingDescription")}
-              </p>
+          <div>
+            <h1 className="text-[1.75rem] font-semibold tracking-[-0.04em] text-foreground sm:text-[2rem]">
+              {t("paymentSuccess.errorTitle")}
+            </h1>
+            <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
+              {t("paymentSuccess.error")}
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Button
+                size="lg"
+                showArrow={false}
+                onClick={() => setRetryToken((value) => value + 1)}
+              >
+                {t("paymentSuccess.tryAgain")}
+              </Button>
+              <Button
+                href={href("/onboarding/pricing")}
+                variant="secondary"
+                size="lg"
+                showArrow={false}
+              >
+                {t("paymentSuccess.backToPlans")}
+              </Button>
             </div>
-          ) : null}
-
-          {status === "ready" ? (
-            <div>
-              <h1 className="text-[1.75rem] font-semibold tracking-[-0.04em] text-foreground sm:text-[2rem]">
-                {t("paymentSuccess.title")}
-              </h1>
-              <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
-                {t("paymentSuccess.success")}
-              </p>
-              <div className="mt-8">
-                <Button href={href("/install")} size="lg" showArrow={false}>
-                  {t("paymentSuccess.continueInstall")}
-                </Button>
-              </div>
-            </div>
-          ) : null}
-
-          {status === "error" ? (
-            <div>
-              <h1 className="text-[1.75rem] font-semibold tracking-[-0.04em] text-foreground sm:text-[2rem]">
-                {t("paymentSuccess.errorTitle")}
-              </h1>
-              <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
-                {t("paymentSuccess.error")}
-              </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button
-                  size="lg"
-                  showArrow={false}
-                  onClick={() => setRetryToken((value) => value + 1)}
-                >
-                  {t("paymentSuccess.tryAgain")}
-                </Button>
-                <Button
-                  href={href("/onboarding/pricing")}
-                  variant="secondary"
-                  size="lg"
-                  showArrow={false}
-                >
-                  {t("paymentSuccess.backToPlans")}
-                </Button>
-              </div>
-            </div>
-          ) : null}
+          </div>
         </Container>
       </main>
     </div>

@@ -528,8 +528,8 @@ export const ptBR: Dictionary = {
     eyebrow: "Configuração no iPhone",
     title: "Instalar proteção BetClear",
     description:
-      "Isso baixa um perfil de configuração da Apple que aponta seu iPhone para o DNS criptografado em dns.betclear.app. Abra esta página no Safari no seu iPhone e toque no botão abaixo.",
-    downloadCta: "Baixar perfil",
+      "Abra esta página no Safari no seu iPhone e toque em Me proteja para baixar o perfil e ver as instruções passo a passo.",
+    downloadCta: "Me proteja",
     openDirectly: "Ou abra diretamente:",
     subscribeRequired:
       "É necessária uma assinatura ativa antes de baixar o perfil de proteção.",
@@ -555,7 +555,7 @@ export const ptBR: Dictionary = {
       {
         title: "Baixar",
         detail:
-          "Toque em Baixar perfil no Safari. Permita o download do perfil de configuração quando solicitado.",
+          "Toque em Me proteja no Safari. Permita o download do perfil de configuração quando solicitado.",
       },
       {
         title: "Abrir Ajustes",
@@ -669,7 +669,7 @@ export const ptBR: Dictionary = {
       {
         title: "Instalar",
         detail:
-          "Você chegará à página de instalação. Toque em Baixar perfil e siga as instruções do iOS.",
+          "Você chegará à página de instalação. Toque em Me proteja e siga as instruções do iOS.",
       },
     ],
   },
