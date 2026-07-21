@@ -24,6 +24,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+  const [subscribed, setSubscribed] = useState<boolean | null>(null);
   const reduce = useReducedMotion();
   const titleId = useId();
 
@@ -56,6 +57,27 @@ export function Header() {
   }, []);
 
   useEffect(() => {
+    if (!authEnabled || !user) {
+      setSubscribed(null);
+      return;
+    }
+
+    let active = true;
+    fetch("/api/subscription/status")
+      .then((response) => response.json())
+      .then((data: { subscribed?: boolean }) => {
+        if (active) setSubscribed(Boolean(data.subscribed));
+      })
+      .catch(() => {
+        if (active) setSubscribed(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [authEnabled, user]);
+
+  useEffect(() => {
     if (!open) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -72,7 +94,12 @@ export function Header() {
   }, [open]);
 
   const close = () => setOpen(false);
-  const startHref = href("/onboarding/spend");
+  const startHref =
+    authEnabled && user
+      ? subscribed
+        ? href("/install")
+        : href("/pricing")
+      : href("/onboarding/spend");
   const loginHref = href("/login");
 
   async function handleMobileSignOut() {
@@ -136,7 +163,9 @@ export function Header() {
           >
             {t("nav.startProtection")}
           </Button>
-          {authEnabled && user ? <AccountMenu user={user} /> : null}
+          {authEnabled && user ? (
+            <AccountMenu user={user} subscribed={subscribed ?? false} />
+          ) : null}
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { SignOut } from "@phosphor-icons/react";
+import { CreditCard, SignOut } from "@phosphor-icons/react";
 import type { User } from "@supabase/supabase-js";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useLocale } from "@/components/i18n/LocaleProvider";
@@ -14,12 +14,19 @@ function initialFor(user: User): string {
   return source.trim().charAt(0).toUpperCase() || "?";
 }
 
-export function AccountMenu({ user }: { user: User }) {
+export function AccountMenu({
+  user,
+  subscribed = false,
+}: {
+  user: User;
+  subscribed?: boolean;
+}) {
   const router = useRouter();
   const { href, t } = useLocale();
   const reduce = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [billingLoading, setBillingLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -51,6 +58,21 @@ export function AccountMenu({ user }: { user: User }) {
       router.refresh();
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function openBilling() {
+    setBillingLoading(true);
+    try {
+      const response = await fetch("/api/billing/portal", { method: "POST" });
+      const data = (await response.json()) as { url?: string };
+      if (response.ok && data.url) {
+        window.location.href = data.url;
+        return;
+      }
+      setBillingLoading(false);
+    } catch {
+      setBillingLoading(false);
     }
   }
 
@@ -100,6 +122,18 @@ export function AccountMenu({ user }: { user: User }) {
               </span>
             </div>
             <div className="p-1.5">
+              {subscribed ? (
+                <button
+                  type="button"
+                  role="menuitem"
+                  disabled={billingLoading}
+                  onClick={openBilling}
+                  className="flex w-full items-center gap-2 rounded-[var(--radius-md)] px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-surface hover:text-foreground disabled:opacity-60"
+                >
+                  <CreditCard size={17} />
+                  {billingLoading ? t("common.opening") : t("install.manageBilling")}
+                </button>
+              ) : null}
               <button
                 type="button"
                 role="menuitem"
