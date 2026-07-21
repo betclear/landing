@@ -1,8 +1,14 @@
 import type { ReactNode } from "react";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { OnboardingProvider } from "@/components/onboarding/OnboardingProvider";
 import { isAppLocale, type AppLocale } from "@/lib/i18n/config";
 import { defaultCurrencyForLocale } from "@/lib/i18n/pricing";
+
+// Onboarding is a private funnel — keep it out of search indexes.
+export const metadata: Metadata = {
+  robots: { index: false, follow: true },
+};
 
 type LayoutProps = {
   children: ReactNode;

@@ -28,6 +28,7 @@ export async function generateMetadata({ params }: PageProps) {
     path: "/install/complete",
     title: dict.meta.installCompleteTitle,
     description: dict.meta.installCompleteDescription,
+    robotsIndex: false,
   });
 }
 

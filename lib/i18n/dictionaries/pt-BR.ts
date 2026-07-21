@@ -4,10 +4,10 @@ export const ptBR: Dictionary = {
   meta: {
     homeTitle: "BetClear — Bloqueie sites de apostas no iPhone",
     homeDescription:
-      "Bloqueie 300.000+ sites de apostas no seu iPhone. Instale o BetClear uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
+      "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu iPhone. Instale uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
     homeOgTitle: "BetClear — Bloqueie sites de apostas no iPhone",
     homeOgDescription:
-      "Bloqueie 300.000+ sites de apostas no seu iPhone. Instale o BetClear uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
+      "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu iPhone. Instale uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
     homeOgImageAlt: "Bloqueador de sites de apostas BetClear no iPhone",
     installTitle: "Instalar proteção",
     installDescription:
@@ -33,12 +33,16 @@ export const ptBR: Dictionary = {
       "Sua assinatura BetClear está ativa. Continue no Safari para instalar a proteção no seu iPhone.",
     paymentSuccessTitle: "Pagamento confirmado",
     keywords: [
+      "como parar de apostar",
+      "como parar de apostar na bet",
       "bloqueador de sites de apostas",
-      "bloquear sites de apostas",
-      "bloqueador de apostas",
-      "bloquear betting",
+      "como bloquear sites de apostas no iphone",
+      "bloquear bets no iphone",
+      "como parar de jogar no tigrinho",
+      "como parar de jogar aviator",
+      "vício em apostas",
       "parar de apostar online",
-      "bloquear sites de apostas no iPhone",
+      "autoexclusão apostas",
     ],
   },
   common: {
@@ -81,6 +85,7 @@ export const ptBR: Dictionary = {
     progress: "Progresso",
     support: "Suporte",
     faq: "Perguntas frequentes",
+    guides: "Guias",
     startProtection: "Começar proteção",
     startShort: "Começar",
     signIn: "Entrar",
@@ -99,6 +104,7 @@ export const ptBR: Dictionary = {
     howItWorks: "Como funciona",
     pricing: "Preços",
     faq: "Perguntas frequentes",
+    guides: "Guias",
     beGambleAware: "BeGambleAware",
     gamblersAnonymous: "Gamblers Anonymous",
   },

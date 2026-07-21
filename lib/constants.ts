@@ -4,7 +4,7 @@ export const SITE = {
   description:
     "BetClear blocks access to gambling websites across your iPhone, making it harder to place another bet when the urge hits.",
   longDescription:
-    "Block 300,000+ gambling websites across your iPhone. Install BetClear once, stay protected automatically, and start with a 7-day free trial.",
+    "Block 348,000+ gambling websites across your iPhone. Install BetClear once, stay protected automatically, and start with a 7-day free trial.",
   email: "hello@betclear.app",
   url: "https://betclear.app",
   ctaPrimary: "Start Free Protection",

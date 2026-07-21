@@ -26,6 +26,7 @@ export async function generateMetadata({ params }: PageProps) {
     path: "/login",
     title: dict.meta.loginTitle,
     description: dict.meta.loginDescription,
+    robotsIndex: false,
   });
 }
 

@@ -21,6 +21,7 @@ export async function generateMetadata({ params }: PageProps) {
     path: "/auth",
     title: dict.meta.onboardingTitle,
     description: dict.meta.loginDescription,
+    robotsIndex: false,
   });
 }
 

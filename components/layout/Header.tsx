@@ -35,7 +35,7 @@ export function Header() {
       return [
         { href: href("/#how-it-works"), label: t("nav.howItWorks") },
         { href: href("/#protection"), label: t("nav.protection") },
-        { href: href("/#progress"), label: t("nav.progress") },
+        { href: href("/guides"), label: t("nav.guides") },
         { href: href("/support"), label: t("nav.support") },
         { href: href("/#faq"), label: t("nav.faq") },
       ];
@@ -44,6 +44,7 @@ export function Header() {
     return [
       { href: href("/#how-it-works"), label: t("nav.howItWorks") },
       { href: href("/#protection"), label: t("nav.protection") },
+      { href: href("/guides"), label: t("nav.guides") },
       { href: href("/#pricing"), label: t("nav.pricing") },
       { href: href("/#faq"), label: t("nav.faq") },
     ];

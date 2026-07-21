@@ -11,6 +11,7 @@ export function Footer() {
 
   const productLinks = [
     { href: href("/#how-it-works"), label: t("footer.howItWorks") },
+    { href: href("/guides"), label: t("footer.guides") },
     { href: href("/install"), label: t("footer.installation") },
     { href: href("/#pricing"), label: t("footer.pricing") },
     { href: href("/#faq"), label: t("footer.faq") },

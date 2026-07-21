@@ -2,10 +2,10 @@ export const en = {
   meta: {
     homeTitle: "BetClear — Block Gambling Websites on iPhone",
     homeDescription:
-      "Block 300,000+ gambling websites across your iPhone. Install BetClear once, stay protected automatically, and start with a 7-day free trial.",
+      "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your iPhone. Install once, stay protected automatically, and start with a 7-day free trial.",
     homeOgTitle: "BetClear — Block Gambling Websites on iPhone",
     homeOgDescription:
-      "Block 300,000+ gambling websites across your iPhone. Install BetClear once, stay protected automatically, and start with a 7-day free trial.",
+      "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your iPhone. Install once, stay protected automatically, and start with a 7-day free trial.",
     homeOgImageAlt: "BetClear gambling website blocker on iPhone",
     installTitle: "Install Protection",
     installDescription:
@@ -31,12 +31,16 @@ export const en = {
       "Your BetClear subscription is active. Continue in Safari to install protection on your iPhone.",
     paymentSuccessTitle: "Payment confirmed",
     keywords: [
+      "how to stop gambling",
+      "how to stop gambling online",
       "gambling website blocker",
-      "block gambling websites",
-      "gambling blocker",
-      "betting site blocker",
-      "stop gambling online",
+      "block gambling websites on iPhone",
       "block betting sites on iPhone",
+      "how to block gambling sites on iphone",
+      "stop sports betting",
+      "gambling blocker app",
+      "quit gambling",
+      "gambling self-exclusion",
     ],
   },
   common: {
@@ -79,6 +83,7 @@ export const en = {
     progress: "Progress",
     support: "Support",
     faq: "FAQ",
+    guides: "Guides",
     startProtection: "Start Protection",
     startShort: "Start",
     signIn: "Sign in",
@@ -96,6 +101,7 @@ export const en = {
     howItWorks: "How it works",
     pricing: "Pricing",
     faq: "FAQ",
+    guides: "Guides",
     beGambleAware: "BeGambleAware",
     gamblersAnonymous: "Gamblers Anonymous",
   },

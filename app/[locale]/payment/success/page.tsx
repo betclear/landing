@@ -19,6 +19,7 @@ export async function generateMetadata({ params }: PageProps) {
     path: "/payment/success",
     title: dict.meta.paymentSuccessTitle,
     description: dict.paymentSuccess.loadingDescription,
+    robotsIndex: false,
   });
 }
 

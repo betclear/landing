@@ -8,6 +8,7 @@ import { CostComparison } from "@/components/marketing/CostComparison";
 import { InstallationSteps } from "@/components/marketing/InstallationSteps";
 import { PricingSection } from "@/components/marketing/PricingSection";
 import { FAQ } from "@/components/marketing/FAQ";
+import { GuidesTeaser } from "@/components/marketing/GuidesTeaser";
 import { FinalCTA } from "@/components/marketing/FinalCTA";
 import { StickyMobileCTA } from "@/components/marketing/StickyMobileCTA";
 import { FaqJsonLd } from "@/components/marketing/FaqJsonLd";
@@ -56,6 +57,7 @@ export default async function HomePage({ params }: PageProps) {
         <CostComparison />
         <InstallationSteps />
         <PricingSection />
+        <GuidesTeaser locale={locale} />
         <FAQ />
         <FinalCTA domainCountLabel={stats.domainCountLabel} />
       </main>

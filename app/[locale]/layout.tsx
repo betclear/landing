@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { AnalyticsLocaleSync } from "@/components/i18n/AnalyticsLocaleSync";
 import { LocaleProvider } from "@/components/i18n/LocaleProvider";
+import { SiteJsonLd } from "@/components/marketing/SiteJsonLd";
 import {
   isAppLocale,
   locales,
@@ -25,6 +26,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
 
   return (
     <LocaleProvider locale={locale} dictionary={dictionary}>
+      <SiteJsonLd locale={locale} />
       <AnalyticsLocaleSync />
       {children}
     </LocaleProvider>

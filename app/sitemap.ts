@@ -1,10 +1,12 @@
 import type { MetadataRoute } from "next";
 import { SITE } from "@/lib/constants";
+import { guideSlugs } from "@/lib/content/guides";
 import { locales } from "@/lib/i18n/config";
 import { localizePath } from "@/lib/i18n/routing";
 
 const INDEXABLE_PATHS = [
   "/",
+  "/guides",
   "/install",
   "/pricing",
   "/privacy",
@@ -21,7 +23,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
         url: `${SITE.url}${localizePath(locale, path)}`,
         lastModified: new Date(),
         changeFrequency: path === "/" ? "weekly" : "monthly",
-        priority: path === "/" ? 1 : 0.6,
+        priority: path === "/" ? 1 : path === "/guides" ? 0.7 : 0.6,
+      });
+    }
+
+    for (const slug of guideSlugs(locale)) {
+      entries.push({
+        url: `${SITE.url}${localizePath(locale, `/guides/${slug}`)}`,
+        lastModified: new Date(),
+        changeFrequency: "monthly",
+        priority: 0.7,
       });
     }
   }
