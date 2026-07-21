@@ -67,6 +67,7 @@ export async function middleware(request: NextRequest) {
   const shouldLegacyRedirect =
     bare.startsWith("/onboarding") ||
     bare.startsWith("/install") ||
+    bare.startsWith("/blog") ||
     bare.startsWith("/privacy") ||
     bare.startsWith("/terms") ||
     bare.startsWith("/support") ||

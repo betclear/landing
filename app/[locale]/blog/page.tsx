@@ -1,49 +1,47 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/ui/Container";
-import { SITE } from "@/lib/constants";
-import { listPosts, readingMinutes } from "@/lib/content/blog";
+import { getBlogUi, listPosts } from "@/lib/content/blog";
+import { isAppLocale, type AppLocale } from "@/lib/i18n/config";
+import { buildPageMetadata } from "@/lib/i18n/metadata";
+import { localizePath } from "@/lib/i18n/routing";
 
-export const dynamic = "force-static";
-
-const TITLE = "Blog — Gambling Recovery Stories & Guides";
-const DESCRIPTION =
-  "Real recovery stories and practical guides on how to stop gambling, understand the addiction, and take back control — from the team behind BetClear.";
-
-export const metadata: Metadata = {
-  title: "Blog",
-  description: DESCRIPTION,
-  keywords: [
-    "gambling recovery blog",
-    "how to stop gambling",
-    "gambling addiction stories",
-    "quit gambling",
-    "gambling self-help",
-  ],
-  alternates: { canonical: `${SITE.url}/blog` },
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: `${SITE.url}/blog`,
-    type: "website",
-    images: [{ url: `${SITE.url}/opengraph-image` }],
-  },
-  robots: { index: true, follow: true },
+type PageProps = {
+  params: Promise<{ locale: string }>;
 };
 
-function formatDate(iso: string): string {
-  return new Intl.DateTimeFormat("en-US", {
+export async function generateMetadata({ params }: PageProps) {
+  const { locale: raw } = await params;
+  if (!isAppLocale(raw)) return {};
+  const locale = raw as AppLocale;
+  const ui = getBlogUi(locale);
+  const keywords = listPosts(locale).flatMap((post) => post.title);
+
+  return buildPageMetadata(locale, {
+    path: "/blog",
+    title: ui.hubTitle,
+    description: ui.hubDescription,
+    keywords,
+  });
+}
+
+function formatDate(locale: AppLocale, iso: string): string {
+  return new Intl.DateTimeFormat(locale === "br" ? "pt-BR" : "en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
   }).format(new Date(iso));
 }
 
-export default function BlogIndexPage() {
-  const posts = listPosts();
+export default async function BlogHubPage({ params }: PageProps) {
+  const { locale: raw } = await params;
+  if (!isAppLocale(raw)) notFound();
+  const locale = raw as AppLocale;
+  const ui = getBlogUi(locale);
+  const posts = listPosts(locale);
   const [featured, ...rest] = posts;
 
   return (
@@ -52,22 +50,21 @@ export default function BlogIndexPage() {
       <main className="py-12 sm:py-16">
         <Container className="max-w-4xl">
           <p className="text-[12px] font-medium uppercase tracking-[0.16em] text-primary">
-            BetClear Blog
+            {ui.eyebrow}
           </p>
           <h1 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl">
-            Recovery stories &amp; guides
+            {ui.hubTitle}
           </h1>
           <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted-foreground">
-            Honest stories from people who stopped gambling, and practical guides
-            on breaking the cycle. If you&apos;re ready to make the next bet
-            harder to reach, BetClear can help.
+            {ui.hubDescription}
           </p>
 
           {featured ? (
             <Link
-              href={`/blog/${featured.slug}`}
+              href={localizePath(locale, `/blog/${featured.slug}`)}
               className="group mt-12 grid gap-6 rounded-[var(--radius-lg)] border border-border bg-card p-4 transition-colors hover:border-primary/40 sm:grid-cols-2 sm:p-5"
             >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={featured.heroImage}
                 alt={featured.heroAlt}
@@ -86,8 +83,7 @@ export default function BlogIndexPage() {
                   {featured.excerpt}
                 </p>
                 <span className="mt-4 text-xs uppercase tracking-[0.12em] text-muted-foreground">
-                  {formatDate(featured.datePublished)} ·{" "}
-                  {readingMinutes(featured)} min read
+                  {formatDate(locale, featured.datePublished)}
                 </span>
               </div>
             </Link>
@@ -98,9 +94,10 @@ export default function BlogIndexPage() {
               {rest.map((post) => (
                 <Link
                   key={post.slug}
-                  href={`/blog/${post.slug}`}
+                  href={localizePath(locale, `/blog/${post.slug}`)}
                   className="group flex h-full flex-col overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card transition-colors hover:border-primary/40"
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={post.heroImage}
                     alt={post.heroAlt}
@@ -119,7 +116,7 @@ export default function BlogIndexPage() {
                       {post.excerpt}
                     </p>
                     <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
-                      Read story
+                      {ui.readStory}
                       <ArrowRight
                         size={16}
                         className="transition-transform group-hover:translate-x-0.5"
@@ -133,9 +130,7 @@ export default function BlogIndexPage() {
           ) : null}
 
           <p className="mt-12 rounded-[var(--radius-md)] border border-border bg-surface px-5 py-4 text-xs leading-relaxed text-muted-foreground">
-            {SITE.name} is a gambling website blocker, not a medical service. If
-            you need clinical or crisis support, please contact a qualified
-            professional or a responsible-gambling helpline.
+            {ui.disclaimer}
           </p>
         </Container>
       </main>

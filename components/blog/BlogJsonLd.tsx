@@ -1,10 +1,19 @@
 import { SITE } from "@/lib/constants";
-import type { BlogPost } from "@/lib/content/blog";
+import type { BlogPost, BlogUi } from "@/lib/content/blog";
+import type { AppLocale } from "@/lib/i18n/config";
+import { localizePath } from "@/lib/i18n/routing";
+
+type BlogJsonLdProps = {
+  locale: AppLocale;
+  post: BlogPost;
+  ui: BlogUi;
+};
 
 /** Article + BreadcrumbList structured data for a single blog post. */
-export function BlogJsonLd({ post }: { post: BlogPost }) {
-  const url = `${SITE.url}/blog/${post.slug}`;
-  const blogUrl = `${SITE.url}/blog`;
+export function BlogJsonLd({ locale, post, ui }: BlogJsonLdProps) {
+  const inLanguage = locale === "br" ? "pt-BR" : "en";
+  const url = `${SITE.url}${localizePath(locale, `/blog/${post.slug}`)}`;
+  const blogUrl = `${SITE.url}${localizePath(locale, "/blog")}`;
   const image = `${SITE.url}${post.heroImage}`;
 
   const article = {
@@ -12,7 +21,7 @@ export function BlogJsonLd({ post }: { post: BlogPost }) {
     "@type": "Article",
     headline: post.title,
     description: post.description,
-    inLanguage: "en",
+    inLanguage,
     datePublished: post.datePublished,
     dateModified: post.dateModified,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
@@ -30,7 +39,7 @@ export function BlogJsonLd({ post }: { post: BlogPost }) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Blog", item: blogUrl },
+      { "@type": "ListItem", position: 1, name: ui.breadcrumbBlog, item: blogUrl },
       { "@type": "ListItem", position: 2, name: post.title, item: url },
     ],
   };

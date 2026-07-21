@@ -2,15 +2,27 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { BlogCta } from "@/components/blog/BlogCta";
 import { Container } from "@/components/ui/Container";
+import { SITE } from "@/lib/constants";
 import {
   getRelatedPosts,
   readingMinutes,
   type BlogBlock,
   type BlogPost,
+  type BlogPostId,
 } from "@/lib/content/blog";
+import type { BlogUi } from "@/lib/content/blog";
+import type { AppLocale } from "@/lib/i18n/config";
+import { localizePath } from "@/lib/i18n/routing";
 
-function formatDate(iso: string): string {
-  return new Intl.DateTimeFormat("en-US", {
+type BlogArticleProps = {
+  locale: AppLocale;
+  id: BlogPostId;
+  post: BlogPost;
+  ui: BlogUi;
+};
+
+function formatDate(locale: AppLocale, iso: string): string {
+  return new Intl.DateTimeFormat(locale === "br" ? "pt-BR" : "en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -64,10 +76,12 @@ function Block({ block }: { block: BlogBlock }) {
   }
 }
 
-export function BlogArticle({ post }: { post: BlogPost }) {
-  const related = getRelatedPosts(post);
+export function BlogArticle({ locale, id, post, ui }: BlogArticleProps) {
+  const blogHref = localizePath(locale, "/blog");
+  const startHref = localizePath(locale, SITE.startHref);
+  const related = getRelatedPosts(locale, post, id);
   const minutes = readingMinutes(post);
-  // Insert the conversion CTA after the intro so it sits above the fold on most posts.
+  // Insert the conversion CTA after the intro so it sits high on most posts.
   const ctaAfter = Math.min(3, post.body.length);
 
   return (
@@ -77,8 +91,8 @@ export function BlogArticle({ post }: { post: BlogPost }) {
           aria-label="Breadcrumb"
           className="flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground"
         >
-          <Link href="/blog" className="hover:text-foreground">
-            Blog
+          <Link href={blogHref} className="hover:text-foreground">
+            {ui.breadcrumbBlog}
           </Link>
           <span aria-hidden="true">/</span>
           <span className="text-foreground">{post.category}</span>
@@ -95,10 +109,12 @@ export function BlogArticle({ post }: { post: BlogPost }) {
             {post.excerpt}
           </p>
           <p className="mt-4 text-xs uppercase tracking-[0.12em] text-muted-foreground">
-            {post.author} · {formatDate(post.datePublished)} · {minutes} min read
+            {post.author} · {formatDate(locale, post.datePublished)} · {minutes}{" "}
+            {ui.minRead}
           </p>
         </header>
 
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={post.heroImage}
           alt={post.heroAlt}
@@ -111,32 +127,39 @@ export function BlogArticle({ post }: { post: BlogPost }) {
           {post.body.map((block, index) => (
             <div key={index}>
               <Block block={block} />
-              {index === ctaAfter - 1 ? <BlogCta /> : null}
+              {index === ctaAfter - 1 ? (
+                <BlogCta
+                  title={ui.cta.title}
+                  body={ui.cta.body}
+                  button={ui.cta.button}
+                  href={startHref}
+                />
+              ) : null}
             </div>
           ))}
         </div>
 
         <BlogCta
-          title="Ready to put a barrier between you and the next bet?"
-          body="BetClear blocks 348,000+ gambling websites across your iPhone using encrypted DNS. Install once, stay protected automatically, and start with a 7-day free trial."
+          title={ui.ctaClosing.title}
+          body={ui.ctaClosing.body}
+          button={ui.cta.button}
+          href={startHref}
         />
 
         <p className="mt-10 rounded-[var(--radius-md)] border border-border bg-surface px-5 py-4 text-xs leading-relaxed text-muted-foreground">
-          BetClear is a gambling website blocker, not a medical service. If you
-          need clinical or crisis support, please contact a qualified
-          professional or a responsible-gambling helpline.
+          {ui.disclaimer}
         </p>
 
         {related.length > 0 ? (
           <section className="mt-14 border-t border-border pt-10">
             <h2 className="text-[12px] font-medium uppercase tracking-[0.16em] text-primary">
-              Keep reading
+              {ui.keepReading}
             </h2>
             <div className="mt-5 flex flex-col gap-3">
-              {related.map((relatedPost) => (
+              {related.map(({ id: relatedId, post: relatedPost }) => (
                 <Link
-                  key={relatedPost.slug}
-                  href={`/blog/${relatedPost.slug}`}
+                  key={relatedId}
+                  href={localizePath(locale, `/blog/${relatedPost.slug}`)}
                   className="group flex items-center justify-between gap-4 rounded-[var(--radius-md)] border border-border bg-card px-5 py-4 transition-colors hover:border-primary/40"
                 >
                   <span>
@@ -160,11 +183,11 @@ export function BlogArticle({ post }: { post: BlogPost }) {
 
         <div className="mt-10">
           <Link
-            href="/blog"
+            href={blogHref}
             className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft size={16} aria-hidden="true" />
-            All articles
+            {ui.allArticles}
           </Link>
         </div>
       </Container>
