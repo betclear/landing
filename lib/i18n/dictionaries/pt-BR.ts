@@ -247,7 +247,7 @@ export const ptBR: Dictionary = {
       "Escolha proteção anual ou mensal depois da configuração personalizada.",
     pageTitle: "Proteção que permanece ativa",
     pageDescription:
-      "Assine uma vez, baixe o perfil no iPhone e mantenha sites de apostas bloqueados em todo o sistema. Cancele quando quiser no portal de cobrança.",
+      "Comece com 7 dias grátis. Assine uma vez, baixe o perfil no iPhone e mantenha sites de apostas bloqueados em todo o sistema. Cancele quando quiser no portal de cobrança.",
     features: [
       "Bloqueio de sites de apostas",
       "Atualizações automáticas da lista de bloqueio",

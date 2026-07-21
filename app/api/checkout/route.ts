@@ -3,7 +3,7 @@ import { getSiteUrl, type BillingPlan } from "@/lib/stripe/config";
 import { getAuthUser } from "@/lib/auth/user";
 import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/client";
-import { getStripePriceId, isAppLocaleParam } from "@/lib/stripe/prices";
+import { getStripePriceId, isAppLocaleParam, TRIAL_PERIOD_DAYS } from "@/lib/stripe/prices";
 import { localizePath } from "@/lib/i18n/routing";
 import type { AppLocale } from "@/lib/i18n/config";
 
@@ -66,7 +66,16 @@ export async function POST(request: Request) {
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${siteUrl}${localizePath(locale, "/install/complete")}?session_id={CHECKOUT_SESSION_ID}`,
+      subscription_data: {
+        trial_period_days: TRIAL_PERIOD_DAYS,
+        metadata: {
+          app: "betclear",
+          plan,
+          locale,
+          ...(user ? { user_id: user.id } : {}),
+        },
+      },
+      success_url: `${siteUrl}${localizePath(locale, "/payment/success")}?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}${localizePath(locale, "/pricing")}`,
       allow_promotion_codes: true,
       billing_address_collection: "auto",

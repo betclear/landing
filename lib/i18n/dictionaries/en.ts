@@ -238,7 +238,7 @@ export const en = {
       "Choose annual or monthly protection after your personalized setup.",
     pageTitle: "Protection that stays on",
     pageDescription:
-      "Subscribe once, download your iPhone profile, and keep gambling sites blocked system-wide. Cancel anytime from your billing portal.",
+      "Start with a 7-day free trial. Subscribe once, download your iPhone profile, and keep gambling sites blocked system-wide. Cancel anytime from your billing portal.",
     features: [
       "Gambling website blocking",
       "Automatic blocklist updates",
