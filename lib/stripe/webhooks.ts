@@ -17,7 +17,6 @@ function planFromPriceId(priceId: string | null | undefined): BillingPlan | null
   if (!priceId) return null;
   if (priceId === process.env.STRIPE_PRICE_MONTHLY) return "monthly";
   if (priceId === process.env.STRIPE_PRICE_ANNUAL) return "annual";
-  if (priceId === process.env.STRIPE_PRICE_TEST) return null;
   return null;
 }
 

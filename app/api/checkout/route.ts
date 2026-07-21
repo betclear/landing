@@ -41,19 +41,15 @@ export async function POST(request: Request) {
   try {
     const plan = body.plan;
 
-    if (plan !== "monthly" && plan !== "annual" && plan !== "test") {
+    if (plan !== "monthly" && plan !== "annual") {
       return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
     }
 
     let priceId: string | undefined;
-    if (plan === "test") {
-      priceId = process.env.STRIPE_PRICE_TEST;
-    } else {
-      try {
-        priceId = getStripePriceId(plan, locale);
-      } catch {
-        priceId = undefined;
-      }
+    try {
+      priceId = getStripePriceId(plan, locale);
+    } catch {
+      priceId = undefined;
     }
 
     if (!priceId) {

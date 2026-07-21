@@ -1,4 +1,4 @@
-export type BillingPlan = "monthly" | "annual" | "test";
+export type BillingPlan = "monthly" | "annual";
 
 export type PlanConfig = {
   id: BillingPlan;
@@ -7,27 +7,11 @@ export type PlanConfig = {
   priceLabel: string;
   intervalLabel: string;
   features: readonly string[];
-  priceIdEnv:
-    | "STRIPE_PRICE_MONTHLY"
-    | "STRIPE_PRICE_ANNUAL"
-    | "STRIPE_PRICE_TEST";
+  priceIdEnv: "STRIPE_PRICE_MONTHLY" | "STRIPE_PRICE_ANNUAL";
   highlighted?: boolean;
 };
 
 export const BILLING_PLANS: PlanConfig[] = [
-  {
-    id: "test",
-    name: "Test Product",
-    description: "Temporary low-cost plan for payment flow testing.",
-    priceLabel: "$0.99",
-    intervalLabel: "per month",
-    priceIdEnv: "STRIPE_PRICE_TEST",
-    features: [
-      "Same install and paywall flow as paid plans",
-      "For internal testing only",
-      "Cancel anytime from your billing portal",
-    ],
-  },
   {
     id: "monthly",
     name: "BetClear Monthly",
@@ -63,10 +47,7 @@ export function getPriceId(plan: BillingPlan): string | undefined {
   if (plan === "monthly") {
     return process.env.STRIPE_PRICE_MONTHLY;
   }
-  if (plan === "annual") {
-    return process.env.STRIPE_PRICE_ANNUAL;
-  }
-  return process.env.STRIPE_PRICE_TEST;
+  return process.env.STRIPE_PRICE_ANNUAL;
 }
 
 export function getSiteUrl(): string {

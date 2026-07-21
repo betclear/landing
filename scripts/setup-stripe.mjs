@@ -14,14 +14,6 @@ const WEBHOOK_EVENTS = [
 
 const PLANS = [
   {
-    key: "STRIPE_PRICE_TEST",
-    productName: "Test Product",
-    description: "Temporary low-cost plan for payment flow testing.",
-    unitAmount: 99,
-    interval: "month",
-    plan: "test",
-  },
-  {
     key: "STRIPE_PRICE_MONTHLY",
     productName: "BetClear Monthly",
     description: "Monthly iPhone gambling site blocking.",

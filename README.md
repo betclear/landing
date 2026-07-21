@@ -174,7 +174,6 @@ Documented in `.env.example`:
 | `ADGUARD_USERNAME` | **Server only** | AdGuard Home admin username |
 | `ADGUARD_PASSWORD` | **Server only** | AdGuard Home admin password |
 | `NEXT_PUBLIC_SITE_URL` | Public | Alias for site URL used by existing paywall helpers |
-| `STRIPE_PRICE_TEST` | **Server only** | Optional low-cost test price ID |
 | `PROFILE_SIGNING_CERT` | **Server only** | Leaf certificate PEM used to CMS-sign `.mobileconfig` |
 | `PROFILE_SIGNING_KEY` | **Server only** | Matching private key PEM (**never expose**) |
 | `PROFILE_SIGNING_CHAIN` | **Server only** | Optional intermediate/root chain PEM |
