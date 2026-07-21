@@ -577,49 +577,44 @@ export const en = {
     profileName: "BetClear Protection",
     steps: [
       {
-        title: "Open Settings",
-        detail: "Open the Settings app on your iPhone.",
+        title: "Open the settings app on your device.",
+        detail: "",
       },
       {
-        title: "Tap General",
-        detail: "Scroll down and tap General.",
+        title: 'At the top of Settings, tap “Profile Downloaded”.',
+        detail: "",
       },
       {
-        title: "Open VPN & Device Management",
-        detail: "Scroll down and tap VPN & Device Management.",
+        title: 'Tap “Install” in the top right hand corner.',
+        detail: "",
       },
       {
-        title: "Select the profile",
+        title: "Enter your device passcode when prompted.",
+        detail: "",
+      },
+      {
+        title:
+          'After entering your passcode, tap “Install” in the top right hand corner.',
+        detail: "",
+      },
+      {
+        title:
+          'Confirm the installation by tapping on “Install” at the bottom of the page.',
+        detail: "",
+      },
+      {
+        title: 'Tap “Done” / the checkmark in the top right hand corner.',
+        detail: "",
+      },
+      {
+        title: "You're protected.",
         detail:
-          "On this page, tap the downloaded profile that says BetClear Protection.",
-      },
-      {
-        title: "Tap Install",
-        detail: "On the next page, tap Install in the top right corner.",
-      },
-      {
-        title: "Enter your passcode",
-        detail: "Enter your device passcode when prompted.",
-      },
-      {
-        title: "Install again",
-        detail:
-          "After entering your passcode, tap Install in the top right corner.",
-      },
-      {
-        title: "Confirm installation",
-        detail:
-          "Confirm by tapping Install at the bottom of the page. Then tap Done in the top right.",
-      },
-      {
-        title: "Verify protection",
-        detail:
-          "Try opening a known gambling website. It should fail to load when BetClear is active.",
+          "Gambling websites on this iPhone won't load anymore. The path to the next bet just got blocked.",
       },
     ],
     next: "Next",
     back: "Back",
-    doneCta: "I’m finished",
+    doneCta: "Got it",
     downloadAgain: "Download profile again",
     troubleDownloadTitle: "Having trouble downloading BetClear?",
     troubleDownloadBody:

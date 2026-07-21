@@ -2,12 +2,12 @@ import type { Dictionary } from "./types";
 
 export const ptBR: Dictionary = {
   meta: {
-    homeTitle: "BetClear — Bloqueie sites de apostas no seu iPhone",
+    homeTitle: "BetClear — Bloqueie sites de apostas no iPhone",
     homeDescription:
-      "Bloqueie sites de apostas no iPhone e crie uma barreira entre o impulso e a próxima aposta. Comece sua proteção com 7 dias grátis.",
-    homeOgTitle: "BetClear — Bloqueie sites de apostas no seu iPhone",
+      "Bloqueie 300.000+ sites de apostas no seu iPhone. Instale o BetClear uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
+    homeOgTitle: "BetClear — Bloqueie sites de apostas no iPhone",
     homeOgDescription:
-      "Bloqueie sites de apostas no iPhone e crie uma barreira entre o impulso e a próxima aposta. Comece sua proteção com 7 dias grátis.",
+      "Bloqueie 300.000+ sites de apostas no seu iPhone. Instale o BetClear uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
     homeOgImageAlt: "Bloqueador de sites de apostas BetClear no iPhone",
     installTitle: "Instalar proteção",
     installDescription:
@@ -103,26 +103,25 @@ export const ptBR: Dictionary = {
     gamblersAnonymous: "Gamblers Anonymous",
   },
   hero: {
-    eyebrow: "Proteção para os momentos que mais importam",
-    title: "Torne as apostas inacessíveis quando o impulso aparecer.",
-    titleWithCount: "Torne as apostas inacessíveis quando o impulso aparecer.",
+    eyebrow: "Bloqueio de apostas para iPhone",
+    title: "Bloqueie {domainCount} sites de apostas.",
+    titleWithCount: "Bloqueie {domainCount} sites de apostas.",
     description:
-      "O BetClear bloqueia sites de apostas no seu iPhone, criando uma barreira entre um impulso e a sua próxima aposta.",
+      "O BetClear bloqueia o acesso a sites de apostas no seu iPhone, tornando mais difícil fazer outra aposta quando o impulso aparece.",
     primaryCta: "Começar proteção gratuita",
     secondaryCta: "Veja como funciona",
-    microcopy: "Configuração personalizada e 7 dias grátis.",
+    microcopy: "Configuração personalizada e depois 7 dias grátis.",
     visualCaption:
-      "Uma tentativa de aposta acontece. O BetClear bloqueia.",
+      "Você tenta abrir um site de apostas. O BetClear bloqueia.",
   },
   trust: {
     ariaLabel: "Provas do produto",
-    domainsTitle:
-      "Mais de {domainCount} domínios de apostas identificados",
+    domainsTitle: "{domainCount} sites bloqueados",
     domainsDetail:
-      "Cobertura criada a partir de múltiplas fontes de bloqueio de sites de apostas.",
-    worksTitle: "Funciona nos navegadores compatíveis do iPhone",
+      "Cobertura específica para apostas a partir de múltiplas fontes de bloqueio.",
+    worksTitle: "Funciona no seu iPhone",
     worksDetail:
-      "A proteção usa o DNS do sistema para bloquear o acesso no Safari e em apps compatíveis.",
+      "A proteção vale no Safari e em apps compatíveis que usam o DNS do sistema.",
     updatedTitle: "Atualizado automaticamente",
     updatedDetail:
       "Novos domínios de apostas podem ser adicionados sem reinstalar.",
@@ -354,7 +353,7 @@ export const ptBR: Dictionary = {
       "Instale o BetClear antes do próximo impulso e bloqueie o acesso a {domainCount} sites de apostas no seu iPhone.",
     primaryCta: "Começar proteção gratuita",
     secondaryCta: "Ver guia de instalação",
-    microcopy: "Configuração personalizada e 7 dias grátis.",
+    microcopy: "Configuração personalizada e depois 7 dias grátis.",
   },
   stickyCta: {
     label: "Começar proteção gratuita",
@@ -595,49 +594,44 @@ export const ptBR: Dictionary = {
     profileName: "BetClear Protection",
     steps: [
       {
-        title: "Abrir Ajustes",
-        detail: "Abra o app Ajustes no seu iPhone.",
+        title: "Abra o app Ajustes no seu dispositivo.",
+        detail: "",
       },
       {
-        title: "Toque em Geral",
-        detail: "Role para baixo e toque em Geral.",
+        title: 'No topo de Ajustes, toque em “Perfil Baixado”.',
+        detail: "",
       },
       {
-        title: "Abrir VPN e Gerenciamento de Dispositivo",
-        detail: "Role para baixo e toque em VPN e Gerenciamento de Dispositivo.",
+        title: 'Toque em “Instalar” no canto superior direito.',
+        detail: "",
       },
       {
-        title: "Selecione o perfil",
+        title: "Digite o código do dispositivo quando for pedido.",
+        detail: "",
+      },
+      {
+        title:
+          'Depois de digitar o código, toque em “Instalar” no canto superior direito.',
+        detail: "",
+      },
+      {
+        title:
+          'Confirme a instalação tocando em “Instalar” na parte de baixo da página.',
+        detail: "",
+      },
+      {
+        title: 'Toque em “Concluído” / no visto no canto superior direito.',
+        detail: "",
+      },
+      {
+        title: "Você está protegido.",
         detail:
-          "Nesta página, toque no perfil baixado chamado BetClear Protection.",
-      },
-      {
-        title: "Toque em Instalar",
-        detail: "Na próxima página, toque em Instalar no canto superior direito.",
-      },
-      {
-        title: "Digite o código",
-        detail: "Digite o código do iPhone quando for pedido.",
-      },
-      {
-        title: "Instalar novamente",
-        detail:
-          "Depois de digitar o código, toque em Instalar no canto superior direito.",
-      },
-      {
-        title: "Confirmar instalação",
-        detail:
-          "Confirme tocando em Instalar na parte de baixo da página. Depois toque em Concluído no canto superior direito.",
-      },
-      {
-        title: "Verificar proteção",
-        detail:
-          "Tente abrir um site de apostas conhecido. Ele não deve carregar quando o BetClear estiver ativo.",
+          "Sites de apostas neste iPhone não vão mais carregar. O caminho para a próxima aposta acaba de ser bloqueado.",
       },
     ],
     next: "Próximo",
     back: "Voltar",
-    doneCta: "Concluí",
+    doneCta: "Entendi",
     downloadAgain: "Baixar perfil novamente",
     troubleDownloadTitle: "Problemas para baixar o BetClear?",
     troubleDownloadBody:

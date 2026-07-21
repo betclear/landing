@@ -64,7 +64,10 @@ export default async function InstallPage({ params, searchParams }: PageProps) {
 
           {hasAccess ? (
             <>
-              <InstallDownloadButton profileUrl={profileUrl} />
+              <InstallDownloadButton
+                profileUrl={profileUrl}
+                accessToken={access}
+              />
 
               {paywallEnabled ? <InstallActions /> : null}
             </>
