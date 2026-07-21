@@ -62,6 +62,8 @@ export const en = {
     signIn: "Sign in",
     signOut: "Sign out",
     signingOut: "Signing out...",
+    signedIn: "Signed in",
+    account: "Account",
     choosePlan: "Choose a plan",
     viewPricing: "View pricing",
     terms: "Terms",
@@ -79,6 +81,7 @@ export const en = {
     faq: "FAQ",
     startProtection: "Start Protection",
     startShort: "Start",
+    signIn: "Sign in",
   },
   footer: {
     blurb:

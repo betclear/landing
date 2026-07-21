@@ -1,12 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useId, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { List, X } from "@phosphor-icons/react";
+import { List, SignOut, X } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/Button";
+import { AccountMenu } from "@/components/auth/AccountMenu";
+import { signOutUser, useAuthUser } from "@/components/auth/useAuthUser";
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { useLocale } from "@/components/i18n/LocaleProvider";
+import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
 import { SITE } from "@/lib/constants";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
@@ -15,10 +19,15 @@ const easeOut = [0.16, 1, 0.3, 1] as const;
 
 export function Header() {
   const { locale, t, href } = useLocale();
+  const router = useRouter();
+  const { user, loading } = useAuthUser();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
   const reduce = useReducedMotion();
   const titleId = useId();
+
+  const authEnabled = isSupabaseAuthConfigured();
 
   const navLinks = useMemo(() => {
     if (locale === "br") {
@@ -64,6 +73,19 @@ export function Header() {
 
   const close = () => setOpen(false);
   const startHref = href("/onboarding/spend");
+  const loginHref = href("/login");
+
+  async function handleMobileSignOut() {
+    setSigningOut(true);
+    try {
+      await signOutUser();
+      close();
+      router.replace(href("/"));
+      router.refresh();
+    } finally {
+      setSigningOut(false);
+    }
+  }
 
   return (
     <header className="sticky top-0 z-40 px-4 pt-3 sm:px-6 sm:pt-4">
@@ -99,6 +121,11 @@ export function Header() {
 
         <div className="hidden items-center gap-3 lg:flex">
           <LanguageSwitcher />
+          {authEnabled && !loading && !user ? (
+            <Button href={loginHref} variant="secondary" size="md" showArrow={false}>
+              {t("nav.signIn")}
+            </Button>
+          ) : null}
           <Button
             href={startHref}
             size="md"
@@ -109,6 +136,7 @@ export function Header() {
           >
             {t("nav.startProtection")}
           </Button>
+          {authEnabled && user ? <AccountMenu user={user} /> : null}
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
@@ -199,6 +227,39 @@ export function Header() {
                 <div className="px-3 py-2">
                   <LanguageSwitcher />
                 </div>
+                {authEnabled && user ? (
+                  <div className="mt-1 flex items-center justify-between gap-3 rounded-[var(--radius-md)] border border-border bg-surface px-3 py-2.5">
+                    <span className="min-w-0">
+                      <span className="block text-xs text-muted-foreground">
+                        {t("common.signedIn")}
+                      </span>
+                      <span className="block truncate text-sm font-medium text-foreground">
+                        {user.email}
+                      </span>
+                    </span>
+                    <button
+                      type="button"
+                      disabled={signingOut}
+                      onClick={handleMobileSignOut}
+                      aria-label={t("common.signOut")}
+                      className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:text-foreground disabled:opacity-60"
+                    >
+                      <SignOut size={17} />
+                    </button>
+                  </div>
+                ) : null}
+                {authEnabled && !loading && !user ? (
+                  <Button
+                    href={loginHref}
+                    variant="secondary"
+                    className="w-full"
+                    size="md"
+                    showArrow={false}
+                    onClick={close}
+                  >
+                    {t("nav.signIn")}
+                  </Button>
+                ) : null}
                 <div className="pt-1">
                   <Button
                     href={startHref}

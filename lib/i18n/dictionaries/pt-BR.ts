@@ -64,6 +64,8 @@ export const ptBR: Dictionary = {
     signIn: "Entrar",
     signOut: "Sair",
     signingOut: "Saindo...",
+    signedIn: "Conectado",
+    account: "Conta",
     choosePlan: "Escolher um plano",
     viewPricing: "Ver preços",
     terms: "Termos",
@@ -81,6 +83,7 @@ export const ptBR: Dictionary = {
     faq: "Perguntas frequentes",
     startProtection: "Começar proteção",
     startShort: "Começar",
+    signIn: "Entrar",
   },
   footer: {
     blurb:
