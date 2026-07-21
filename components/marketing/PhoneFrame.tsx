@@ -1,3 +1,7 @@
+"use client";
+
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { SITE } from "@/lib/constants";
 import { cn } from "@/lib/cn";
 
 type PhoneFrameProps = {
@@ -33,6 +37,8 @@ export function PhoneFrame({ children, className, label }: PhoneFrameProps) {
 }
 
 export function BlockedSiteScreen({ domain = "betexample.com" }: { domain?: string }) {
+  const { t } = useLocale();
+
   return (
     <div className="flex h-full flex-col bg-[#0d1a1c] px-5 pb-6 pt-12 text-[#f5f7f3]">
       <div className="rounded-2xl bg-[#122326] px-3 py-2 text-[11px] text-[#a9bab6]">
@@ -44,13 +50,13 @@ export function BlockedSiteScreen({ domain = "betexample.com" }: { domain?: stri
           <span className="text-xl font-semibold">✕</span>
         </div>
         <p className="mt-5 text-lg font-semibold tracking-[-0.03em]">
-          Site blocked
+          {t("phone.siteBlocked")}
         </p>
         <p className="mt-2 max-w-[16rem] text-[13px] leading-relaxed text-[#a9bab6]">
-          BetClear stopped this gambling website from loading.
+          {t("phone.siteBlockedDetail")}
         </p>
         <div className="mt-6 rounded-full bg-[#7ed6bc]/12 px-3 py-1.5 text-[11px] font-medium text-[#7ed6bc]">
-          Protection active
+          {t("phone.protectionActive")}
         </div>
       </div>
     </div>
@@ -58,19 +64,21 @@ export function BlockedSiteScreen({ domain = "betexample.com" }: { domain?: stri
 }
 
 export function ProtectionStatusScreen() {
+  const { t } = useLocale();
+
   return (
     <div className="flex h-full flex-col bg-[#0d1a1c] px-5 pb-6 pt-12 text-[#f5f7f3]">
       <p className="text-[11px] uppercase tracking-[0.16em] text-[#a9bab6]">
-        BetClear
+        {SITE.name}
       </p>
       <h3 className="mt-2 text-2xl font-semibold tracking-[-0.04em]">
-        Protection active
+        {t("phone.protectionActive")}
       </h3>
       <div className="mt-6 space-y-3">
         {[
-          ["DNS", "Encrypted"],
-          ["Coverage", "Gambling domains"],
-          ["Status", "Holding"],
+          [t("phone.dns"), t("phone.encrypted")],
+          [t("phone.coverage"), t("phone.gamblingDomains")],
+          [t("phone.status"), t("phone.holding")],
         ].map(([label, value]) => (
           <div
             key={label}
@@ -83,7 +91,7 @@ export function ProtectionStatusScreen() {
       </div>
       <div className="mt-auto rounded-2xl bg-[#193035] p-4">
         <p className="text-[12px] leading-relaxed text-[#a9bab6]">
-          The decision you made is still protected.
+          {t("phone.decisionProtected")}
         </p>
       </div>
     </div>
@@ -91,24 +99,26 @@ export function ProtectionStatusScreen() {
 }
 
 export function ProgressDashboardScreen() {
+  const { t } = useLocale();
+
   return (
     <div className="flex h-full flex-col bg-[#0d1a1c] px-4 pb-5 pt-12 text-[#f5f7f3]">
       <div className="flex items-center justify-between">
         <p className="text-[11px] uppercase tracking-[0.16em] text-[#a9bab6]">
-          Progress
+          {t("phone.progress")}
         </p>
         <span className="rounded-full bg-[#7ed6bc]/12 px-2 py-1 text-[10px] text-[#7ed6bc]">
-          Sample UI
+          {t("phone.sampleUi")}
         </span>
       </div>
       <p className="mt-2 text-3xl font-semibold tracking-[-0.05em]">18 days</p>
-      <p className="mt-1 text-[12px] text-[#a9bab6]">Protected streak</p>
+      <p className="mt-1 text-[12px] text-[#a9bab6]">{t("phone.timeWithoutGambling")}</p>
       <div className="mt-5 grid grid-cols-2 gap-2">
         {[
-          ["47", "Attempts blocked"],
-          ["$620", "Est. money protected"],
-          ["11h", "Time recovered"],
-          ["3", "Week streak"],
+          ["47", t("phone.attemptsBlocked")],
+          ["$620", t("phone.moneySaved")],
+          ["11h", t("phone.timeRecovered")],
+          ["3", t("phone.weekStreak")],
         ].map(([value, label]) => (
           <div key={label} className="rounded-2xl bg-[#122326] p-3">
             <p className="text-lg font-semibold tracking-[-0.03em] text-[#7ed6bc]">
@@ -123,6 +133,8 @@ export function ProgressDashboardScreen() {
 }
 
 export function GamblingAttemptScreen() {
+  const { t } = useLocale();
+
   return (
     <div className="flex h-full flex-col bg-[#101418] px-5 pb-6 pt-12 text-white">
       <div className="rounded-2xl bg-[#1c2228] px-3 py-2 text-[11px] text-white/55">
@@ -130,10 +142,10 @@ export function GamblingAttemptScreen() {
       </div>
       <div className="mt-6 rounded-3xl bg-gradient-to-b from-[#243038] to-[#161b20] p-5">
         <p className="text-[10px] uppercase tracking-[0.18em] text-white/40">
-          Live odds
+          {t("phone.liveOdds")}
         </p>
         <p className="mt-3 text-xl font-semibold tracking-[-0.03em]">
-          Place your next bet
+          {t("phone.gamblingAttempt")}
         </p>
         <div className="mt-5 space-y-2">
           {["Home 1.92", "Draw 3.40", "Away 4.10"].map((odd) => (

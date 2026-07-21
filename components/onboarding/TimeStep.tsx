@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { OptionButton } from "@/components/onboarding/OptionButton";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 import {
   WEEKLY_HOUR_PRESETS,
@@ -14,13 +15,21 @@ import {
 import { isTimeValid } from "@/lib/onboarding/storage";
 import { cn } from "@/lib/cn";
 
-const OPTIONS: { id: WeeklyHourPresetId | "manual"; label: string }[] = [
-  { id: "less_than_2", label: "Less than 2 hours / week" },
-  { id: "2_to_5", label: "2–5 hours / week" },
-  { id: "6_to_10", label: "6–10 hours / week" },
-  { id: "10_plus", label: "10+ hours / week" },
-  { id: "manual", label: "Enter hours per week" },
+const OPTION_IDS: (WeeklyHourPresetId | "manual")[] = [
+  "less_than_2",
+  "2_to_5",
+  "6_to_10",
+  "10_plus",
+  "manual",
 ];
+
+const OPTION_KEYS = {
+  less_than_2: "lessThan2",
+  "2_to_5": "twoToFive",
+  "6_to_10": "sixToTen",
+  "10_plus": "tenPlus",
+  manual: "manual",
+} as const;
 
 function matchPreset(hours: number | null): WeeklyHourPresetId | "manual" | null {
   if (hours == null) return null;
@@ -32,6 +41,7 @@ function matchPreset(hours: number | null): WeeklyHourPresetId | "manual" | null
 
 export function TimeStep() {
   const router = useRouter();
+  const { href, t } = useLocale();
   const { state, update, setStep } = useOnboarding();
   const initialPreset = matchPreset(state.weeklyGamblingHours);
   const [selected, setSelected] = useState<WeeklyHourPresetId | "manual" | null>(
@@ -65,15 +75,15 @@ export function TimeStep() {
     update({ weeklyGamblingHours: hours });
     setStep(3);
     trackEvent("onboarding_time_completed", { step: "time" });
-    router.push("/onboarding/last-gamble");
+    router.push(href("/onboarding/last-gamble"));
   }
 
   return (
     <OnboardingShell
       step={2}
       backHref="/onboarding/spend"
-      title="How much time do you spend gambling per week?"
-      description="Include time spent placing bets, checking results, researching odds, or thinking about gambling in a typical week."
+      title={t("onboarding.time.title")}
+      description={t("onboarding.time.description")}
       footer={
         <Button
           size="lg"
@@ -82,39 +92,39 @@ export function TimeStep() {
           disabled={!valid}
           onClick={continueNext}
         >
-          Continue
+          {t("onboarding.time.continue")}
         </Button>
       }
     >
       <div className="space-y-3">
-        {OPTIONS.map((option) => (
+        {OPTION_IDS.map((id) => (
           <OptionButton
-            key={option.id}
-            selected={selected === option.id}
+            key={id}
+            selected={selected === id}
             onClick={() => {
-              setSelected(option.id);
+              setSelected(id);
               setTouched(true);
-              if (option.id !== "manual") {
+              if (id !== "manual") {
                 update({
-                  weeklyGamblingHours: WEEKLY_HOUR_PRESETS[option.id],
+                  weeklyGamblingHours: WEEKLY_HOUR_PRESETS[id],
                 });
               }
             }}
           >
-            {option.label}
+            {t(`onboarding.time.options.${OPTION_KEYS[id]}`)}
           </OptionButton>
         ))}
 
         {selected === "manual" ? (
           <div className="pt-2">
             <label className="sr-only" htmlFor="weekly-hours">
-              Hours per week
+              {t("onboarding.time.hoursLabel")}
             </label>
             <input
               id="weekly-hours"
               type="text"
               inputMode="decimal"
-              placeholder="e.g. 4"
+              placeholder={t("onboarding.time.manualPlaceholder")}
               value={manualText}
               onChange={(event) => {
                 setManualText(event.target.value);
@@ -129,7 +139,7 @@ export function TimeStep() {
             />
             {showError ? (
               <p id="time-error" className="mt-2 text-sm text-accent" role="alert">
-                Enter a number of hours greater than zero.
+                {t("onboarding.time.error")}
               </p>
             ) : null}
           </div>

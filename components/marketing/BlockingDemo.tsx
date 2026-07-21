@@ -11,7 +11,7 @@ import {
   PhoneFrame,
   ProtectionStatusScreen,
 } from "@/components/marketing/PhoneFrame";
-import { HOW_IT_WORKS_STEPS } from "@/lib/constants";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { cn } from "@/lib/cn";
 
 const screens = [
@@ -22,31 +22,33 @@ const screens = [
 
 export function BlockingDemo() {
   const reduce = useReducedMotion();
+  const { t, dictionary } = useLocale();
+  const steps = dictionary.howItWorks.steps;
   const [active, setActive] = useState(0);
 
   useEffect(() => {
     if (reduce) return;
     const id = window.setInterval(() => {
-      setActive((current) => (current + 1) % HOW_IT_WORKS_STEPS.length);
+      setActive((current) => (current + 1) % steps.length);
     }, 3000);
     return () => window.clearInterval(id);
-  }, [reduce]);
+  }, [reduce, steps.length]);
 
   return (
     <section id="how-it-works" className="py-20 sm:py-28">
       <Container>
         <Reveal>
           <SectionHeading
-            eyebrow="How it works"
-            title="The bet stops before it begins."
-            description="BetClear adds a barrier between the urge to gamble and the website you are trying to open."
+            eyebrow={t("howItWorks.eyebrow")}
+            title={t("howItWorks.title")}
+            description={t("howItWorks.description")}
           />
         </Reveal>
 
         <div className="mt-12 grid items-center gap-10 lg:grid-cols-[1fr_0.9fr]">
           <Reveal>
             <ol className="space-y-2">
-              {HOW_IT_WORKS_STEPS.map((step, index) => {
+              {steps.map((step, index) => {
                 const selected = active === index;
                 return (
                   <li key={step.id}>
@@ -62,7 +64,7 @@ export function BlockingDemo() {
                       aria-current={selected ? "step" : undefined}
                     >
                       <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-primary">
-                        Step {index + 1}
+                        {t("howItWorks.stepLabel", { number: index + 1 })}
                       </p>
                       <p className="mt-1.5 text-lg font-semibold tracking-[-0.03em] text-foreground">
                         {step.label}

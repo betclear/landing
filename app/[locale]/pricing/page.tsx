@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/ui/Container";
@@ -7,17 +7,37 @@ import { PricingCards } from "@/components/pricing/PricingCards";
 import { requireAuthUser } from "@/lib/auth/user";
 import { BILLING_PLANS } from "@/lib/stripe/config";
 import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
+import { isAppLocale, type AppLocale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { buildPageMetadata } from "@/lib/i18n/metadata";
+import { localizePath } from "@/lib/i18n/routing";
 
-export const metadata: Metadata = {
-  title: "Pricing",
-  description:
-    "Choose monthly or annual BetClear protection for your iPhone. Start with a 7-day free trial.",
-  alternates: { canonical: "/pricing" },
+type PageProps = {
+  params: Promise<{ locale: string }>;
 };
 
-export default async function PricingPage() {
+export async function generateMetadata({ params }: PageProps) {
+  const { locale: raw } = await params;
+  if (!isAppLocale(raw)) return {};
+  const locale = raw as AppLocale;
+  const dict = getDictionary(locale);
+
+  return buildPageMetadata(locale, {
+    path: "/pricing",
+    title: dict.meta.pricingTitle,
+    description: dict.meta.pricingDescription,
+  });
+}
+
+export default async function PricingPage({ params }: PageProps) {
+  const { locale: raw } = await params;
+  if (!isAppLocale(raw)) notFound();
+  const locale = raw as AppLocale;
+  const dict = getDictionary(locale);
+  const pricingPath = localizePath(locale, "/pricing");
+
   const user = isSupabaseAuthConfigured()
-    ? await requireAuthUser("/pricing")
+    ? await requireAuthUser(pricingPath, locale)
     : null;
 
   return (
@@ -27,14 +47,13 @@ export default async function PricingPage() {
         <Container>
           <div className="mx-auto max-w-2xl text-center">
             <p className="text-sm font-medium tracking-[-0.01em] text-primary">
-              Pricing
+              {dict.pricing.eyebrow}
             </p>
             <h1 className="mt-3 text-4xl font-semibold tracking-[-0.04em] text-foreground sm:text-5xl">
-              Protection that stays on
+              {dict.pricing.pageTitle}
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
-              Subscribe once, download your iPhone profile, and keep gambling
-              sites blocked system-wide. Cancel anytime from your billing portal.
+              {dict.pricing.pageDescription}
             </p>
           </div>
 
@@ -45,16 +64,14 @@ export default async function PricingPage() {
           </div>
 
           <p className="mx-auto mt-10 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground">
-            Prefer a guided start?{" "}
+            {dict.pricing.preferGuided}{" "}
             <a
-              href="/onboarding/spend"
+              href={localizePath(locale, "/onboarding/spend")}
               className="font-medium text-foreground underline-offset-4 hover:underline"
             >
-              Begin personalized onboarding
+              {dict.pricing.beginOnboarding}
             </a>
-            . Already subscribed? Open the install page in Safari and sign in
-            with the same email, or use Manage billing there to update payment
-            details.
+            . {dict.pricing.alreadySubscribed}
           </p>
         </Container>
       </main>

@@ -32,7 +32,10 @@ export type AnalyticsEvent =
   | "authentication_completed"
   | "stripe_checkout_started"
   | "stripe_checkout_completed"
-  | "installation_page_viewed";
+  | "installation_page_viewed"
+  | "installation_step_viewed"
+  | "start_protection_clicked"
+  | "trial_started";
 
 /** Non-sensitive analytics properties only — never send spend/hours/dates. */
 export type AnalyticsPayload = {
@@ -42,6 +45,8 @@ export type AnalyticsPayload = {
   source?: string;
   method?: string;
   question?: string;
+  locale?: "en" | "pt-BR";
+  market?: "general" | "BR";
 };
 
 const BLOCKED_PAYLOAD_KEYS = new Set([
@@ -54,18 +59,27 @@ const BLOCKED_PAYLOAD_KEYS = new Set([
   "spend",
 ]);
 
+let analyticsDefaults: Pick<AnalyticsPayload, "locale" | "market"> = {};
+
+export function setAnalyticsDefaults(
+  defaults: Pick<AnalyticsPayload, "locale" | "market">,
+) {
+  analyticsDefaults = defaults;
+}
+
 export function trackEvent(event: AnalyticsEvent, payload?: AnalyticsPayload) {
   if (typeof window === "undefined") return;
 
   try {
     window.clarity?.("event", event);
-    if (payload) {
-      const safe: Record<string, string> = {};
-      for (const [key, value] of Object.entries(payload)) {
-        if (value == null) continue;
-        if (BLOCKED_PAYLOAD_KEYS.has(key)) continue;
-        safe[key] = String(value);
-      }
+    const merged = { ...analyticsDefaults, ...payload };
+    const safe: Record<string, string> = {};
+    for (const [key, value] of Object.entries(merged)) {
+      if (value == null) continue;
+      if (BLOCKED_PAYLOAD_KEYS.has(key)) continue;
+      safe[key] = String(value);
+    }
+    if (Object.keys(safe).length > 0) {
       window.clarity?.("set", event, JSON.stringify(safe));
     }
   } catch {

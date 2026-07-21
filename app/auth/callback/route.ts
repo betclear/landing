@@ -1,15 +1,20 @@
 import { NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server-auth";
 import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
+import { getLocaleFromPathname, hasLocalePrefix } from "@/lib/i18n/routing";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 function safeNextPath(value: string | null): string {
   if (!value || !value.startsWith("/") || value.startsWith("//")) {
-    return "/auth";
+    return "/en/auth";
   }
-  return value;
+  // Allow locale-prefixed and legacy paths (legacy redirected by middleware).
+  if (hasLocalePrefix(value) || value.startsWith("/")) {
+    return value;
+  }
+  return "/en/auth";
 }
 
 function redirectOrigin(request: Request): string {
@@ -25,17 +30,22 @@ function redirectOrigin(request: Request): string {
 }
 
 function authErrorPath(next: string): string {
-  if (next === "/auth" || next.startsWith("/onboarding")) {
-    return "/auth?error=auth";
+  const locale = getLocaleFromPathname(next) ?? "en";
+  if (
+    next.endsWith("/auth") ||
+    next.includes("/onboarding") ||
+    next === "/auth"
+  ) {
+    return `/${locale}/auth?error=auth`;
   }
-  return "/login?error=auth";
+  return `/${locale}/login?error=auth`;
 }
 
 export async function GET(request: Request) {
   const origin = redirectOrigin(request);
 
   if (!isSupabaseAuthConfigured()) {
-    return NextResponse.redirect(new URL("/login", origin));
+    return NextResponse.redirect(new URL("/en/login", origin));
   }
 
   const url = new URL(request.url);
@@ -50,7 +60,7 @@ export async function GET(request: Request) {
   }
 
   if (!code) {
-    return NextResponse.redirect(new URL("/login", origin));
+    return NextResponse.redirect(new URL("/en/login", origin));
   }
 
   const supabase = await createServerSupabaseClient();

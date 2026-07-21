@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { SITE } from "@/lib/constants";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 
 export function StickyMobileCTA() {
   const [visible, setVisible] = useState(false);
+  const { t, href } = useLocale();
 
   useEffect(() => {
     const onScroll = () => {
@@ -28,7 +29,7 @@ export function StickyMobileCTA() {
       )}
     >
       <Button
-        href={SITE.startHref}
+        href={href("/onboarding/spend")}
         size="lg"
         className="w-full"
         showArrow={false}
@@ -36,7 +37,7 @@ export function StickyMobileCTA() {
           trackEvent("hero_start_protection_clicked", { source: "sticky_mobile" })
         }
       >
-        {SITE.ctaPrimary}
+        {t("stickyCta.label")}
       </Button>
     </div>
   );

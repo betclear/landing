@@ -4,14 +4,18 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
-import { formatDisplayDate } from "@/lib/onboarding/dates";
+import { formatLongDate } from "@/lib/i18n/format";
 
 export function ConfirmDateStep() {
   const router = useRouter();
+  const { locale, href, t } = useLocale();
   const { state, setStep } = useOnboarding();
 
-  const exact = Boolean(state.lastGamblingDate) && !state.lastGamblingDateIsApproximate;
+  const hasDate = Boolean(state.lastGamblingDate);
+  const exact =
+    Boolean(state.lastGamblingDate) && !state.lastGamblingDateIsApproximate;
   const approximateWithDate =
     Boolean(state.lastGamblingDate) && state.lastGamblingDateIsApproximate;
 
@@ -19,31 +23,33 @@ export function ConfirmDateStep() {
   let bodySecondary: string;
 
   if (exact && state.lastGamblingDate) {
-    bodyPrimary = `You told us your last gambling date was ${formatDisplayDate(state.lastGamblingDate)}.`;
-    bodySecondary =
-      "Once your recovery tracker begins, this starting date cannot be moved forward. You’ll still be able to correct it if you entered it incorrectly.";
+    bodyPrimary = formatLongDate(state.lastGamblingDate, locale);
+    bodySecondary = t("onboarding.confirmDate.description");
   } else if (approximateWithDate && state.lastGamblingDate) {
-    bodyPrimary = `You told us your last gambling date was around ${formatDisplayDate(state.lastGamblingDate)}.`;
-    bodySecondary =
-      "We’ll treat this as an approximate starting point for your journey. You can refine it later if needed.";
+    bodyPrimary = t("onboarding.confirmDate.approxPrimary", {
+      date: formatLongDate(state.lastGamblingDate, locale),
+    });
+    bodySecondary = t("onboarding.confirmDate.approxSecondary");
   } else {
-    bodyPrimary =
-      "You’re not sure of your exact last gambling date, and that’s okay.";
-    bodySecondary =
-      "We’ll start your journey from today as an approximate beginning. You can update this later if you remember a clearer date.";
+    bodyPrimary = t("onboarding.confirmDate.unsurePrimary");
+    bodySecondary = t("onboarding.confirmDate.unsureSecondary");
   }
 
   function confirm() {
     setStep(5);
     trackEvent("onboarding_date_confirmed", { step: "confirm-date" });
-    router.push("/onboarding/impact");
+    router.push(href("/onboarding/impact"));
   }
 
   return (
     <OnboardingShell
       step={4}
       backHref="/onboarding/last-gamble"
-      title="Your journey starts here"
+      title={
+        hasDate
+          ? t("onboarding.confirmDate.title")
+          : t("onboarding.confirmDate.journeyStarts")
+      }
       footer={
         <div className="flex flex-col gap-3">
           <Button
@@ -52,22 +58,28 @@ export function ConfirmDateStep() {
             showArrow={false}
             onClick={confirm}
           >
-            Confirm date
+            {t("onboarding.confirmDate.confirm")}
           </Button>
           <Button
             size="lg"
             variant="secondary"
             className="w-full justify-center"
             showArrow={false}
-            href="/onboarding/last-gamble"
+            href={href("/onboarding/last-gamble")}
           >
-            Change date
+            {t("common.back")}
           </Button>
         </div>
       }
     >
       <div className="space-y-4 rounded-[24px] bg-card/70 p-5 ring-1 ring-border">
-        <p className="text-[15px] leading-relaxed text-foreground">
+        <p
+          className={
+            exact
+              ? "text-xl font-semibold tracking-[-0.03em] text-foreground"
+              : "text-[15px] leading-relaxed text-foreground"
+          }
+        >
           {bodyPrimary}
         </p>
         <p className="text-[15px] leading-relaxed text-muted-foreground">

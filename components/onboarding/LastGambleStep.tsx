@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { OptionButton } from "@/components/onboarding/OptionButton";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 import {
   isFutureISODate,
@@ -18,6 +19,7 @@ type Choice = "today" | "yesterday" | "choose" | "unsure" | null;
 
 export function LastGambleStep() {
   const router = useRouter();
+  const { href, t } = useLocale();
   const { state, update, setStep } = useOnboarding();
   const [choice, setChoice] = useState<Choice>(() => {
     if (state.lastGamblingDateIsApproximate && !state.lastGamblingDate) {
@@ -71,15 +73,15 @@ export function LastGambleStep() {
 
     setStep(4);
     trackEvent("onboarding_date_completed", { step: "last-gamble" });
-    router.push("/onboarding/confirm-date");
+    router.push(href("/onboarding/confirm-date"));
   }
 
   return (
     <OnboardingShell
       step={3}
       backHref="/onboarding/time"
-      title="When did you last gamble?"
-      description="We’ll use this date to track your gambling-free journey."
+      title={t("onboarding.lastGamble.title")}
+      description={t("onboarding.lastGamble.description")}
       footer={
         <Button
           size="lg"
@@ -88,7 +90,7 @@ export function LastGambleStep() {
           disabled={!canContinue}
           onClick={continueNext}
         >
-          Continue
+          {t("onboarding.lastGamble.continue")}
         </Button>
       }
     >
@@ -100,7 +102,7 @@ export function LastGambleStep() {
             setTouched(true);
           }}
         >
-          Today
+          {t("onboarding.lastGamble.options.today")}
         </OptionButton>
         <OptionButton
           selected={choice === "yesterday"}
@@ -109,7 +111,7 @@ export function LastGambleStep() {
             setTouched(true);
           }}
         >
-          Yesterday
+          {t("onboarding.lastGamble.options.yesterday")}
         </OptionButton>
         <OptionButton
           selected={choice === "choose"}
@@ -118,7 +120,7 @@ export function LastGambleStep() {
             setTouched(true);
           }}
         >
-          Choose a date
+          {t("onboarding.lastGamble.options.choose")}
         </OptionButton>
         <OptionButton
           selected={choice === "unsure"}
@@ -127,13 +129,13 @@ export function LastGambleStep() {
             setTouched(true);
           }}
         >
-          I’m not sure
+          {t("onboarding.lastGamble.options.unsure")}
         </OptionButton>
 
         {choice === "choose" ? (
           <div className="pt-2">
             <label className="sr-only" htmlFor="last-gamble-date">
-              Last gambling date
+              {t("onboarding.lastGamble.dateLabel")}
             </label>
             <input
               id="last-gamble-date"
@@ -153,7 +155,7 @@ export function LastGambleStep() {
             />
             {dateError ? (
               <p id="date-error" className="mt-2 text-sm text-accent" role="alert">
-                Choose a date that is today or earlier.
+                {t("onboarding.lastGamble.error")}
               </p>
             ) : null}
           </div>

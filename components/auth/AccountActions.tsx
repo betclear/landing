@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 
 type AccountActionsProps = {
   email: string;
@@ -10,13 +11,16 @@ type AccountActionsProps = {
 
 export function AccountActions({ email }: AccountActionsProps) {
   const router = useRouter();
+  const { href, t } = useLocale();
   const [loading, setLoading] = useState(false);
 
   async function signOut() {
     setLoading(true);
     try {
       await fetch("/api/auth/signout", { method: "POST" });
-      router.replace("/login?next=/pricing");
+      router.replace(
+        `${href("/login")}?next=${encodeURIComponent(href("/pricing"))}`,
+      );
       router.refresh();
     } finally {
       setLoading(false);
@@ -26,8 +30,7 @@ export function AccountActions({ email }: AccountActionsProps) {
   return (
     <div className="mx-auto mt-6 flex max-w-2xl flex-col items-center gap-3 rounded-[var(--radius-xl)] border border-border bg-surface px-4 py-3 text-center sm:flex-row sm:justify-between sm:text-left">
       <p className="text-sm text-muted-foreground">
-        Signed in as{" "}
-        <span className="font-medium text-foreground">{email}</span>
+        {t("pricing.signedInAs", { email })}
       </p>
       <Button
         variant="secondary"
@@ -36,7 +39,7 @@ export function AccountActions({ email }: AccountActionsProps) {
         disabled={loading}
         onClick={signOut}
       >
-        {loading ? "Signing out..." : "Sign out"}
+        {loading ? t("common.signingOut") : t("common.signOut")}
       </Button>
     </div>
   );

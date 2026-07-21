@@ -5,23 +5,36 @@ import {
   getSupabaseUrl,
   isSupabaseAuthConfigured,
 } from "@/lib/supabase/config";
+import { getLocaleFromPathname } from "@/lib/i18n/routing";
+
+function nextWithLocale(request: NextRequest) {
+  const requestHeaders = new Headers(request.headers);
+  const locale = getLocaleFromPathname(request.nextUrl.pathname);
+  if (locale) {
+    requestHeaders.set("x-betclear-locale", locale);
+  }
+  return NextResponse.next({
+    request: { headers: requestHeaders },
+  });
+}
 
 export async function updateSession(request: NextRequest) {
   if (!isSupabaseAuthConfigured()) {
-    return NextResponse.next({ request });
+    return nextWithLocale(request);
   }
 
   const code = request.nextUrl.searchParams.get("code");
   if (code && request.nextUrl.pathname !== "/auth/callback") {
+    const locale = getLocaleFromPathname(request.nextUrl.pathname);
     const url = request.nextUrl.clone();
     url.pathname = "/auth/callback";
     if (!url.searchParams.has("next")) {
-      url.searchParams.set("next", "/auth");
+      url.searchParams.set("next", locale ? `/${locale}/auth` : "/en/auth");
     }
     return NextResponse.redirect(url);
   }
 
-  let supabaseResponse = NextResponse.next({ request });
+  let supabaseResponse = nextWithLocale(request);
 
   const supabase = createServerClient(getSupabaseUrl(), getSupabaseAnonKey(), {
     cookies: {
@@ -32,7 +45,7 @@ export async function updateSession(request: NextRequest) {
         cookiesToSet.forEach(({ name, value }) => {
           request.cookies.set(name, value);
         });
-        supabaseResponse = NextResponse.next({ request });
+        supabaseResponse = nextWithLocale(request);
         cookiesToSet.forEach(({ name, value, options }) => {
           supabaseResponse.cookies.set(name, value, options);
         });

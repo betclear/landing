@@ -12,13 +12,41 @@ import { FinalCTA } from "@/components/marketing/FinalCTA";
 import { StickyMobileCTA } from "@/components/marketing/StickyMobileCTA";
 import { FaqJsonLd } from "@/components/marketing/FaqJsonLd";
 import { getProductStats } from "@/lib/product-stats";
+import { isAppLocale, type AppLocale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { buildPageMetadata } from "@/lib/i18n/metadata";
+import { notFound } from "next/navigation";
 
-export default async function HomePage() {
+type PageProps = {
+  params: Promise<{ locale: string }>;
+};
+
+export async function generateMetadata({ params }: PageProps) {
+  const { locale: raw } = await params;
+  if (!isAppLocale(raw)) return {};
+  const locale = raw as AppLocale;
+  const dict = getDictionary(locale);
+
+  return buildPageMetadata(locale, {
+    path: "/",
+    title: dict.meta.homeTitle,
+    description: dict.meta.homeDescription,
+    ogTitle: dict.meta.homeOgTitle,
+    ogDescription: dict.meta.homeOgDescription,
+    ogImageAlt: dict.meta.homeOgImageAlt,
+    keywords: dict.meta.keywords,
+  });
+}
+
+export default async function HomePage({ params }: PageProps) {
+  const { locale: raw } = await params;
+  if (!isAppLocale(raw)) notFound();
+  const locale = raw as AppLocale;
   const stats = await getProductStats();
 
   return (
     <>
-      <FaqJsonLd />
+      <FaqJsonLd locale={locale} />
       <Header />
       <main>
         <Hero domainCountLabel={stats.domainCountLabel} />

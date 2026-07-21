@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/shared/Reveal";
-import { SITE } from "@/lib/constants";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 
 type FinalCTAProps = {
@@ -11,6 +11,8 @@ type FinalCTAProps = {
 };
 
 export function FinalCTA({ domainCountLabel }: FinalCTAProps) {
+  const { t, href } = useLocale();
+
   return (
     <section className="relative overflow-hidden pb-24 pt-8 sm:pb-32 sm:pt-12">
       <div
@@ -21,31 +23,32 @@ export function FinalCTA({ domainCountLabel }: FinalCTAProps) {
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-balance text-3xl font-semibold tracking-[-0.05em] text-foreground sm:text-5xl lg:text-[3.1rem] lg:leading-[1.05]">
-              Make your next bet harder to reach.
+              {t("finalCta.title")}
             </h2>
             <p className="mx-auto mt-4 max-w-[36rem] text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Install BetClear before the next urge arrives and block access to{" "}
-              {domainCountLabel} gambling websites across your iPhone.
+              {t("finalCta.description", { domainCount: domainCountLabel })}
             </p>
             <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button
-                href={SITE.startHref}
+                href={href("/onboarding/spend")}
                 size="lg"
                 onClick={() => trackEvent("final_cta_clicked")}
               >
-                {SITE.ctaPrimary}
+                {t("finalCta.primaryCta")}
               </Button>
               <Button
-                href={SITE.installHref}
+                href={href("/install")}
                 variant="secondary"
                 size="lg"
                 showArrow={false}
                 onClick={() => trackEvent("installation_guide_opened")}
               >
-                View Installation Guide
+                {t("finalCta.secondaryCta")}
               </Button>
             </div>
-            <p className="mt-3 text-sm text-muted-foreground">{SITE.ctaMicrocopy}</p>
+            <p className="mt-3 text-sm text-muted-foreground">
+              {t("finalCta.microcopy")}
+            </p>
           </div>
         </Reveal>
       </Container>

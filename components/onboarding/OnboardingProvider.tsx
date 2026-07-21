@@ -9,7 +9,7 @@ import {
 } from "react";
 import {
   clearOnboardingState,
-  createClientDefaultOnboardingState,
+  createDefaultOnboardingState,
   loadOnboardingState,
   saveOnboardingState,
 } from "@/lib/onboarding/storage";
@@ -26,16 +26,22 @@ type OnboardingContextValue = {
 
 const OnboardingContext = createContext<OnboardingContextValue | null>(null);
 
-export function OnboardingProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<OnboardingState>(
-    createClientDefaultOnboardingState,
+export function OnboardingProvider({
+  children,
+  defaultCurrency,
+}: {
+  children: ReactNode;
+  defaultCurrency?: string;
+}) {
+  const [state, setState] = useState<OnboardingState>(() =>
+    createDefaultOnboardingState(defaultCurrency),
   );
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    setState(loadOnboardingState());
+    setState(loadOnboardingState(defaultCurrency));
     setHydrated(true);
-  }, []);
+  }, [defaultCurrency]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -54,7 +60,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     setPlan: (plan) => setState((prev) => ({ ...prev, selectedPlan: plan })),
     clear: () => {
       clearOnboardingState();
-      setState(createClientDefaultOnboardingState());
+      setState(createDefaultOnboardingState(defaultCurrency));
     },
   };
 

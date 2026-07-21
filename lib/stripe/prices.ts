@@ -1,5 +1,13 @@
 import type { PlanId } from "@/lib/onboarding/types";
+import type { AppLocale } from "@/lib/i18n/config";
+import {
+  getLocalePricing,
+  getPlanPricing,
+  getStripePriceIdForLocale,
+} from "@/lib/i18n/pricing";
+import { formatCurrency } from "@/lib/i18n/format";
 
+/** @deprecated Prefer getPlanDisplay(locale, plan) for locale-aware pricing. */
 export const PLAN_PRICING = {
   annual: {
     id: "annual" as const,
@@ -24,23 +32,39 @@ export const PLAN_PRICING = {
 
 export const TRIAL_PERIOD_DAYS = 7;
 
-export function getStripePriceId(plan: PlanId): string {
-  const priceId =
-    plan === "annual"
-      ? process.env.STRIPE_PRICE_ANNUAL
-      : process.env.STRIPE_PRICE_MONTHLY;
+export function getPlanDisplay(locale: AppLocale, plan: PlanId) {
+  const pricing = getPlanPricing(locale, plan);
+  const localePricing = getLocalePricing(locale);
+  // Plan prices are billed in USD for all markets — format with en-US so
+  // Brazil still shows $3.99 / $29.99 rather than a converted BRL amount.
+  const formatted = formatCurrency(pricing.amount, "en", pricing.currency);
+  const equivalent =
+    plan === "annual" && pricing.monthlyEquivalent != null
+      ? formatCurrency(pricing.monthlyEquivalent, "en", pricing.currency)
+      : null;
 
-  if (!priceId) {
-    throw new Error(
-      plan === "annual"
-        ? "Missing STRIPE_PRICE_ANNUAL"
-        : "Missing STRIPE_PRICE_MONTHLY",
-    );
-  }
+  return {
+    ...pricing,
+    currency: localePricing.currency,
+    priceLabel: formatted,
+    formattedAmount: formatted,
+    equivalentLabel: equivalent,
+    savingsPercent: pricing.savingsPercent,
+  };
+}
 
-  return priceId;
+/** Resolve Stripe Price ID. Same prices for all locales for now. */
+export function getStripePriceId(
+  plan: PlanId,
+  locale: AppLocale = "en",
+): string {
+  return getStripePriceIdForLocale(locale, plan);
 }
 
 export function isPlanId(value: unknown): value is PlanId {
   return value === "annual" || value === "monthly";
+}
+
+export function isAppLocaleParam(value: unknown): value is AppLocale {
+  return value === "en" || value === "br";
 }

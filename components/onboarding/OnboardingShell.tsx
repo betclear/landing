@@ -4,6 +4,7 @@ import { useEffect, useRef, type ReactNode } from "react";
 import Link from "next/link";
 import { CaretLeft } from "@phosphor-icons/react";
 import { Container } from "@/components/ui/Container";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { cn } from "@/lib/cn";
 import { SITE } from "@/lib/constants";
 import { ONBOARDING_STEPS } from "@/lib/onboarding/types";
@@ -28,8 +29,10 @@ export function OnboardingShell({
   className,
 }: OnboardingShellProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const { t, href } = useLocale();
   const total = ONBOARDING_STEPS.length;
   const progress = Math.min(step / total, 1);
+  const localizedBackHref = backHref ? href(backHref) : undefined;
 
   useEffect(() => {
     headingRef.current?.focus();
@@ -48,11 +51,11 @@ export function OnboardingShell({
       <header className="relative z-10 border-b border-border/60 bg-background/70 backdrop-blur-md">
         <Container className="flex h-14 items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2">
-            {backHref ? (
+            {localizedBackHref ? (
               <Link
-                href={backHref}
+                href={localizedBackHref}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-surface hover:text-foreground"
-                aria-label="Go back"
+                aria-label={t("onboarding.goBack")}
               >
                 <CaretLeft size={20} weight="bold" />
               </Link>
@@ -60,14 +63,17 @@ export function OnboardingShell({
               <span className="h-10 w-10" aria-hidden="true" />
             )}
             <Link
-              href="/"
+              href={href("/")}
               className="truncate text-sm font-semibold tracking-[-0.02em] text-foreground"
             >
               {SITE.name}
             </Link>
           </div>
           <p className="text-xs text-muted-foreground">
-            Step {Math.min(step, total)} of {total}
+            {t("onboarding.progressLabel", {
+              current: Math.min(step, total),
+              total,
+            })}
           </p>
         </Container>
         <div className="h-1 w-full bg-surface">
@@ -78,7 +84,7 @@ export function OnboardingShell({
             aria-valuenow={step}
             aria-valuemin={1}
             aria-valuemax={total}
-            aria-label="Onboarding progress"
+            aria-label={t("onboarding.progressAria")}
           />
         </div>
       </header>

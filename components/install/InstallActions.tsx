@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 
 export function InstallActions() {
+  const { t } = useLocale();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -16,7 +18,7 @@ export function InstallActions() {
       const data = (await response.json()) as { url?: string; error?: string };
 
       if (!response.ok || !data.url) {
-        throw new Error(data.error ?? "Unable to open billing portal");
+        throw new Error(data.error ?? t("common.errorGeneric"));
       }
 
       window.location.href = data.url;
@@ -24,7 +26,7 @@ export function InstallActions() {
       setError(
         portalError instanceof Error
           ? portalError.message
-          : "Unable to open billing portal",
+          : t("common.errorGeneric"),
       );
       setLoading(false);
     }
@@ -33,7 +35,7 @@ export function InstallActions() {
   return (
     <div className="mt-8 border-t border-border pt-8">
       <p className="text-sm text-muted-foreground">
-        Need to update your card, switch plans, or cancel?
+        {t("install.manageBillingPrompt")}
       </p>
       {error ? (
         <p className="mt-2 text-sm text-red-600">{error}</p>
@@ -45,7 +47,7 @@ export function InstallActions() {
           disabled={loading}
           onClick={openPortal}
         >
-          {loading ? "Opening..." : "Manage billing"}
+          {loading ? t("common.opening") : t("install.manageBilling")}
         </Button>
       </div>
     </div>

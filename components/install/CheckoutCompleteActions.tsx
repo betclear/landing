@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 
 type CheckoutCompleteActionsProps = {
   safariHandoffUrl: string;
@@ -12,6 +13,7 @@ export function CheckoutCompleteActions({
   safariHandoffUrl,
   requireCopyHandoff,
 }: CheckoutCompleteActionsProps) {
+  const { t } = useLocale();
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState<string | null>(null);
 
@@ -23,9 +25,7 @@ export function CheckoutCompleteActions({
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2500);
     } catch {
-      setCopyError(
-        "Unable to copy. Long-press the link below and choose Copy.",
-      );
+      setCopyError(t("installComplete.copyError"));
     }
   }
 
@@ -33,11 +33,13 @@ export function CheckoutCompleteActions({
     <div className="mt-8 space-y-4">
       {requireCopyHandoff ? (
         <Button size="lg" showArrow={false} onClick={copyLink}>
-          {copied ? "Link copied — open Safari" : "Copy link for Safari"}
+          {copied
+            ? t("installComplete.linkCopiedOpenSafari")
+            : t("installComplete.copyLinkForSafari")}
         </Button>
       ) : (
         <Button href={safariHandoffUrl} size="lg">
-          Continue in Safari
+          {t("installComplete.continueCta")}
         </Button>
       )}
 
@@ -49,7 +51,9 @@ export function CheckoutCompleteActions({
             showArrow={false}
             onClick={copyLink}
           >
-            {copied ? "Link copied" : "Copy Safari link"}
+            {copied
+              ? t("installComplete.linkCopied")
+              : t("installComplete.copySafariLink")}
           </Button>
         </div>
       ) : null}
@@ -59,19 +63,9 @@ export function CheckoutCompleteActions({
       ) : null}
 
       <p className="text-sm leading-relaxed text-muted-foreground">
-        {requireCopyHandoff ? (
-          <>
-            On iPhone, Chrome cannot hand off to the Safari app from a link
-            tap. Copy the link, open the Safari app, paste it into the address
-            bar, and press Go.
-          </>
-        ) : (
-          <>
-            Open the link below in Safari on your iPhone to unlock profile
-            download. Subscription access is saved per browser until you open
-            this link in Safari.
-          </>
-        )}
+        {requireCopyHandoff
+          ? t("installComplete.chromeHandoffNote")
+          : t("installComplete.safariHandoffNote")}
       </p>
 
       <p className="break-all rounded-[var(--radius-lg)] border border-border bg-surface px-4 py-3 font-mono text-xs text-muted-foreground">

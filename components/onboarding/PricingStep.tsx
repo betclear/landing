@@ -6,15 +6,20 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
-import { PLAN_PRICING } from "@/lib/stripe/prices";
+import { getPlanDisplay } from "@/lib/stripe/prices";
 import type { PlanId } from "@/lib/onboarding/types";
 import { cn } from "@/lib/cn";
 
 export function PricingStep() {
   const router = useRouter();
+  const { locale, href, t } = useLocale();
   const { state, setPlan, setStep } = useOnboarding();
   const [busy, setBusy] = useState(false);
+
+  const annual = getPlanDisplay(locale, "annual");
+  const monthly = getPlanDisplay(locale, "monthly");
 
   function selectPlan(plan: PlanId) {
     setPlan(plan);
@@ -28,15 +33,18 @@ export function PricingStep() {
       plan: state.selectedPlan,
       step: "pricing",
     });
-    router.push("/auth");
+    router.push(href("/auth"));
   }
+
+  const annualPrice = annual.formattedAmount!;
+  const monthlyPrice = monthly.formattedAmount!;
 
   return (
     <OnboardingShell
       step={6}
       backHref="/onboarding/impact"
-      title="Choose your protection plan"
-      description="Start with a 7-day free trial. Cancel anytime before it ends."
+      title={t("onboarding.pricing.title")}
+      description={t("onboarding.pricing.description")}
       footer={
         <div className="space-y-3">
           <Button
@@ -46,22 +54,25 @@ export function PricingStep() {
             disabled={busy}
             onClick={continueNext}
           >
-            Start my 7-day free trial
+            {t("onboarding.pricing.trialCta")}
           </Button>
           <p className="text-center text-xs leading-relaxed text-muted-foreground">
-            Cancel anytime before the trial ends to avoid being charged.
+            {t("onboarding.pricing.cancelNote")}
           </p>
           <p className="text-center text-xs text-muted-foreground">
-            <Link href="/terms" className="underline underline-offset-2">
-              Terms
+            <Link href={href("/terms")} className="underline underline-offset-2">
+              {t("common.terms")}
             </Link>
             {" · "}
-            <Link href="/privacy" className="underline underline-offset-2">
-              Privacy Policy
+            <Link href={href("/privacy")} className="underline underline-offset-2">
+              {t("common.privacyPolicy")}
             </Link>
             {" · "}
-            <Link href="/terms#billing" className="underline underline-offset-2">
-              Billing terms
+            <Link
+              href={href("/terms#billing")}
+              className="underline underline-offset-2"
+            >
+              {t("common.billingTerms")}
             </Link>
           </p>
         </div>
@@ -70,20 +81,32 @@ export function PricingStep() {
       <div className="space-y-3">
         <PlanCard
           plan="annual"
+          planLabel={t("onboarding.pricing.annualPlan")}
           selected={state.selectedPlan === "annual"}
           onSelect={() => selectPlan("annual")}
-          badge="Best value"
-          savingBadge="Save 37%"
-          price={PLAN_PRICING.annual.priceLabel}
-          equivalent={PLAN_PRICING.annual.equivalentLabel}
-          description={PLAN_PRICING.annual.description}
+          badge={t("onboarding.pricing.bestValue")}
+          savingBadge={
+            annual.savingsPercent != null
+              ? t("onboarding.pricing.savePercent", {
+                  percent: annual.savingsPercent,
+                })
+              : undefined
+          }
+          price={annualPrice}
+          equivalent={annual.equivalentLabel ?? undefined}
+          description={t("onboarding.pricing.annualDescription", {
+            price: annualPrice,
+          })}
         />
         <PlanCard
           plan="monthly"
+          planLabel={t("onboarding.pricing.monthlyPlan")}
           selected={state.selectedPlan === "monthly"}
           onSelect={() => selectPlan("monthly")}
-          price={PLAN_PRICING.monthly.priceLabel}
-          description={PLAN_PRICING.monthly.description}
+          price={monthlyPrice}
+          description={t("onboarding.pricing.monthlyDescription", {
+            price: monthlyPrice,
+          })}
         />
       </div>
     </OnboardingShell>
@@ -91,7 +114,8 @@ export function PricingStep() {
 }
 
 function PlanCard({
-  plan,
+  plan: _plan,
+  planLabel,
   selected,
   onSelect,
   badge,
@@ -101,6 +125,7 @@ function PlanCard({
   description,
 }: {
   plan: PlanId;
+  planLabel: string;
   selected: boolean;
   onSelect: () => void;
   badge?: string;
@@ -109,6 +134,7 @@ function PlanCard({
   equivalent?: string;
   description: string;
 }) {
+  void _plan;
   return (
     <button
       type="button"
@@ -123,8 +149,8 @@ function PlanCard({
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-medium text-muted-foreground capitalize">
-            {plan} plan
+          <p className="text-sm font-medium text-muted-foreground">
+            {planLabel}
           </p>
           <p className="mt-1 text-2xl font-semibold tracking-[-0.03em] text-foreground">
             {price}

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 import {
   CURRENCY_OPTIONS,
@@ -17,6 +18,7 @@ import { cn } from "@/lib/cn";
 
 export function SpendStep() {
   const router = useRouter();
+  const { href, t } = useLocale();
   const { state, update, setStep } = useOnboarding();
   const currency = isSupportedCurrency(state.currency) ? state.currency : "USD";
   const [amountText, setAmountText] = useState(
@@ -66,14 +68,14 @@ export function SpendStep() {
       currency,
       step: "spend",
     });
-    router.push("/onboarding/time");
+    router.push(href("/onboarding/time"));
   }
 
   return (
     <OnboardingShell
       step={1}
-      title="How much do you usually spend gambling per month?"
-      description="Enter a typical monthly amount. We’ll use it to estimate how much money you may save over time."
+      title={t("onboarding.spend.title")}
+      description={t("onboarding.spend.description")}
       footer={
         <Button
           size="lg"
@@ -82,14 +84,14 @@ export function SpendStep() {
           disabled={!valid}
           onClick={continueNext}
         >
-          Continue
+          {t("onboarding.spend.continue")}
         </Button>
       }
     >
       <div className="space-y-5">
         <div className="grid grid-cols-[8.5rem_1fr] gap-3">
           <label className="sr-only" htmlFor="currency">
-            Currency
+            {t("onboarding.spend.currencyLabel")}
           </label>
           <select
             id="currency"
@@ -104,14 +106,14 @@ export function SpendStep() {
           >
             {CURRENCY_OPTIONS.map((option) => (
               <option key={option.code} value={option.code}>
-                {option.code}
+                {t(`onboarding.spend.currencyOptions.${option.code}`)}
               </option>
             ))}
           </select>
 
           <div>
             <label className="sr-only" htmlFor="monthly-spend">
-              Monthly gambling spend
+              {t("onboarding.spend.amountLabel")}
             </label>
             <div className="relative">
               <span
@@ -145,12 +147,12 @@ export function SpendStep() {
         </div>
 
         <p id="spend-period" className="text-sm text-muted-foreground">
-          Amount per month
+          {t("onboarding.spend.amountPerMonth")}
         </p>
 
         {showError ? (
           <p id="spend-error" className="text-sm text-accent" role="alert">
-            Enter a monthly amount greater than zero.
+            {t("onboarding.spend.error")}
           </p>
         ) : null}
 
@@ -183,7 +185,7 @@ export function SpendStep() {
                 : "bg-card text-muted-foreground ring-border hover:text-foreground",
             )}
           >
-            Custom
+            {t("common.custom")}
           </button>
         </div>
       </div>

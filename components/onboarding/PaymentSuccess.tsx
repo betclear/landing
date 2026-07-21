@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 import { clearOnboardingState } from "@/lib/onboarding/storage";
 import { SITE } from "@/lib/constants";
@@ -14,6 +15,7 @@ type Status = "loading" | "ready" | "error";
 export function PaymentSuccess() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
+  const { t, href } = useLocale();
   const [status, setStatus] = useState<Status>("loading");
   const [retryToken, setRetryToken] = useState(0);
 
@@ -72,7 +74,7 @@ export function PaymentSuccess() {
       <header className="relative z-10 border-b border-border/60">
         <Container className="flex h-14 items-center">
           <Link
-            href="/"
+            href={href("/")}
             className="text-sm font-semibold tracking-[-0.02em] text-foreground"
           >
             {SITE.name}
@@ -85,10 +87,10 @@ export function PaymentSuccess() {
           {status === "loading" ? (
             <div role="status">
               <h1 className="text-[1.75rem] font-semibold tracking-[-0.04em] text-foreground sm:text-[2rem]">
-                Confirming your subscription…
+                {t("paymentSuccess.loadingTitle")}
               </h1>
               <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
-                This usually takes just a moment.
+                {t("paymentSuccess.loadingDescription")}
               </p>
             </div>
           ) : null}
@@ -96,15 +98,14 @@ export function PaymentSuccess() {
           {status === "ready" ? (
             <div>
               <h1 className="text-[1.75rem] font-semibold tracking-[-0.04em] text-foreground sm:text-[2rem]">
-                Your Betclear account is ready
+                {t("paymentSuccess.title")}
               </h1>
               <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
-                Complete the final installation step to activate gambling
-                blocking on this device.
+                {t("paymentSuccess.success")}
               </p>
               <div className="mt-8">
-                <Button href="/install" size="lg" showArrow={false}>
-                  Install protection
+                <Button href={href("/install")} size="lg" showArrow={false}>
+                  {t("paymentSuccess.continueInstall")}
                 </Button>
               </div>
             </div>
@@ -113,11 +114,10 @@ export function PaymentSuccess() {
           {status === "error" ? (
             <div>
               <h1 className="text-[1.75rem] font-semibold tracking-[-0.04em] text-foreground sm:text-[2rem]">
-                We couldn’t confirm your subscription yet
+                {t("paymentSuccess.errorTitle")}
               </h1>
               <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
-                Please try again. If you were charged, your access will activate
-                shortly.
+                {t("paymentSuccess.error")}
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button
@@ -125,15 +125,15 @@ export function PaymentSuccess() {
                   showArrow={false}
                   onClick={() => setRetryToken((value) => value + 1)}
                 >
-                  Try again
+                  {t("paymentSuccess.tryAgain")}
                 </Button>
                 <Button
-                  href="/onboarding/pricing"
+                  href={href("/onboarding/pricing")}
                   variant="secondary"
                   size="lg"
                   showArrow={false}
                 >
-                  Back to plans
+                  {t("paymentSuccess.backToPlans")}
                 </Button>
               </div>
             </div>

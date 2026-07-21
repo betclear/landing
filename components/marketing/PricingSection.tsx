@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/marketing/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
-import { PRICING_FEATURES, SITE } from "@/lib/constants";
-import { PLAN_PRICING } from "@/lib/stripe/prices";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { getPlanDisplay } from "@/lib/stripe/prices";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 
@@ -18,6 +18,10 @@ export function PricingSection() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.35 });
   const [plan, setPlan] = useState<PlanId>("annual");
+  const { locale, t, href, tList } = useLocale();
+  const features = tList("pricing.features");
+  const annual = getPlanDisplay(locale, "annual");
+  const monthly = getPlanDisplay(locale, "monthly");
 
   useEffect(() => {
     if (inView) trackEvent("pricing_viewed");
@@ -31,15 +35,18 @@ export function PricingSection() {
     );
   };
 
+  const annualPrice = annual.formattedAmount!;
+  const monthlyPrice = monthly.formattedAmount!;
+
   return (
     <section id="pricing" ref={ref} className="py-20 sm:py-28">
       <Container>
         <Reveal>
           <SectionHeading
             align="center"
-            eyebrow="Pricing"
-            title="Start with a 7-day free trial."
-            description="Choose annual or monthly protection after your personalized setup."
+            eyebrow={t("pricing.eyebrow")}
+            title={t("pricing.title")}
+            description={t("pricing.description")}
             className="mx-auto"
           />
         </Reveal>
@@ -58,7 +65,7 @@ export function PricingSection() {
                 )}
                 aria-pressed={plan === "annual"}
               >
-                Annual
+                {t("pricing.annualLabel")}
               </button>
               <button
                 type="button"
@@ -71,7 +78,7 @@ export function PricingSection() {
                 )}
                 aria-pressed={plan === "monthly"}
               >
-                Monthly
+                {t("pricing.monthlyLabel")}
               </button>
             </div>
 
@@ -80,30 +87,34 @@ export function PricingSection() {
                 <>
                   <div className="flex items-center gap-2">
                     <p className="text-3xl font-semibold tracking-[-0.04em] text-foreground">
-                      {PLAN_PRICING.annual.priceLabel}
+                      {annualPrice}
                     </p>
                     <span className="rounded-full bg-primary/12 px-2.5 py-1 text-[11px] font-medium text-primary">
-                      Best value
+                      {t("pricing.annualBadge")}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Equivalent to {PLAN_PRICING.annual.equivalentLabel}
-                  </p>
+                  {annual.equivalentLabel ? (
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {t("pricing.annualEquivalent", {
+                        equivalent: annual.equivalentLabel,
+                      })}
+                    </p>
+                  ) : null}
                 </>
               ) : (
                 <>
                   <p className="text-3xl font-semibold tracking-[-0.04em] text-foreground">
-                    {PLAN_PRICING.monthly.priceLabel}
+                    {monthlyPrice}
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Billed monthly after the trial
+                    {t("pricing.monthlyBilledNote")}
                   </p>
                 </>
               )}
             </div>
 
             <ul className="mt-7 space-y-2.5">
-              {PRICING_FEATURES.map((feature) => (
+              {features.map((feature) => (
                 <li
                   key={feature}
                   className="flex items-start gap-2.5 text-sm text-muted-foreground"
@@ -120,7 +131,7 @@ export function PricingSection() {
             </ul>
 
             <Button
-              href={SITE.startHref}
+              href={href("/onboarding/spend")}
               size="lg"
               className="mt-8 w-full"
               showArrow={false}
@@ -128,10 +139,10 @@ export function PricingSection() {
                 trackEvent("pricing_start_protection_clicked", { plan })
               }
             >
-              {SITE.ctaPrimary}
+              {t("pricing.startFreeProtection")}
             </Button>
             <p className="mt-3 text-center text-sm text-muted-foreground">
-              Cancel before the trial ends to avoid being charged.
+              {t("pricing.cancelNote")}
             </p>
           </div>
         </Reveal>

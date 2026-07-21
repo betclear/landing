@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 import { calculateImpactEstimates } from "@/lib/onboarding/calculations";
 import { formatCurrencyAmount } from "@/lib/onboarding/currency";
 
 export function ImpactStep() {
   const router = useRouter();
+  const { href, t } = useLocale();
   const { state, setStep } = useOnboarding();
 
   const spend = state.monthlyGamblingSpend ?? 0;
@@ -26,17 +28,20 @@ export function ImpactStep() {
 
   function continueNext() {
     setStep(6);
-    router.push("/onboarding/pricing");
+    router.push(href("/onboarding/pricing"));
   }
 
-  const dayWord = estimates.displayDays === 1 ? "day" : "days";
+  const dayWord =
+    estimates.displayDays === 1
+      ? t("onboarding.impact.day")
+      : t("onboarding.impact.days");
 
   return (
     <OnboardingShell
       step={5}
       backHref="/onboarding/confirm-date"
-      title="Here’s what gambling may be costing you"
-      description="Betclear helps you block gambling access and track every day, dollar, and hour you take back."
+      title={t("onboarding.impact.title")}
+      description={t("onboarding.impact.description")}
       footer={
         <Button
           size="lg"
@@ -44,26 +49,31 @@ export function ImpactStep() {
           showArrow={false}
           onClick={continueNext}
         >
-          Protect my progress
+          {t("onboarding.impact.continue")}
         </Button>
       }
     >
       <div className="space-y-3">
         <Metric
           value={formatCurrencyAmount(estimates.displaySpend, state.currency)}
-          label="per year"
+          label={t("onboarding.impact.moneySavedLabel")}
         />
         <Metric
-          value={`${estimates.displayHours.toLocaleString()} hours`}
-          label="per year"
+          value={t("onboarding.impact.hoursUnit", {
+            hours: estimates.displayHours.toLocaleString(),
+          })}
+          label={t("onboarding.impact.timeSavedLabel")}
         />
         <Metric
-          value={`${estimates.displayDaysLabel} full ${dayWord}`}
-          label="of your time"
+          value={t("onboarding.impact.fullDays", {
+            days: estimates.displayDaysLabel,
+            dayWord,
+          })}
+          label={t("onboarding.impact.daysLabel")}
         />
       </div>
       <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
-        Estimates are based on the information you provided.
+        {t("onboarding.impact.estimatesNote")}
       </p>
     </OnboardingShell>
   );

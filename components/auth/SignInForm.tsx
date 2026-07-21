@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { authCallbackUrl } from "@/lib/auth/redirect";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 
@@ -35,10 +36,11 @@ function GoogleIcon() {
 
 export function SignInForm({ nextPath }: SignInFormProps) {
   const searchParams = useSearchParams();
+  const { t } = useLocale();
   const authError = searchParams.get("error") === "auth";
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(
-    authError ? "Sign-in failed or expired. Try again." : null,
+    authError ? t("login.errors.authFailed") : null,
   );
   const [emailLoading, setEmailLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -69,7 +71,7 @@ export function SignInForm({ nextPath }: SignInFormProps) {
       setError(
         oauthError instanceof Error
           ? oauthError.message
-          : "Unable to start Google sign-in",
+          : t("login.errors.googleStartFailed"),
       );
       setGoogleLoading(false);
     }
@@ -99,7 +101,7 @@ export function SignInForm({ nextPath }: SignInFormProps) {
       setError(
         signInError instanceof Error
           ? signInError.message
-          : "Unable to send sign-in link",
+          : t("login.errors.sendLinkFailed"),
       );
     } finally {
       setEmailLoading(false);
@@ -109,11 +111,11 @@ export function SignInForm({ nextPath }: SignInFormProps) {
   if (sent) {
     return (
       <div className="mt-8 rounded-[var(--radius-xl)] border border-border bg-surface p-6">
-        <p className="text-sm font-medium text-foreground">Check your email</p>
+        <p className="text-sm font-medium text-foreground">
+          {t("login.checkYourEmail")}
+        </p>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          We sent a sign-in link to{" "}
-          <span className="font-medium text-foreground">{email}</span>. Open it
-          on this device to continue to checkout or install your profile.
+          {t("login.checkYourEmailDetail", { email })}
         </p>
       </div>
     );
@@ -133,7 +135,9 @@ export function SignInForm({ nextPath }: SignInFormProps) {
         <span className="inline-flex items-center justify-center gap-3">
           <GoogleIcon />
           <span>
-            {googleLoading ? "Redirecting to Google..." : "Continue with Google"}
+            {googleLoading
+              ? t("login.redirectingToGoogle")
+              : t("login.continueWithGoogle")}
           </span>
         </span>
       </Button>
@@ -143,7 +147,7 @@ export function SignInForm({ nextPath }: SignInFormProps) {
           <span className="w-full border-t border-border" />
         </div>
         <p className="relative mx-auto w-fit bg-background px-3 text-xs uppercase tracking-wide text-muted-foreground">
-          or use email
+          {t("login.orUseEmail")}
         </p>
       </div>
 
@@ -153,7 +157,7 @@ export function SignInForm({ nextPath }: SignInFormProps) {
             htmlFor="email"
             className="block text-sm font-medium text-foreground"
           >
-            Email
+            {t("login.email")}
           </label>
           <input
             id="email"
@@ -164,7 +168,7 @@ export function SignInForm({ nextPath }: SignInFormProps) {
             required
             value={email}
             onChange={(event) => setEmail(event.target.value)}
-            placeholder="you@example.com"
+            placeholder={t("login.emailPlaceholder")}
             className="h-11 w-full rounded-[var(--radius-md)] border border-border bg-card px-3 text-sm text-foreground outline-none ring-ring transition focus:ring-2"
           />
         </div>
@@ -182,7 +186,7 @@ export function SignInForm({ nextPath }: SignInFormProps) {
           showArrow={false}
           disabled={busy}
         >
-          {emailLoading ? "Sending link..." : "Email me a sign-in link"}
+          {emailLoading ? t("login.sendingLink") : t("login.emailMeLink")}
         </Button>
       </form>
     </div>

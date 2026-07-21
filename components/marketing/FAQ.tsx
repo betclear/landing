@@ -5,26 +5,28 @@ import { Plus } from "@phosphor-icons/react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/marketing/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
-import { FAQ_ITEMS } from "@/lib/constants";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 
 export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const { t, dictionary } = useLocale();
+  const items = dictionary.faq.items;
 
   return (
     <section id="faq" className="py-20 sm:py-28">
       <Container>
         <Reveal>
           <SectionHeading
-            title="Questions before you install"
-            description="Clear answers about blocking, privacy, pricing, and cancellation."
+            title={t("faq.title")}
+            description={t("faq.description")}
           />
         </Reveal>
 
         <Reveal delay={0.04}>
           <div className="mx-auto mt-10 max-w-3xl divide-y divide-border rounded-[1.5rem] bg-card ring-1 ring-border">
-            {FAQ_ITEMS.map((item, index) => {
+            {items.map((item, index) => {
               const open = openIndex === index;
               const panelId = `faq-panel-${index}`;
               const buttonId = `faq-button-${index}`;

@@ -22,8 +22,12 @@ export function createDefaultOnboardingState(
   };
 }
 
-export function createClientDefaultOnboardingState(): OnboardingState {
-  return createDefaultOnboardingState(inferCurrencyFromLocale());
+export function createClientDefaultOnboardingState(
+  defaultCurrency?: string,
+): OnboardingState {
+  return createDefaultOnboardingState(
+    defaultCurrency ?? inferCurrencyFromLocale(),
+  );
 }
 
 function isPlanId(value: unknown): value is PlanId {
@@ -68,18 +72,20 @@ export function parseOnboardingState(raw: unknown): OnboardingState | null {
   };
 }
 
-export function loadOnboardingState(): OnboardingState {
+export function loadOnboardingState(
+  defaultCurrency?: string,
+): OnboardingState {
   if (typeof window === "undefined") {
-    return createDefaultOnboardingState();
+    return createDefaultOnboardingState(defaultCurrency);
   }
 
   try {
     const raw = window.localStorage.getItem(ONBOARDING_STORAGE_KEY);
-    if (!raw) return createClientDefaultOnboardingState();
+    if (!raw) return createClientDefaultOnboardingState(defaultCurrency);
     const parsed = parseOnboardingState(JSON.parse(raw));
-    return parsed ?? createClientDefaultOnboardingState();
+    return parsed ?? createClientDefaultOnboardingState(defaultCurrency);
   } catch {
-    return createClientDefaultOnboardingState();
+    return createClientDefaultOnboardingState(defaultCurrency);
   }
 }
 

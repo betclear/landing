@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import type { PlanConfig } from "@/lib/stripe/config";
 
 type PricingCardsProps = {
@@ -9,6 +10,7 @@ type PricingCardsProps = {
 };
 
 export function PricingCards({ plans }: PricingCardsProps) {
+  const { locale, t } = useLocale();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,7 +22,7 @@ export function PricingCards({ plans }: PricingCardsProps) {
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: planId }),
+        body: JSON.stringify({ plan: planId, locale }),
       });
 
       const data = (await response.json()) as {
@@ -35,7 +37,7 @@ export function PricingCards({ plans }: PricingCardsProps) {
       }
 
       if (!response.ok || !data.url) {
-        throw new Error(data.error ?? "Checkout failed");
+        throw new Error(data.error ?? t("common.errorGeneric"));
       }
 
       window.location.href = data.url;
@@ -43,7 +45,7 @@ export function PricingCards({ plans }: PricingCardsProps) {
       setError(
         checkoutError instanceof Error
           ? checkoutError.message
-          : "Unable to start checkout",
+          : t("common.errorGeneric"),
       );
       setLoadingPlan(null);
     }
@@ -52,9 +54,7 @@ export function PricingCards({ plans }: PricingCardsProps) {
   return (
     <div>
       {error ? (
-        <p className="mb-6 text-center text-sm text-red-600">
-          {error}
-        </p>
+        <p className="mb-6 text-center text-sm text-red-600">{error}</p>
       ) : null}
 
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -69,7 +69,7 @@ export function PricingCards({ plans }: PricingCardsProps) {
           >
             {plan.highlighted ? (
               <p className="mb-4 inline-flex w-fit rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                Best value
+                {t("pricing.annualBadge")}
               </p>
             ) : null}
 
@@ -110,7 +110,9 @@ export function PricingCards({ plans }: PricingCardsProps) {
                 disabled={loadingPlan !== null}
                 onClick={() => startCheckout(plan.id)}
               >
-                {loadingPlan === plan.id ? "Redirecting..." : "Get Protected"}
+                {loadingPlan === plan.id
+                  ? t("common.opening")
+                  : t("pricing.trialCta")}
               </Button>
             </div>
           </article>

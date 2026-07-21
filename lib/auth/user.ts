@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { createServerSupabaseClient } from "@/lib/supabase/server-auth";
 import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
+import type { AppLocale } from "@/lib/i18n/config";
+import { localizePath } from "@/lib/i18n/routing";
 
 export async function getAuthUser(): Promise<User | null> {
   if (!isSupabaseAuthConfigured()) {
@@ -16,10 +18,14 @@ export async function getAuthUser(): Promise<User | null> {
   return user;
 }
 
-export async function requireAuthUser(nextPath: string): Promise<User> {
+export async function requireAuthUser(
+  nextPath: string,
+  locale?: AppLocale,
+): Promise<User> {
   const user = await getAuthUser();
   if (!user) {
-    redirect(`/login?next=${encodeURIComponent(nextPath)}`);
+    const loginBase = locale ? localizePath(locale, "/login") : "/login";
+    redirect(`${loginBase}?next=${encodeURIComponent(nextPath)}`);
   }
   return user;
 }

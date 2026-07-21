@@ -6,9 +6,12 @@ import {
 import { getAppUrl, getStripe } from "@/lib/stripe/client";
 import {
   getStripePriceId,
+  isAppLocaleParam,
   isPlanId,
   TRIAL_PERIOD_DAYS,
 } from "@/lib/stripe/prices";
+import { localizePath } from "@/lib/i18n/routing";
+import type { AppLocale } from "@/lib/i18n/config";
 import { getAuthenticatedUser } from "@/lib/supabase/server-auth";
 
 export const dynamic = "force-dynamic";
@@ -31,6 +34,11 @@ export async function POST(request: Request) {
     body && typeof body === "object"
       ? (body as { plan?: unknown }).plan
       : undefined;
+  const localeRaw =
+    body && typeof body === "object"
+      ? (body as { locale?: unknown }).locale
+      : undefined;
+  const locale: AppLocale = isAppLocaleParam(localeRaw) ? localeRaw : "en";
 
   if (!isPlanId(plan)) {
     return NextResponse.json({ error: "invalid_plan" }, { status: 400 });
@@ -43,7 +51,7 @@ export async function POST(request: Request) {
 
   try {
     const stripe = getStripe();
-    const priceId = getStripePriceId(plan);
+    const priceId = getStripePriceId(plan, locale);
     const appUrl = getAppUrl();
 
     let customerId = profile.stripe_customer_id;
@@ -75,6 +83,7 @@ export async function POST(request: Request) {
         metadata: {
           userId: user.id,
           selectedPlan: plan,
+          locale,
           currency: profile.currency,
           monthlyGamblingSpend: String(profile.monthly_gambling_spend),
           weeklyGamblingHours: String(profile.weekly_gambling_hours),
@@ -87,6 +96,7 @@ export async function POST(request: Request) {
       metadata: {
         userId: user.id,
         selectedPlan: plan,
+        locale,
         currency: profile.currency,
         monthlyGamblingSpend: String(profile.monthly_gambling_spend),
         weeklyGamblingHours: String(profile.weekly_gambling_hours),
@@ -95,8 +105,8 @@ export async function POST(request: Request) {
           profile.last_gambling_date_is_approximate,
         ),
       },
-      success_url: `${appUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${appUrl}/onboarding/pricing`,
+      success_url: `${appUrl}${localizePath(locale, "/payment/success")}?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}${localizePath(locale, "/onboarding/pricing")}`,
       allow_promotion_codes: true,
     });
 

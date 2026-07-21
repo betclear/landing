@@ -1,31 +1,36 @@
+"use client";
+
 import { Container } from "@/components/ui/Container";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 
 type TrustStripProps = {
   domainCountLabel: string;
 };
 
 export function TrustStrip({ domainCountLabel }: TrustStripProps) {
+  const { t } = useLocale();
+
   const items = [
     {
-      title: `${domainCountLabel} sites blocked`,
-      detail: "Gambling-specific coverage from multiple blocklist sources.",
+      title: t("trust.domainsTitle", { domainCount: domainCountLabel }),
+      detail: t("trust.domainsDetail"),
     },
     {
-      title: "Works across your iPhone",
-      detail: "Protection applies across Safari and supported apps using system DNS.",
+      title: t("trust.worksTitle"),
+      detail: t("trust.worksDetail"),
     },
     {
-      title: "Updated automatically",
-      detail: "New gambling domains can be added without reinstalling.",
+      title: t("trust.updatedTitle"),
+      detail: t("trust.updatedDetail"),
     },
     {
-      title: "Guided installation",
-      detail: "Clear step-by-step setup on iPhone.",
+      title: t("trust.guidedTitle"),
+      detail: t("trust.guidedDetail"),
     },
   ];
 
   return (
-    <section aria-label="Product proof" className="border-y border-border/70 py-7">
+    <section aria-label={t("trust.ariaLabel")} className="border-y border-border/70 py-7">
       <Container>
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((item) => (

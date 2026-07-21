@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { headers } from "next/headers";
 import Script from "next/script";
 import { FirebaseAnalytics } from "@/components/shared/FirebaseAnalytics";
 import { SITE } from "@/lib/constants";
+import { localeConfig, type AppLocale, isAppLocale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,51 +27,26 @@ export const metadata: Metadata = {
   },
   description: SITE.longDescription,
   metadataBase: new URL(SITE.url),
-  alternates: {
-    canonical: "/",
-  },
-  keywords: [
-    "gambling website blocker",
-    "block gambling websites",
-    "gambling blocker",
-    "betting site blocker",
-    "stop gambling online",
-    "block betting sites on iPhone",
-  ],
-  openGraph: {
-    title: "BetClear — Block Gambling Websites on iPhone",
-    description: SITE.longDescription,
-    siteName: SITE.name,
-    type: "website",
-    url: SITE.url,
-    images: [
-      {
-        url: "/images/hero-iphone.png",
-        width: 900,
-        height: 1200,
-        alt: "BetClear gambling website blocker on iPhone",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "BetClear — Block Gambling Websites on iPhone",
-    description: SITE.longDescription,
-    images: ["/images/hero-iphone.png"],
-  },
   robots: {
     index: true,
     follow: true,
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headerStore = await headers();
+  const rawLocale = headerStore.get("x-betclear-locale");
+  const locale: AppLocale =
+    rawLocale && isAppLocale(rawLocale) ? rawLocale : "en";
+  const htmlLang = localeConfig[locale].htmlLang;
+  const dictionary = getDictionary(locale);
+
   return (
-    <html lang="en" className="light">
+    <html lang={htmlLang} className="light">
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -83,7 +61,7 @@ export default function RootLayout({
           href="#how-it-works"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:text-primary-foreground"
         >
-          Skip to content
+          {dictionary.common.skipToContent}
         </a>
         <FirebaseAnalytics />
         {children}

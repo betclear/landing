@@ -1,10 +1,21 @@
-import { FAQ_ITEMS, SITE } from "@/lib/constants";
+import { SITE } from "@/lib/constants";
+import type { AppLocale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { getPlanDisplay } from "@/lib/stripe/prices";
 
-export function FaqJsonLd() {
+type FaqJsonLdProps = {
+  locale: AppLocale;
+};
+
+export function FaqJsonLd({ locale }: FaqJsonLdProps) {
+  const dictionary = getDictionary(locale);
+  const annual = getPlanDisplay(locale, "annual");
+  const monthly = getPlanDisplay(locale, "monthly");
+
   const data = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: FAQ_ITEMS.map((item) => ({
+    mainEntity: dictionary.faq.items.map((item) => ({
       "@type": "Question",
       name: item.question,
       acceptedAnswer: {
@@ -20,12 +31,12 @@ export function FaqJsonLd() {
     name: SITE.name,
     applicationCategory: "UtilitiesApplication",
     operatingSystem: "iOS",
-    description: SITE.longDescription,
+    description: dictionary.meta.homeDescription,
     offers: {
       "@type": "Offer",
-      price: "29.99",
-      priceCurrency: "USD",
-      description: "Annual plan with 7-day free trial; monthly plan available at $3.99",
+      price: String(annual.amount),
+      priceCurrency: annual.currency,
+      description: `Annual plan with 7-day free trial; monthly plan available at ${monthly.formattedAmount}`,
     },
   };
 

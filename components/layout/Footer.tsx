@@ -1,12 +1,46 @@
+"use client";
+
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
-import {
-  FOOTER_PRODUCT_LINKS,
-  FOOTER_SUPPORT_LINKS,
-  SITE,
-} from "@/lib/constants";
+import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { SITE } from "@/lib/constants";
 
 export function Footer() {
+  const { t, href } = useLocale();
+
+  const productLinks = [
+    { href: href("/#how-it-works"), label: t("footer.howItWorks") },
+    { href: href("/install"), label: t("footer.installation") },
+    { href: href("/#pricing"), label: t("footer.pricing") },
+    { href: href("/#faq"), label: t("footer.faq") },
+  ];
+
+  const supportLinks = [
+    {
+      href: href("/support"),
+      label: t("nav.support"),
+      external: false,
+    },
+    {
+      href: `mailto:${SITE.email}`,
+      label: t("footer.contact"),
+      external: false,
+    },
+    { href: href("/privacy"), label: t("footer.privacy"), external: false },
+    { href: href("/terms"), label: t("footer.terms"), external: false },
+    {
+      href: "https://www.begambleaware.org/",
+      label: t("footer.beGambleAware"),
+      external: true,
+    },
+    {
+      href: "https://www.gamblersanonymous.org/",
+      label: t("footer.gamblersAnonymous"),
+      external: true,
+    },
+  ];
+
   return (
     <footer className="border-t border-border/70 bg-[#081113] py-16 text-[#f5f7f3]">
       <Container>
@@ -14,8 +48,7 @@ export function Footer() {
           <div>
             <p className="text-lg font-semibold tracking-[-0.04em]">{SITE.name}</p>
             <p className="mt-3 max-w-sm text-sm leading-relaxed text-[#a9bab6]">
-              Gambling website blocker for iPhone. Install once and stay
-              protected automatically.
+              {t("footer.blurb")}
             </p>
             <a
               href={`mailto:${SITE.email}`}
@@ -23,14 +56,20 @@ export function Footer() {
             >
               {SITE.email}
             </a>
+            <div className="mt-5">
+              <LanguageSwitcher variant="footer" />
+            </div>
           </div>
 
           <div>
             <p className="text-[12px] font-medium uppercase tracking-[0.16em] text-[#7ed6bc]">
-              Product
+              {t("footer.productHeading")}
             </p>
-            <nav aria-label="Product" className="mt-4 flex flex-col gap-2.5">
-              {FOOTER_PRODUCT_LINKS.map((link) => (
+            <nav
+              aria-label={t("common.product")}
+              className="mt-4 flex flex-col gap-2.5"
+            >
+              {productLinks.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
@@ -44,11 +83,14 @@ export function Footer() {
 
           <div>
             <p className="text-[12px] font-medium uppercase tracking-[0.16em] text-[#7ed6bc]">
-              Support
+              {t("footer.supportHeading")}
             </p>
-            <nav aria-label="Support" className="mt-4 flex flex-col gap-2.5">
-              {FOOTER_SUPPORT_LINKS.map((link) =>
-                "external" in link && link.external ? (
+            <nav
+              aria-label={t("common.support")}
+              className="mt-4 flex flex-col gap-2.5"
+            >
+              {supportLinks.map((link) =>
+                link.external ? (
                   <a
                     key={link.label}
                     href={link.href}
@@ -74,9 +116,10 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-[#7a8f8a] sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} {SITE.name}. All rights reserved.
+            © {new Date().getFullYear()} {SITE.name}.{" "}
+            {t("common.allRightsReserved")}
           </p>
-          <p>Gambling website protection for iPhone. Not a medical service.</p>
+          <p>{t("footer.disclaimer")}</p>
         </div>
       </Container>
     </footer>

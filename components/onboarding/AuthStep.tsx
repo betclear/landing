@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 import {
   canAccessStep,
@@ -19,6 +20,7 @@ type Mode = "choose" | "email";
 export function AuthStep() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { locale, href, t } = useLocale();
   const { state, hydrated } = useOnboarding();
   const [mode, setMode] = useState<Mode>("choose");
   const [email, setEmail] = useState("");
@@ -30,16 +32,16 @@ export function AuthStep() {
   useEffect(() => {
     if (!hydrated) return;
     if (!canAccessStep(state, 6) || !isSpendValid(state.monthlyGamblingSpend) || !isTimeValid(state.weeklyGamblingHours)) {
-      router.replace("/onboarding/spend");
+      router.replace(href("/onboarding/spend"));
     }
-  }, [hydrated, router, state]);
+  }, [hydrated, href, router, state]);
 
   useEffect(() => {
     const authError = searchParams.get("error");
     if (authError) {
-      setError("Sign-in didn’t finish. Please try again.");
+      setError(t("onboarding.auth.errors.signInDidntFinish"));
     }
-  }, [searchParams]);
+  }, [searchParams, t]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -77,22 +79,22 @@ export function AuthStep() {
   function messageForApiError(code: string | undefined): string {
     switch (code) {
       case "unauthorized":
-        return "Your session expired. Please sign in again.";
+        return t("onboarding.auth.errors.unauthorized");
       case "invalid_payload":
-        return "Some onboarding answers were missing. Go back to pricing and try again.";
+        return t("onboarding.auth.errors.invalidPayload");
       case "save_failed":
-        return "We couldn't save your progress. Please try again in a moment.";
+        return t("onboarding.auth.errors.saveFailed");
       case "profile_required":
-        return "We couldn't find your saved answers. Go back to pricing and try again.";
+        return t("onboarding.auth.errors.profileRequired");
       case "invalid_plan":
-        return "Please choose a plan on the previous step.";
+        return t("onboarding.auth.errors.invalidPlan");
       case "checkout_url_missing":
       case "checkout_failed":
-        return "Checkout couldn't be started. Please try again.";
+        return t("onboarding.auth.errors.checkoutFailed");
       default:
         return code
-          ? `Something went wrong (${code}). Please try again.`
-          : "We couldn't start checkout. Please check your connection and try again.";
+          ? t("onboarding.auth.errors.genericWithCode", { code })
+          : t("onboarding.auth.errors.genericCheckout");
     }
   }
 
@@ -145,7 +147,7 @@ export function AuthStep() {
       const checkout = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: state.selectedPlan }),
+        body: JSON.stringify({ plan: state.selectedPlan, locale }),
       });
 
       const data = (await checkout.json()) as { url?: string; error?: string };
@@ -175,16 +177,17 @@ export function AuthStep() {
     try {
       const supabase = createBrowserSupabaseClient();
       const origin = window.location.origin;
+      const next = href("/auth");
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${origin}/auth/callback?next=/auth`,
+          redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
         },
       });
       if (oauthError) throw oauthError;
     } catch {
       setBusy(false);
-      setError("Google sign-in isn’t available right now. Try email instead.");
+      setError(t("onboarding.auth.errors.googleUnavailable"));
     }
   }
 
@@ -203,11 +206,12 @@ export function AuthStep() {
       });
 
       if (signIn.error) {
+        const next = href("/auth");
         const signUp = await supabase.auth.signUp({
           email: email.trim(),
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/auth/callback?next=/auth`,
+            emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
           },
         });
 
@@ -221,23 +225,21 @@ export function AuthStep() {
         }
 
         setBusy(false);
-        setInfo(
-          "Check your email to confirm your account, then return here to continue.",
-        );
+        setInfo(t("onboarding.auth.checkEmailConfirm"));
         return;
       }
 
       await continueToCheckout();
     } catch {
       setBusy(false);
-      setError("We couldn’t sign you in with that email. Please try again.");
+      setError(t("onboarding.auth.errors.emailSignInFailed"));
     }
   }
 
   if (!hydrated) {
     return (
       <div className="flex min-h-dvh items-center justify-center bg-background text-sm text-muted-foreground">
-        Loading…
+        {t("common.loading")}
       </div>
     );
   }
@@ -246,8 +248,8 @@ export function AuthStep() {
     <OnboardingShell
       step={6}
       backHref="/onboarding/pricing"
-      title="Save your progress"
-      description="Create your private Betclear account to continue with your selected plan."
+      title={t("onboarding.auth.title")}
+      description={t("onboarding.auth.description")}
     >
       {mode === "choose" ? (
         <div className="space-y-3">
@@ -258,7 +260,7 @@ export function AuthStep() {
             disabled={busy}
             onClick={continueWithGoogle}
           >
-            Continue with Google
+            {t("onboarding.auth.continueWithGoogle")}
           </Button>
           <Button
             size="lg"
@@ -268,7 +270,7 @@ export function AuthStep() {
             disabled={busy}
             onClick={() => setMode("email")}
           >
-            Continue with email
+            {t("onboarding.auth.continueWithEmail")}
           </Button>
           <Button
             size="lg"
@@ -278,7 +280,7 @@ export function AuthStep() {
             disabled
             aria-disabled="true"
           >
-            Continue with Apple (soon)
+            {t("onboarding.auth.continueWithAppleSoon")}
           </Button>
         </div>
       ) : (
@@ -288,7 +290,7 @@ export function AuthStep() {
               htmlFor="email"
               className="mb-2 block text-sm text-muted-foreground"
             >
-              Email
+              {t("onboarding.auth.email")}
             </label>
             <input
               id="email"
@@ -305,7 +307,7 @@ export function AuthStep() {
               htmlFor="password"
               className="mb-2 block text-sm text-muted-foreground"
             >
-              Password
+              {t("onboarding.auth.password")}
             </label>
             <input
               id="password"
@@ -325,7 +327,7 @@ export function AuthStep() {
             showArrow={false}
             disabled={busy}
           >
-            {busy ? "Continuing…" : "Continue"}
+            {busy ? t("common.continuing") : t("common.continue")}
           </Button>
           <button
             type="button"
@@ -333,7 +335,7 @@ export function AuthStep() {
             onClick={() => setMode("choose")}
             disabled={busy}
           >
-            Other sign-in options
+            {t("onboarding.auth.otherOptions")}
           </button>
         </form>
       )}
@@ -353,7 +355,7 @@ export function AuthStep() {
       ) : null}
       {busy && !error ? (
         <p className="mt-4 text-sm text-muted-foreground" role="status">
-          Preparing your secure checkout…
+          {t("onboarding.auth.preparingCheckout")}
         </p>
       ) : null}
     </OnboardingShell>

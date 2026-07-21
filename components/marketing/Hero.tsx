@@ -10,7 +10,7 @@ import {
   PhoneFrame,
   ProtectionStatusScreen,
 } from "@/components/marketing/PhoneFrame";
-import { SITE } from "@/lib/constants";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 
 type HeroProps = {
@@ -19,6 +19,7 @@ type HeroProps = {
 
 export function Hero({ domainCountLabel }: HeroProps) {
   const reduce = useReducedMotion();
+  const { t, href } = useLocale();
 
   useEffect(() => {
     trackEvent("homepage_viewed");
@@ -34,27 +35,27 @@ export function Hero({ domainCountLabel }: HeroProps) {
       <Container className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
         <div className="max-w-xl">
           <p className="text-[12px] font-medium uppercase tracking-[0.18em] text-primary">
-            Gambling blocking for iPhone
+            {t("hero.eyebrow")}
           </p>
           <h1 className="mt-3 text-balance text-[2rem] font-semibold leading-[1.05] tracking-[-0.055em] text-foreground sm:text-5xl lg:text-[3.35rem] lg:leading-[1.02]">
-            Block {domainCountLabel} gambling websites.
+            {t("hero.title", { domainCount: domainCountLabel })}
           </h1>
           <p className="mt-4 max-w-[34rem] text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-            {SITE.description}
+            {t("hero.description")}
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Button
-              href={SITE.startHref}
+              href={href("/onboarding/spend")}
               size="lg"
               onClick={() => {
                 trackEvent("hero_start_protection_clicked");
                 trackEvent("hero_cta_clicked", { source: "hero" });
               }}
             >
-              {SITE.ctaPrimary}
+              {t("hero.primaryCta")}
             </Button>
             <Button
-              href="#how-it-works"
+              href={href("/#how-it-works")}
               variant="secondary"
               size="lg"
               showArrow={false}
@@ -63,10 +64,12 @@ export function Hero({ domainCountLabel }: HeroProps) {
                 trackEvent("how_it_works_clicked");
               }}
             >
-              {SITE.ctaSecondary}
+              {t("hero.secondaryCta")}
             </Button>
           </div>
-          <p className="mt-3 text-sm text-muted-foreground">{SITE.ctaMicrocopy}</p>
+          <p className="mt-3 text-sm text-muted-foreground">
+            {t("hero.microcopy")}
+          </p>
         </div>
 
         <div className="relative mx-auto w-full max-w-[420px]">
@@ -110,7 +113,7 @@ export function Hero({ domainCountLabel }: HeroProps) {
           </div>
 
           <p className="mx-auto mt-5 max-w-sm rounded-full bg-card/80 px-4 py-2 text-center text-[12px] text-muted-foreground ring-1 ring-border">
-            You try to open a gambling site. BetClear blocks it.
+            {t("hero.visualCaption")}
           </p>
         </div>
       </Container>
