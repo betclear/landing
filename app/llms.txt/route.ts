@@ -1,4 +1,5 @@
 import { SITE } from "@/lib/constants";
+import { listPosts } from "@/lib/content/blog";
 import { listGuides } from "@/lib/content/guides";
 import { localizePath } from "@/lib/i18n/routing";
 
@@ -10,6 +11,12 @@ function guideLines(locale: "en" | "br"): string {
       const url = `${SITE.url}${localizePath(locale, `/guides/${guide.slug}`)}`;
       return `- [${guide.cardTitle}](${url}): ${guide.description}`;
     })
+    .join("\n");
+}
+
+function blogLines(): string {
+  return listPosts()
+    .map((post) => `- [${post.title}](${SITE.url}/blog/${post.slug}): ${post.description}`)
     .join("\n");
 }
 
@@ -29,6 +36,9 @@ ${guideLines("en")}
 
 ## Guides (Português / Brasil)
 ${guideLines("br")}
+
+## Blog (recovery stories & guides)
+${blogLines()}
 
 ## About
 - Platform: iPhone (iOS), via Apple configuration profile + encrypted DNS (DNS-over-HTTPS).

@@ -12,6 +12,8 @@ export function Footer() {
   const productLinks = [
     { href: href("/#how-it-works"), label: t("footer.howItWorks") },
     { href: href("/guides"), label: t("footer.guides") },
+    // The blog is a single top-level English section (see app/blog/layout.tsx).
+    { href: "/blog", label: "Blog" },
     { href: href("/install"), label: t("footer.installation") },
     { href: href("/#pricing"), label: t("footer.pricing") },
     { href: href("/#faq"), label: t("footer.faq") },
