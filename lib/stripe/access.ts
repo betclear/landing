@@ -1,6 +1,11 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
 import { getAuthUser } from "@/lib/auth/user";
+import {
+  getRecoveryProfileByStripeCustomerId,
+  getRecoveryProfileByUserId,
+  isSubscriptionEntitled,
+} from "@/lib/onboarding/profile";
 import { createServiceClient } from "@/lib/supabase/server";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/client";
 
@@ -185,8 +190,15 @@ export async function hasPaywallAccess(
   if (!isStripeConfigured()) return true;
 
   const user = await getAuthUser();
-  if (user && (await isUserSubscribed(user.id, user.email))) {
-    return true;
+  if (user) {
+    if (await isUserSubscribed(user.id, user.email)) {
+      return true;
+    }
+
+    const profile = await getRecoveryProfileByUserId(user.id);
+    if (isSubscriptionEntitled(profile?.subscription_status)) {
+      return true;
+    }
   }
 
   const jar = await cookies();
@@ -196,6 +208,13 @@ export async function hasPaywallAccess(
     const access = verifyAccessToken(raw ?? undefined);
     if (!access) continue;
     if (await isCustomerSubscribed(access.customerId)) {
+      return true;
+    }
+
+    const profile = await getRecoveryProfileByStripeCustomerId(
+      access.customerId,
+    );
+    if (isSubscriptionEntitled(profile?.subscription_status)) {
       return true;
     }
   }
@@ -252,7 +271,11 @@ export async function grantAccessFromCheckoutSession(
     expand: ["subscription"],
   });
 
-  if (session.payment_status !== "paid" && session.status !== "complete") {
+  if (
+    session.status !== "complete" &&
+    session.payment_status !== "paid" &&
+    session.payment_status !== "no_payment_required"
+  ) {
     return null;
   }
 

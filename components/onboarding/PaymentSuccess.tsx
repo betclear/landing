@@ -38,16 +38,24 @@ export function PaymentSuccess() {
           throw new Error("verify_failed");
         }
 
-        await fetch("/api/checkout/success", {
+        const successRes = await fetch("/api/checkout/success", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ sessionId }),
         });
 
+        let installPath = href("/install");
+        if (successRes.ok) {
+          const successData = (await successRes.json()) as { token?: string };
+          if (successData.token) {
+            installPath = `${installPath}?access=${encodeURIComponent(successData.token)}`;
+          }
+        }
+
         if (!cancelled) {
           clearOnboardingState();
           trackEvent("stripe_checkout_completed", { step: "payment-success" });
-          router.replace(href("/install"));
+          router.replace(installPath);
         }
       } catch {
         if (!cancelled) setStatus("error");

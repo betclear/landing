@@ -5,6 +5,7 @@ import {
   updateRecoveryProfileByUserId,
 } from "@/lib/onboarding/profile";
 import { getStripe } from "@/lib/stripe/client";
+import { handleCheckoutSessionCompleted } from "@/lib/stripe/webhooks";
 import { isPlanId } from "@/lib/stripe/prices";
 import { getSubscriptionPeriodEnd, unixToIso } from "@/lib/stripe/subscription";
 import { getAuthenticatedUser } from "@/lib/supabase/server-auth";
@@ -31,7 +32,10 @@ export async function GET(request: Request) {
       expand: ["subscription"],
     });
 
-    if (session.metadata?.userId && session.metadata.userId !== user.id) {
+    const sessionUserId =
+      session.metadata?.userId ?? session.metadata?.user_id ?? null;
+
+    if (sessionUserId && sessionUserId !== user.id) {
       return NextResponse.json({ error: "forbidden" }, { status: 403 });
     }
 
@@ -70,30 +74,40 @@ export async function GET(request: Request) {
 
     const plan = isPlanId(session.metadata?.selectedPlan)
       ? session.metadata.selectedPlan
-      : profile?.selected_plan;
+      : isPlanId(session.metadata?.plan)
+        ? session.metadata.plan
+        : profile?.selected_plan;
 
     const customerId =
       typeof session.customer === "string"
         ? session.customer
         : session.customer?.id;
 
-    await updateRecoveryProfileByUserId(user.id, {
-      stripe_customer_id: customerId ?? profile?.stripe_customer_id ?? null,
-      stripe_subscription_id:
-        subscription?.id ?? profile?.stripe_subscription_id ?? null,
-      subscription_status:
-        subscription?.status ??
-        (paymentOk ? "trialing" : profile?.subscription_status ?? null),
-      selected_plan: plan ?? null,
-      trial_ends_at: subscription
-        ? unixToIso(subscription.trial_end)
-        : (profile?.trial_ends_at ?? null),
-      current_period_ends_at: subscription
-        ? getSubscriptionPeriodEnd(subscription)
-        : (profile?.current_period_ends_at ?? null),
-      onboarding_completed_at:
-        profile?.onboarding_completed_at ?? new Date().toISOString(),
-    });
+    if (profile) {
+      await updateRecoveryProfileByUserId(user.id, {
+        stripe_customer_id: customerId ?? profile.stripe_customer_id ?? null,
+        stripe_subscription_id:
+          subscription?.id ?? profile.stripe_subscription_id ?? null,
+        subscription_status:
+          subscription?.status ??
+          (paymentOk ? "trialing" : profile.subscription_status ?? null),
+        selected_plan: plan ?? null,
+        trial_ends_at: subscription
+          ? unixToIso(subscription.trial_end)
+          : (profile.trial_ends_at ?? null),
+        current_period_ends_at: subscription
+          ? getSubscriptionPeriodEnd(subscription)
+          : (profile.current_period_ends_at ?? null),
+        onboarding_completed_at:
+          profile.onboarding_completed_at ?? new Date().toISOString(),
+      });
+    }
+
+    try {
+      await handleCheckoutSessionCompleted(session);
+    } catch (syncError) {
+      console.error("verify-session subscription sync failed", syncError);
+    }
 
     return NextResponse.json({
       ok: true,
