@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-20T20:24:24.898Z",
-  "durationMs": 253420,
+  "generatedAt": "2026-07-21T10:57:52.995Z",
+  "durationMs": 247741,
   "success": true,
   "usedStaleCache": false,
   "sources": [
@@ -11,10 +11,10 @@
       "sourceUrl": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/gambling-onlydomains.txt",
       "status": "success",
       "usedCache": false,
-      "rawEntries": 339801,
-      "validDomains": 339789,
+      "rawEntries": 342511,
+      "validDomains": 342499,
       "rejectedEntries": 12,
-      "uniqueContributions": 3346,
+      "uniqueContributions": 6056,
       "warnings": []
     },
     {
@@ -56,15 +56,15 @@
     }
   ],
   "merge": {
-    "validEntriesBeforeDeduplication": 682456,
+    "validEntriesBeforeDeduplication": 685166,
     "duplicatesRemoved": 336485,
-    "domainsBeforeAllowlist": 345971,
+    "domainsBeforeAllowlist": 348681,
     "allowlistRules": 0,
     "allowlistMatchesRemoved": 0,
-    "finalDomainCount": 345971
+    "finalDomainCount": 348681
   },
   "output": {
     "file": "output/gambling.txt",
-    "sha256": "8eccad0f21ffa5c788b471605762bafbc24693a2be5b4715662320cbd3f2c075"
+    "sha256": "75c059428aa9bd6d51cb363c269d632e4b892ae415809057a08ee45f19ca4f13"
   }
 }
