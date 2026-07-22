@@ -57,7 +57,7 @@ export function Footer() {
           <div>
             <Link
               href={href("/")}
-              className="inline-flex items-center transition-opacity hover:opacity-80"
+              className="inline-flex items-center text-[#f5f7f3] transition-opacity hover:opacity-80"
               aria-label={SITE.name}
             >
               <BrandLogo height={32} />
