@@ -25,7 +25,7 @@ export default function manifest(): MetadataRoute.Manifest {
       },
       {
         src: "/images/faviconbc.png",
-        sizes: "53x53",
+        sizes: "48x54",
         type: "image/png",
         purpose: "any",
       },
