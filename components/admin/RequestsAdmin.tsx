@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, X } from "@phosphor-icons/react";
 import { Container } from "@/components/ui/Container";
+import { notifyAdminRequestsChanged } from "@/lib/admin/events";
 import type { DomainSubmission } from "@/lib/supabase/types";
 
 export function RequestsAdmin() {
@@ -71,6 +72,7 @@ export function RequestsAdmin() {
 
     setWarning(data.refreshWarning ?? null);
     await loadSubmissions();
+    notifyAdminRequestsChanged();
   }
 
   return (

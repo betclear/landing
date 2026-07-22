@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { refreshAdGuardBlocklist } from "@/lib/adguard/client";
+import { scheduleAdGuardRefresh } from "@/lib/adguard/client";
 import { isAdminAuthenticated } from "@/lib/auth/admin";
 import { createServiceClient } from "@/lib/supabase/server";
 
@@ -58,12 +58,12 @@ export async function PATCH(request: Request, context: RouteContext) {
       );
     }
 
-    const refresh = await refreshAdGuardBlocklist();
+    scheduleAdGuardRefresh();
 
     return NextResponse.json({
       domain: data,
-      dnsRefresh: refresh.ok,
-      refreshWarning: refresh.warning ?? null,
+      dnsRefresh: true,
+      refreshWarning: null,
     });
   } catch (error) {
     console.error("domains PATCH error", error);
@@ -86,10 +86,12 @@ export async function DELETE(_request: Request, context: RouteContext) {
 
   try {
     const supabase = createServiceClient();
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("blocked_domains")
       .delete()
-      .eq("id", id);
+      .eq("id", id)
+      .select("id, hostname")
+      .maybeSingle();
 
     if (error) {
       console.error("domains delete failed", error);
@@ -99,12 +101,20 @@ export async function DELETE(_request: Request, context: RouteContext) {
       );
     }
 
-    const refresh = await refreshAdGuardBlocklist();
+    if (!data) {
+      return NextResponse.json(
+        { error: "Domain not found" },
+        { status: 404 },
+      );
+    }
+
+    scheduleAdGuardRefresh();
 
     return NextResponse.json({
       ok: true,
-      dnsRefresh: refresh.ok,
-      refreshWarning: refresh.warning ?? null,
+      deleted: data,
+      dnsRefresh: true,
+      refreshWarning: null,
     });
   } catch (error) {
     console.error("domains DELETE error", error);

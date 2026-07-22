@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { refreshAdGuardBlocklist } from "@/lib/adguard/client";
+import { scheduleAdGuardRefresh } from "@/lib/adguard/client";
 import { isAdminAuthenticated } from "@/lib/auth/admin";
 import { createServiceClient } from "@/lib/supabase/server";
 
@@ -53,9 +53,6 @@ export async function PATCH(request: Request, context: RouteContext) {
       );
     }
 
-    let refreshWarning: string | null = null;
-    let dnsRefresh = false;
-
     if (action === "approve") {
       const { error: insertError } = await supabase
         .from("blocked_domains")
@@ -73,9 +70,7 @@ export async function PATCH(request: Request, context: RouteContext) {
         );
       }
 
-      const refresh = await refreshAdGuardBlocklist();
-      dnsRefresh = refresh.ok;
-      refreshWarning = refresh.warning ?? null;
+      scheduleAdGuardRefresh();
     }
 
     const nextStatus = action === "approve" ? "approved" : "rejected";
@@ -99,8 +94,8 @@ export async function PATCH(request: Request, context: RouteContext) {
 
     return NextResponse.json({
       submission: updated,
-      dnsRefresh,
-      refreshWarning,
+      dnsRefresh: action === "approve",
+      refreshWarning: null,
     });
   } catch (error) {
     console.error("submissions PATCH error", error);

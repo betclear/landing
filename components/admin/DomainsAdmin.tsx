@@ -20,6 +20,7 @@ export function DomainsAdmin() {
   const [warning, setWarning] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   function applyRefreshWarning(data: { refreshWarning?: string | null }) {
     setWarning(data.refreshWarning ?? null);
@@ -128,22 +129,37 @@ export function DomainsAdmin() {
 
     setError(null);
     setWarning(null);
-    const response = await fetch(`/api/admin/domains/${domain.id}`, {
-      method: "DELETE",
-    });
+    setDeletingId(domain.id);
 
-    const data = (await response.json()) as {
-      error?: string;
-      refreshWarning?: string | null;
-    };
+    // Optimistic UI so the row disappears even if AdGuard is slow.
+    setDomains((current) => current.filter((item) => item.id !== domain.id));
+    setTotal((current) => Math.max(0, current - 1));
 
-    if (!response.ok) {
-      setError(data.error ?? "Failed to delete domain");
-      return;
+    try {
+      const response = await fetch(`/api/admin/domains/${domain.id}`, {
+        method: "DELETE",
+      });
+
+      const data = (await response.json()) as {
+        error?: string;
+        refreshWarning?: string | null;
+      };
+
+      if (!response.ok) {
+        setError(data.error ?? "Failed to delete domain");
+        await loadDomains(query, page);
+        setDeletingId(null);
+        return;
+      }
+
+      applyRefreshWarning(data);
+      await loadDomains(query, page);
+    } catch {
+      setError("Failed to delete domain. Please try again.");
+      await loadDomains(query, page);
+    } finally {
+      setDeletingId(null);
     }
-
-    applyRefreshWarning(data);
-    await loadDomains(query, page);
   }
 
   return (
@@ -298,8 +314,9 @@ export function DomainsAdmin() {
                         <button
                           type="button"
                           onClick={() => void removeDomain(domain)}
+                          disabled={deletingId === domain.id}
                           aria-label={`Delete ${domain.hostname}`}
-                          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:bg-surface hover:text-foreground"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:bg-surface hover:text-foreground disabled:opacity-50"
                         >
                           <Trash size={14} />
                         </button>

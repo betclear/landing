@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { SignOut } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { ADMIN_REQUESTS_CHANGED_EVENT } from "@/lib/admin/events";
 import { cn } from "@/lib/cn";
 
 const TABS = [
@@ -32,6 +33,16 @@ export function AdminNav() {
   useEffect(() => {
     void loadPendingCount();
   }, [loadPendingCount, pathname]);
+
+  useEffect(() => {
+    const onChange = () => {
+      void loadPendingCount();
+    };
+    window.addEventListener(ADMIN_REQUESTS_CHANGED_EVENT, onChange);
+    return () => {
+      window.removeEventListener(ADMIN_REQUESTS_CHANGED_EVENT, onChange);
+    };
+  }, [loadPendingCount]);
 
   async function logout() {
     await fetch("/api/admin/logout", { method: "POST" });

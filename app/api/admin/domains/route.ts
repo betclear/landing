@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { refreshAdGuardBlocklist } from "@/lib/adguard/client";
+import { scheduleAdGuardRefresh } from "@/lib/adguard/client";
 import { isAdminAuthenticated } from "@/lib/auth/admin";
 import { normalizeHostname } from "@/lib/domains/normalize";
 import { createServiceClient } from "@/lib/supabase/server";
@@ -107,13 +107,13 @@ export async function POST(request: Request) {
       );
     }
 
-    const refresh = await refreshAdGuardBlocklist();
+    scheduleAdGuardRefresh();
 
     return NextResponse.json(
       {
         domain: data,
-        dnsRefresh: refresh.ok,
-        refreshWarning: refresh.warning ?? null,
+        dnsRefresh: true,
+        refreshWarning: null,
       },
       { status: 201 },
     );

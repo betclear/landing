@@ -1,3 +1,5 @@
+import { after } from "next/server";
+
 export type AdGuardRefreshResult = {
   ok: boolean;
   updated?: number;
@@ -9,6 +11,8 @@ type AdGuardConfig = {
   username: string;
   password: string;
 };
+
+const ADGUARD_TIMEOUT_MS = 8_000;
 
 function getAdGuardConfig(): AdGuardConfig | null {
   const baseUrl = process.env.ADGUARD_BASE_URL?.trim().replace(/\/$/, "");
@@ -35,6 +39,24 @@ function authHeaders(config: AdGuardConfig): HeadersInit {
   };
 }
 
+async function fetchAdGuard(
+  url: string,
+  init: RequestInit,
+): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ADGUARD_TIMEOUT_MS);
+
+  try {
+    return await fetch(url, {
+      ...init,
+      signal: controller.signal,
+      cache: "no-store",
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 /**
  * Ensure AdGuard Home filter update interval is 1 hour as a fallback
  * if the immediate refresh call is missed.
@@ -44,12 +66,11 @@ async function ensureFiltersUpdateInterval(
 ): Promise<void> {
   const headers = authHeaders(config);
 
-  const statusResponse = await fetch(
+  const statusResponse = await fetchAdGuard(
     `${config.baseUrl}/control/filtering/status`,
     {
       method: "GET",
       headers,
-      cache: "no-store",
     },
   );
 
@@ -71,7 +92,7 @@ async function ensureFiltersUpdateInterval(
     return;
   }
 
-  const configResponse = await fetch(
+  const configResponse = await fetchAdGuard(
     `${config.baseUrl}/control/filtering/config`,
     {
       method: "POST",
@@ -80,7 +101,6 @@ async function ensureFiltersUpdateInterval(
         enabled: status.enabled ?? true,
         interval: 1,
       }),
-      cache: "no-store",
     },
   );
 
@@ -110,13 +130,12 @@ export async function refreshAdGuardBlocklist(): Promise<AdGuardRefreshResult> {
   try {
     await ensureFiltersUpdateInterval(config);
 
-    const response = await fetch(
+    const response = await fetchAdGuard(
       `${config.baseUrl}/control/filtering/refresh`,
       {
         method: "POST",
         headers: authHeaders(config),
         body: JSON.stringify({ whitelist: false }),
-        cache: "no-store",
       },
     );
 
@@ -137,14 +156,22 @@ export async function refreshAdGuardBlocklist(): Promise<AdGuardRefreshResult> {
       updated: typeof data.updated === "number" ? data.updated : undefined,
     };
   } catch (error) {
-    console.error(
-      "AdGuard refresh error",
-      error instanceof Error ? error.message : "unknown",
-    );
+    const message = error instanceof Error ? error.message : "unknown";
+    console.error("AdGuard refresh error", message);
     return {
       ok: false,
       warning:
         "AdGuard filter refresh failed. Domain change was saved; DNS may update on the hourly fallback.",
     };
   }
+}
+
+/**
+ * Run AdGuard refresh after the HTTP response is sent so admin CRUD
+ * stays fast even when AdGuard is slow or times out.
+ */
+export function scheduleAdGuardRefresh(): void {
+  after(() => {
+    void refreshAdGuardBlocklist();
+  });
 }
