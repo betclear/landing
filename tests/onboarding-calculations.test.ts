@@ -48,14 +48,14 @@ describe("parseOnboardingState", () => {
     });
   });
 
-  it("defaults protection duration to 12 months", () => {
+  it("defaults protection duration to 3 months", () => {
     const parsed = parseOnboardingState({
       currentStep: 1,
       currency: "USD",
-      selectedPlan: "annual",
+      selectedPlan: "monthly",
     });
 
-    expect(parsed?.protectionDurationMonths).toBe(12);
-    expect(parsed?.selectedPlan).toBe("annual");
+    expect(parsed?.protectionDurationMonths).toBe(3);
+    expect(parsed?.selectedPlan).toBe("monthly");
   });
 });

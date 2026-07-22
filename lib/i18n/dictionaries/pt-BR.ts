@@ -473,38 +473,26 @@ export const ptBR: Dictionary = {
     },
     protectionPeriod: {
       eyebrow: "Seu período de proteção",
-      title: "A recuperação leva mais do que algumas semanas.",
-      researchAria: "Insight de pesquisa sobre a duração da recuperação",
-      statValue: "14 meses",
-      statBody:
-        "Em um estudo com pessoas que haviam resolvido problemas graves com o jogo, a mediana do tempo de resolução foi de 14 meses.",
-      statClarification:
-        "A recuperação é diferente para cada pessoa. Esta pesquisa não significa que todo mundo precisa do mesmo tempo.",
-      sourcePrefix: "Fonte:",
-      sourceName: "Hodgins & el-Guebaly, Addiction, 2000",
-      viewResearch: "Ver pesquisa ↗",
-      question: "Por quanto tempo você quer que o BetClear te proteja?",
-      questionDescription:
-        "Escolha um período que dê tempo para essa decisão se tornar parte do dia a dia.",
+      title: "A recuperação costuma levar meses, não semanas.",
+      description:
+        "Em um estudo, o tempo mediano para resolver problemas graves com o jogo foi de 14 meses.",
+      viewResearch: "Ver estudo",
+      question: "Por quanto tempo o BetClear deve te proteger?",
       oneMonth: "1 mês",
-      oneMonthLabel: "Proteção de curto prazo",
-      oneMonthDescription:
-        "Um ponto de partida se você ainda não está pronto para se comprometer por mais tempo.",
+      oneMonthShort: "1m",
       threeMonths: "3 meses",
-      threeMonthsLabel: "Construir impulso inicial",
-      threeMonthsDescription:
-        "Proteja-se enquanto começa a mudar suas rotinas.",
+      threeMonthsShort: "3m",
       sixMonths: "6 meses",
-      sixMonthsLabel: "Compromisso mais forte",
-      sixMonthsDescription:
-        "Crie mais distância entre você e o jogo.",
+      sixMonthsShort: "6m",
       twelveMonths: "12 meses",
-      twelveMonthsLabel: "Recomendado",
-      twelveMonthsDescription:
-        "Um ano inteiro de proteção ininterrupta, sem precisar tomar a decisão de novo todo mês.",
-      recommended: "Recomendado",
+      twelveMonthsShort: "12m",
+      hintOneMonth: "Um ponto de partida curto",
+      hintThreeMonths: "Tempo para criar novas rotinas",
+      hintSixMonths: "Mais distância do jogo",
+      hintTwelveMonths: "Um ano inteiro sem decidir de novo todo mês",
+      recommendedShort: "Melhor",
       cancelNote:
-        "Você pode cancelar renovações futuras a qualquer momento. Sua proteção permanece ativa até o fim do período já pago.",
+        "Cancele renovações quando quiser. A proteção fica ativa até o fim do período já pago.",
       continue: "Continuar",
     },
     pricing: {

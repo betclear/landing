@@ -459,38 +459,26 @@ export const en = {
     },
     protectionPeriod: {
       eyebrow: "Your protection period",
-      title: "Recovery takes longer than a few weeks.",
-      researchAria: "Research insight about recovery duration",
-      statValue: "14 months",
-      statBody:
-        "In one study of people who had resolved serious gambling problems, the median length of resolution was 14 months.",
-      statClarification:
-        "Recovery is different for everyone. This research does not mean every person needs the same amount of time.",
-      sourcePrefix: "Source:",
-      sourceName: "Hodgins & el-Guebaly, Addiction, 2000",
-      viewResearch: "View research ↗",
-      question: "How long do you want BetClear to protect you?",
-      questionDescription:
-        "Choose a period that gives your decision enough time to become part of everyday life.",
+      title: "Recovery often takes months, not weeks.",
+      description:
+        "In one study, the median time to resolve serious gambling problems was 14 months.",
+      viewResearch: "View study",
+      question: "How long should BetClear protect you?",
       oneMonth: "1 month",
-      oneMonthLabel: "Short-term protection",
-      oneMonthDescription:
-        "A starting point if you are not ready to commit for longer.",
+      oneMonthShort: "1m",
       threeMonths: "3 months",
-      threeMonthsLabel: "Build initial momentum",
-      threeMonthsDescription:
-        "Protect yourself while you begin changing your routines.",
+      threeMonthsShort: "3m",
       sixMonths: "6 months",
-      sixMonthsLabel: "Stronger commitment",
-      sixMonthsDescription:
-        "Create more distance between yourself and gambling.",
+      sixMonthsShort: "6m",
       twelveMonths: "12 months",
-      twelveMonthsLabel: "Recommended",
-      twelveMonthsDescription:
-        "A full year of uninterrupted protection without needing to make the decision again each month.",
-      recommended: "Recommended",
+      twelveMonthsShort: "12m",
+      hintOneMonth: "A short starting point",
+      hintThreeMonths: "Time to build new routines",
+      hintSixMonths: "More distance from gambling",
+      hintTwelveMonths: "A full year without deciding again each month",
+      recommendedShort: "Best",
       cancelNote:
-        "You can cancel future renewals at any time. Your protection remains active until the end of the period you have already paid for.",
+        "Cancel renewals anytime. Protection stays active until the end of the period you’ve paid for.",
       continue: "Continue",
     },
     pricing: {

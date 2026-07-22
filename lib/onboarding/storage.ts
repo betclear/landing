@@ -20,8 +20,8 @@ export function createDefaultOnboardingState(
     weeklyGamblingHours: null,
     lastGamblingDate: null,
     lastGamblingDateIsApproximate: false,
-    protectionDurationMonths: 12,
-    selectedPlan: "annual",
+    protectionDurationMonths: 3,
+    selectedPlan: "monthly",
   };
 }
 
