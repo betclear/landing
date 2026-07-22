@@ -472,11 +472,12 @@ export const ptBR: Dictionary = {
       continue: "Proteger meu progresso",
     },
     protectionPeriod: {
-      eyebrow: "Seu período de proteção",
       title: "A recuperação costuma levar meses, não semanas.",
-      description:
-        "Em um estudo, o tempo mediano para resolver problemas graves com o jogo foi de 14 meses.",
-      viewResearch: "Ver estudo",
+      descriptionBefore:
+        "Em um estudo, pessoas que resolveram problemas graves com o jogo levaram, em mediana, ",
+      fourteenMonths: "14 meses",
+      descriptionAfter: ".",
+      researchLinkAria: "(abre o estudo em uma nova aba)",
       question: "Por quanto tempo o BetClear deve te proteger?",
       oneMonth: "1 mês",
       oneMonthShort: "1m",
@@ -490,7 +491,6 @@ export const ptBR: Dictionary = {
       hintThreeMonths: "Tempo para criar novas rotinas",
       hintSixMonths: "Mais distância do jogo",
       hintTwelveMonths: "Um ano inteiro sem decidir de novo todo mês",
-      recommendedShort: "Melhor",
       cancelNote:
         "Cancele renovações quando quiser. A proteção fica ativa até o fim do período já pago.",
       continue: "Continuar",

@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowSquareOut } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
@@ -36,7 +37,7 @@ export function ProtectionPeriodStep() {
   const { state, update, setStep, setPlan } = useOnboarding();
   const sliderId = useId();
   const questionId = useId();
-  const defaultSelectionRef = useRef(state.protectionDurationMonths === 3);
+  const defaultSelectionRef = useRef(state.protectionDurationMonths === 12);
   const viewedRef = useRef(false);
 
   const selected = state.protectionDurationMonths;
@@ -65,7 +66,7 @@ export function ProtectionPeriodStep() {
     trackEvent("protection_period_selected", {
       step: "protection-period",
       selected_months: months,
-      default_selection: months === 3 && defaultSelectionRef.current,
+      default_selection: months === 12 && defaultSelectionRef.current,
     });
   }
 
@@ -78,7 +79,7 @@ export function ProtectionPeriodStep() {
     trackEvent("protection_period_continued", {
       step: "protection-period",
       selected_months: months,
-      default_selection: months === 3 && defaultSelectionRef.current,
+      default_selection: months === 12 && defaultSelectionRef.current,
       preselected_plan: plan,
     });
     router.push(href("/onboarding/pricing"));
@@ -88,9 +89,30 @@ export function ProtectionPeriodStep() {
     <OnboardingShell
       step={6}
       backHref="/onboarding/impact"
-      eyebrow={t("onboarding.protectionPeriod.eyebrow")}
       title={t("onboarding.protectionPeriod.title")}
-      description={t("onboarding.protectionPeriod.description")}
+      description={
+        <>
+          {t("onboarding.protectionPeriod.descriptionBefore")}
+          <a
+            href={RESEARCH_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-baseline gap-1 font-medium text-foreground underline decoration-primary/50 underline-offset-2 transition-colors hover:text-primary hover:decoration-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            <span>{t("onboarding.protectionPeriod.fourteenMonths")}</span>
+            <ArrowSquareOut
+              size={14}
+              weight="bold"
+              aria-hidden="true"
+              className="relative top-[0.1em] shrink-0"
+            />
+            <span className="sr-only">
+              {t("onboarding.protectionPeriod.researchLinkAria")}
+            </span>
+          </a>
+          {t("onboarding.protectionPeriod.descriptionAfter")}
+        </>
+      }
       footer={
         <Button
           size="lg"
@@ -103,26 +125,13 @@ export function ProtectionPeriodStep() {
       }
     >
       <div className="space-y-7">
-        <p className="text-sm text-muted-foreground">
-          <a
-            href={RESEARCH_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-primary underline underline-offset-2 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            {t("onboarding.protectionPeriod.viewResearch")}
-          </a>
-        </p>
-
         <section aria-labelledby={questionId} className="space-y-5">
-          <div>
-            <h2
-              id={questionId}
-              className="text-balance text-xl font-semibold tracking-[-0.03em] text-foreground"
-            >
-              {t("onboarding.protectionPeriod.question")}
-            </h2>
-          </div>
+          <h2
+            id={questionId}
+            className="text-balance text-xl font-semibold tracking-[-0.03em] text-foreground"
+          >
+            {t("onboarding.protectionPeriod.question")}
+          </h2>
 
           <div className="rounded-[22px] bg-card px-5 py-6 ring-1 ring-border">
             <p className="text-center text-3xl font-semibold tracking-[-0.04em] text-foreground">
@@ -173,7 +182,7 @@ export function ProtectionPeriodStep() {
                       type="button"
                       onClick={() => selectDuration(months)}
                       className={cn(
-                        "rounded-full px-1 py-1.5 text-center text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                        "rounded-full px-1 py-2 text-center text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                         active
                           ? "bg-primary/12 text-foreground"
                           : "text-muted-foreground hover:text-foreground",
@@ -183,14 +192,6 @@ export function ProtectionPeriodStep() {
                       {t(
                         `onboarding.protectionPeriod.${DURATION_LABEL_KEYS[months]}Short`,
                       )}
-                      <span
-                        className={cn(
-                          "mt-0.5 block text-[10px] font-semibold",
-                          months === 12 ? "text-primary" : "invisible",
-                        )}
-                      >
-                        {t("onboarding.protectionPeriod.recommendedShort")}
-                      </span>
                     </button>
                   );
                 })}

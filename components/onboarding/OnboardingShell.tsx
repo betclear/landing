@@ -14,7 +14,7 @@ type OnboardingShellProps = {
   step: number;
   title: string;
   eyebrow?: string;
-  description?: string;
+  description?: ReactNode;
   backHref?: string;
   children: ReactNode;
   footer?: ReactNode;
@@ -113,9 +113,9 @@ export function OnboardingShell({
             {title}
           </h1>
           {description ? (
-            <p className="mt-3 text-pretty text-[15px] leading-relaxed text-muted-foreground">
+            <div className="mt-3 text-pretty text-[15px] leading-relaxed text-muted-foreground">
               {description}
-            </p>
+            </div>
           ) : null}
           <div className="mt-8 flex-1">{children}</div>
         </Container>

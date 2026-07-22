@@ -458,11 +458,12 @@ export const en = {
       continue: "Protect my progress",
     },
     protectionPeriod: {
-      eyebrow: "Your protection period",
       title: "Recovery often takes months, not weeks.",
-      description:
-        "In one study, the median time to resolve serious gambling problems was 14 months.",
-      viewResearch: "View study",
+      descriptionBefore:
+        "In one study, people who resolved serious gambling problems took a median of ",
+      fourteenMonths: "14 months",
+      descriptionAfter: ".",
+      researchLinkAria: "(opens study in a new tab)",
       question: "How long should BetClear protect you?",
       oneMonth: "1 month",
       oneMonthShort: "1m",
@@ -476,7 +477,6 @@ export const en = {
       hintThreeMonths: "Time to build new routines",
       hintSixMonths: "More distance from gambling",
       hintTwelveMonths: "A full year without deciding again each month",
-      recommendedShort: "Best",
       cancelNote:
         "Cancel renewals anytime. Protection stays active until the end of the period you’ve paid for.",
       continue: "Continue",
