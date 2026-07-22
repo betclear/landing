@@ -10,6 +10,7 @@ import { AccountMenu } from "@/components/auth/AccountMenu";
 import { signOutUser, useAuthUser } from "@/components/auth/useAuthUser";
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { useLocale } from "@/components/i18n/LocaleProvider";
+import { BrandLogo } from "@/components/shared/BrandLogo";
 import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
 import { SITE } from "@/lib/constants";
 import { trackEvent } from "@/lib/analytics";
@@ -128,9 +129,10 @@ export function Header() {
       >
         <Link
           href={href("/")}
-          className="text-[15px] font-semibold tracking-[-0.04em] text-foreground transition-opacity hover:opacity-70"
+          className="inline-flex items-center transition-opacity hover:opacity-80"
+          aria-label={SITE.name}
         >
-          {SITE.name}
+          <BrandLogo height={28} priority />
         </Link>
 
         <nav

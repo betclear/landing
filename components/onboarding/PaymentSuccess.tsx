@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { BrandLogo } from "@/components/shared/BrandLogo";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 import { clearOnboardingState } from "@/lib/onboarding/storage";
@@ -97,9 +98,10 @@ export function PaymentSuccess() {
         <Container className="flex h-14 items-center">
           <Link
             href={href("/")}
-            className="text-sm font-semibold tracking-[-0.02em] text-foreground"
+            className="inline-flex items-center transition-opacity hover:opacity-80"
+            aria-label={SITE.name}
           >
-            {SITE.name}
+            <BrandLogo height={22} />
           </Link>
         </Container>
       </header>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CaretLeft } from "@phosphor-icons/react";
 import { Container } from "@/components/ui/Container";
 import { useLocale } from "@/components/i18n/LocaleProvider";
+import { BrandLogo } from "@/components/shared/BrandLogo";
 import { cn } from "@/lib/cn";
 import { SITE } from "@/lib/constants";
 import { ONBOARDING_STEPS } from "@/lib/onboarding/types";
@@ -64,9 +65,10 @@ export function OnboardingShell({
             )}
             <Link
               href={href("/")}
-              className="truncate text-sm font-semibold tracking-[-0.02em] text-foreground"
+              className="inline-flex items-center transition-opacity hover:opacity-80"
+              aria-label={SITE.name}
             >
-              {SITE.name}
+              <BrandLogo height={22} />
             </Link>
           </div>
           <p className="text-xs text-muted-foreground">

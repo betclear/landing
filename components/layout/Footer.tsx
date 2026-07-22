@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { useLocale } from "@/components/i18n/LocaleProvider";
+import { BrandLogo } from "@/components/shared/BrandLogo";
 import { openCookieSettings } from "@/lib/consent";
 import { SITE } from "@/lib/constants";
 
@@ -54,7 +55,13 @@ export function Footer() {
       <Container>
         <div className="grid gap-12 md:grid-cols-[1.2fr_1fr_1fr]">
           <div>
-            <p className="text-lg font-semibold tracking-[-0.04em]">{SITE.name}</p>
+            <Link
+              href={href("/")}
+              className="inline-flex items-center transition-opacity hover:opacity-80"
+              aria-label={SITE.name}
+            >
+              <BrandLogo height={32} />
+            </Link>
             <p className="mt-3 max-w-sm text-sm leading-relaxed text-[#a9bab6]">
               {t("footer.blurb")}
             </p>
