@@ -27,6 +27,67 @@ export const blogPtBr: BlogModule = {
     },
   },
   posts: {
+    "online-betting": {
+      slug: "vicio-em-apostas-online",
+      title: "Vício em Apostas Online: Como se Livrar e Recuperar o Controle",
+      excerpt:
+        "As apostas online são mais rápidas, mais acessíveis e mais viciantes do que um cassino físico. Veja por que elas dominam o cérebro — e quatro estratégias para parar.",
+      description:
+        "Por que as apostas online viciam tanto, o que elas fazem com o cérebro e quatro estratégias práticas para se livrar do vício — bloquear o acesso, impor limites, substituir e buscar apoio.",
+      category: "Guia",
+      author: "BetClear",
+      datePublished: "2025-09-26",
+      dateModified: MODIFIED,
+      heroImage: "/blog/online-betting.png",
+      heroAlt:
+        "Um celular virado para baixo sobre uma mesa de madeira junto a uma janela ao entardecer",
+      keywords: [
+        "vício em apostas online",
+        "como se livrar do vício em apostas",
+        "parar de apostar online",
+        "vício em bets",
+        "vício em apostas esportivas",
+      ],
+      body: [
+        {
+          type: "paragraph",
+          text: `O vício em apostas online é um problema que cresce rápido no Brasil. O acesso fácil à internet e a explosão das bets tornaram mais conveniente do que nunca fazer uma aposta — apostas esportivas, cassino, Aviator, Tigrinho — de qualquer lugar, a qualquer hora. Essa conveniência é justamente o que torna as apostas online tão difíceis de largar. Se você quer se livrar, entender como isso funciona é o primeiro passo.`,
+        },
+        { type: "heading", text: "O tamanho do problema no Brasil" },
+        {
+          type: "paragraph",
+          text: `Os números mostram a gravidade. Uma pesquisa da Universidade Federal de São Paulo (Unifesp), dentro do Levantamento Nacional de Álcool e Drogas (Lenad), indica que cerca de 10,9 milhões de brasileiros fazem uso arriscado de apostas, sendo que 1,4 milhão já apresentam transtorno do jogo com prejuízos pessoais, sociais ou financeiros. Segundo o Itaú BBA, estima-se que os brasileiros perderam R$ 23,9 bilhões em apostas online nos 12 meses até junho de 2024 — cerca de 0,22% do PIB. E, de acordo com o Obid (Observatório Brasileiro de Informações sobre Drogas), 38,6% dos apostadores que jogaram no último ano têm algum grau de risco ou transtorno, com os adolescentes de 14 a 17 anos especialmente vulneráveis (55,2% dos que apostam).`,
+        },
+        { type: "heading", text: "Por que as apostas online viciam tanto" },
+        {
+          type: "paragraph",
+          text: `O vício em apostas afeta o cérebro de forma parecida com drogas e álcool. Quando você aposta — especialmente em jogos rápidos —, o cérebro libera dopamina, o neurotransmissor ligado ao prazer e à recompensa. Essa sensação reforça o comportamento, criando um ciclo em que você busca mais apostas para sentir a mesma euforia. Um estudo da Universidade de Cambridge mostrou que pessoas com vício em jogos podem apresentar diferenças nas regiões do cérebro que controlam os impulsos e a tomada de decisão, o que torna as escolhas arriscadas mais difíceis de resistir.`,
+        },
+        {
+          type: "paragraph",
+          text: `Os sites e apps de apostas são projetados para manter você engajado. Cores vibrantes, sons estimulantes e recompensas intermitentes ativam o sistema de recompensa do cérebro de forma ainda mais intensa do que um cassino físico. Some a isso o anonimato e o fato de essas plataformas ficarem abertas 24 horas por dia, 7 dias por semana, e fica fácil demais fazer uma aposta a qualquer momento — em casa, no trabalho, no meio da madrugada.`,
+        },
+        { type: "heading", text: "Quatro estratégias para se livrar" },
+        {
+          type: "list",
+          items: [
+            "Limite o acesso. Bloquear os sites e apps de apostas tira a opção de apostar por impulso. Um bloqueador como a BetClear impede que sites de apostas carreguem em todo o sistema, então a página não abre nem num momento de fraqueza.",
+            "Estabeleça limites financeiros. Defina um orçamento claro, peça ao seu banco o bloqueio de transações de apostas e entregue o controle do dinheiro do dia a dia a alguém de confiança. Se você não consegue acessar dinheiro rápido, não consegue apostar por impulso.",
+            "Encontre hobbies alternativos. As apostas deixam um vazio de dopamina. Preencha-o com exercício físico, hobbies criativos ou tempo com amigos e família — o tédio é um gatilho.",
+            "Busque apoio emocional. Mantenha-se conectado a pessoas de confiança, considere a Terapia Cognitivo-Comportamental (TCC) e conte com grupos como os Jogadores Anônimos. No Brasil, o CVV atende gratuitamente no 188, com sigilo, 24 horas por dia.",
+          ],
+        },
+        {
+          type: "paragraph",
+          text: `Reconhecer o problema é o passo mais difícil e mais libertador. O vício em apostas online tem tratamento — e, quanto mais barreiras você coloca entre você e a próxima aposta, maiores são as suas chances de se manter parado.`,
+        },
+        {
+          type: "quote",
+          text: `O melhor momento para criar uma barreira é antes de a força de vontade acabar — não depois.`,
+        },
+      ],
+      related: ["how-to-stop", "self-help", "jamie-story"],
+    },
     "how-to-stop": {
       slug: "como-parar-de-jogar",
       title: "Como Parar de Jogar: 10 Formas Práticas de Quebrar o Ciclo",
@@ -127,7 +188,7 @@ export const blogPtBr: BlogModule = {
           text: `A recuperação do vício em jogo é possível — especialmente quando você toma as decisões difíceis e coloca as estruturas certas no lugar.`,
         },
       ],
-      related: ["self-help", "my-life-changed", "jamie-story"],
+      related: ["online-betting", "self-help", "my-life-changed"],
     },
     "my-life-changed": {
       slug: "minha-vida-mudou-quando-parei-de-apostar",
@@ -270,7 +331,7 @@ export const blogPtBr: BlogModule = {
           text: `A recuperação é possível. Quem toma as decisões difíceis e coloca as estruturas certas no lugar são justamente os que se mantêm parados.`,
         },
       ],
-      related: ["how-to-stop", "jamie-story", "my-life-changed"],
+      related: ["online-betting", "how-to-stop", "jamie-story"],
     },
     "jamie-story": {
       slug: "a-historia-de-jamie",

@@ -2,6 +2,7 @@ import type { AppLocale } from "@/lib/i18n/config";
 
 /** Stable, locale-independent identifiers for each blog post. */
 export const blogPostIds = [
+  "online-betting",
   "how-to-stop",
   "my-life-changed",
   "self-help",

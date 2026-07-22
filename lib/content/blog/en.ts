@@ -27,6 +27,67 @@ export const blogEn: BlogModule = {
     },
   },
   posts: {
+    "online-betting": {
+      slug: "online-betting-addiction",
+      title: "How to Break Free From Online Betting Addiction",
+      excerpt:
+        "Online betting is faster, more available, and more addictive than a physical casino. Here's why it hooks the brain — and four evidence-based strategies to stop.",
+      description:
+        "Why online betting is so addictive, what it does to the brain, and four practical strategies to break free — block access, set limits, replace it, and get support.",
+      category: "Guide",
+      author: "BetClear",
+      datePublished: "2025-09-26",
+      dateModified: MODIFIED,
+      heroImage: "/blog/online-betting.png",
+      heroAlt:
+        "A smartphone lying face-down on a wooden table by a window at dusk",
+      keywords: [
+        "online betting addiction",
+        "how to stop betting online",
+        "sports betting addiction",
+        "quit online gambling",
+        "online gambling recovery",
+      ],
+      body: [
+        {
+          type: "paragraph",
+          text: `Online betting is a growing problem around the world. Easy internet access and the explosion of betting apps have made it more convenient than ever to place a bet — sports betting, slots, crash games like Aviator — from anywhere, at any hour. That convenience is exactly what makes online betting so hard to stop. If you're trying to break free, understanding how it works is the first step.`,
+        },
+        { type: "heading", text: "Just how big is the problem?" },
+        {
+          type: "paragraph",
+          text: `Brazil is a striking example of how fast online betting can take hold. A national survey by the Federal University of São Paulo (Unifesp), within the Lenad study, estimates that around 10.9 million Brazilians make risky use of betting, and 1.4 million already show a gambling disorder with personal, social, or financial harm. According to Itaú BBA, Brazilians lost roughly R$23.9 billion on online betting in the 12 months to June 2024 — about 0.22% of the country's GDP. Data from Obid found that 38.6% of Brazilians who bet in the last year show some level of risk or disorder, with adolescents aged 14–17 especially vulnerable (55.2% of those who bet).`,
+        },
+        { type: "heading", text: "Why online betting is so addictive" },
+        {
+          type: "paragraph",
+          text: `Online betting affects the brain much like drugs or alcohol. When you place a bet — especially on fast games — the brain releases dopamine, the neurotransmitter tied to pleasure and reward. That hit reinforces the behaviour, creating a loop where you chase more bets to feel the same rush. A University of Cambridge study found that people with gambling problems can show differences in the brain regions that govern impulse control and decision-making, making risky choices harder to resist.`,
+        },
+        {
+          type: "paragraph",
+          text: `Betting sites are engineered to keep you engaged. Vibrant colours, stimulating sounds, and intermittent rewards light up the brain's reward system even more intensely than a physical casino. Add the anonymity and the fact that these platforms are open 24/7, and it becomes far too easy to place a bet at any moment — at home, at work, in the middle of the night.`,
+        },
+        { type: "heading", text: "Four strategies to break free" },
+        {
+          type: "list",
+          items: [
+            "Limit access. Blocking betting sites and apps removes the option to gamble on impulse. A blocker like BetClear stops gambling websites from loading system-wide, so the site won't open even in a weak moment.",
+            "Set financial limits. Define a clear budget, ask your bank about gambling transaction blocks, and hand day-to-day money control to someone you trust. If you can't reach money quickly, you can't bet impulsively.",
+            "Find alternative hobbies. Betting leaves a dopamine gap. Fill it with exercise, creative hobbies, or time with friends and family — boredom is a trigger.",
+            "Get emotional support. Stay connected to people you trust, consider cognitive behavioural therapy (CBT), and lean on peer groups like Gamblers Anonymous. In the US you can call 1-800-GAMBLER, free and confidential, 24/7.",
+          ],
+        },
+        {
+          type: "paragraph",
+          text: `Recognising the problem is the hardest and most freeing step. Online betting addiction is treatable — the more barriers you put between yourself and the next bet, the better your chances of staying stopped.`,
+        },
+        {
+          type: "quote",
+          text: `The best time to build a barrier is before your willpower runs out — not after.`,
+        },
+      ],
+      related: ["how-to-stop", "self-help", "jamie-story"],
+    },
     "how-to-stop": {
       slug: "how-to-stop-gambling",
       title: "How to Stop Gambling: 10 Practical Ways to Break the Cycle",
@@ -127,7 +188,7 @@ export const blogEn: BlogModule = {
           text: `Recovery from a gambling problem is possible — especially when you make the tough decisions and put the right structures in place.`,
         },
       ],
-      related: ["self-help", "my-life-changed", "jamie-story"],
+      related: ["online-betting", "self-help", "my-life-changed"],
     },
     "my-life-changed": {
       slug: "my-life-changed-the-day-i-quit-gambling",
@@ -268,7 +329,7 @@ export const blogEn: BlogModule = {
           text: `Recovery is possible. The people who make the tough decisions and put the right structures in place are the ones who stay stopped.`,
         },
       ],
-      related: ["how-to-stop", "jamie-story", "my-life-changed"],
+      related: ["online-betting", "how-to-stop", "jamie-story"],
     },
     "jamie-story": {
       slug: "jamie-story",
