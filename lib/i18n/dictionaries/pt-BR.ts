@@ -781,8 +781,9 @@ export const ptBR: Dictionary = {
       {
         heading: "Cookies e tecnologias semelhantes",
         paragraphs: [
-          "Usamos cookies e tecnologias semelhantes para funções essenciais como sessões de autenticação, preferência de idioma e verificações de acesso à assinatura. Também usamos ferramentas de analítica (incluindo Microsoft Clarity e Firebase Analytics quando configurado) para entender como o site é usado.",
-          "Você pode controlar cookies nas configurações do navegador. Bloquear cookies essenciais pode impedir o login ou outros recursos principais.",
+          "Usamos cookies e tecnologias semelhantes para funções essenciais como sessões de autenticação, preferência de idioma e verificações de acesso à assinatura. Esses cookies essenciais não exigem consentimento.",
+          "Com o seu consentimento, também usamos ferramentas de analítica (incluindo Microsoft Clarity e Firebase Analytics quando configurado) para entender como o site é usado. Cookies e scripts de analítica só são carregados depois que você aceita a analítica no nosso banner de cookies. Você pode alterar sua escolha a qualquer momento em Configurações de cookies no rodapé.",
+          "Você também pode controlar cookies nas configurações do navegador. Bloquear cookies essenciais pode impedir o login ou outros recursos principais.",
         ],
       },
       {
@@ -918,6 +919,15 @@ export const ptBR: Dictionary = {
     label: "Idioma",
     english: "English",
     portuguese: "Português (Brasil)",
+  },
+  cookieConsent: {
+    title: "Cookies de analítica",
+    description:
+      "Usamos o Microsoft Clarity (e o Firebase Analytics quando habilitado) para entender como o BetClear é usado. Cookies essenciais de login e preferências sempre funcionam. Veja nossa",
+    accept: "Aceitar analítica",
+    reject: "Recusar",
+    privacyLink: "Política de Privacidade",
+    settings: "Configurações de cookies",
   },
   analytics: {},
 };

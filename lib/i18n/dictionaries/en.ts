@@ -765,8 +765,9 @@ export const en = {
       {
         heading: "Cookies and similar technologies",
         paragraphs: [
-          "We use cookies and similar technologies for essential functions such as authentication sessions, locale preference, and subscription access checks. We also use analytics tools (including Microsoft Clarity, and Firebase Analytics when configured) to understand how the site is used.",
-          "You can control cookies through your browser settings. Blocking essential cookies may prevent sign-in or other core features from working.",
+          "We use cookies and similar technologies for essential functions such as authentication sessions, locale preference, and subscription access checks. These essential cookies do not require consent.",
+          "With your consent, we also use analytics tools (including Microsoft Clarity, and Firebase Analytics when configured) to understand how the site is used. Analytics cookies and scripts load only after you accept analytics in our cookie banner. You can change your choice anytime via Cookie settings in the footer.",
+          "You can also control cookies through your browser settings. Blocking essential cookies may prevent sign-in or other core features from working.",
         ],
       },
       {
@@ -901,6 +902,15 @@ export const en = {
     label: "Language",
     english: "English",
     portuguese: "Português (Brasil)",
+  },
+  cookieConsent: {
+    title: "Analytics cookies",
+    description:
+      "We use Microsoft Clarity (and Firebase Analytics when enabled) to understand how BetClear is used. Essential cookies for sign-in and preferences always work. See our",
+    accept: "Accept analytics",
+    reject: "Reject",
+    privacyLink: "Privacy Policy",
+    settings: "Cookie settings",
   },
   analytics: {},
 } as const;

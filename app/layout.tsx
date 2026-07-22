@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
-import Script from "next/script";
-import { FirebaseAnalytics } from "@/components/shared/FirebaseAnalytics";
 import { SITE } from "@/lib/constants";
 import { localeConfig, type AppLocale, isAppLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -63,17 +61,7 @@ export default async function RootLayout({
         >
           {dictionary.common.skipToContent}
         </a>
-        <FirebaseAnalytics />
         {children}
-        <Script id="microsoft-clarity" strategy="afterInteractive">
-          {`
-            (function(c,l,a,r,i,t,y){
-              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script", "xphqj04z51");
-          `}
-        </Script>
       </body>
     </html>
   );

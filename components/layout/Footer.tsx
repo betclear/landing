@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { useLocale } from "@/components/i18n/LocaleProvider";
+import { openCookieSettings } from "@/lib/consent";
 import { SITE } from "@/lib/constants";
 
 export function Footer() {
@@ -117,6 +118,13 @@ export function Footer() {
                   </Link>
                 ),
               )}
+              <button
+                type="button"
+                onClick={() => openCookieSettings()}
+                className="text-left text-sm text-[#a9bab6] transition-colors hover:text-white"
+              >
+                {t("cookieConsent.settings")}
+              </button>
             </nav>
           </div>
         </div>
