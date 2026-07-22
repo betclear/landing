@@ -61,6 +61,7 @@ export async function POST(request: Request) {
         await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
         break;
       case "invoice.paid":
+      case "invoice.payment_succeeded":
         await handleInvoicePaid(event.data.object as Stripe.Invoice);
         break;
       case "invoice.payment_failed":

@@ -60,16 +60,10 @@ export function getStripePriceIdForLocale(
   plan: PlanId,
 ): string {
   const envKey = SHARED_PRICING[plan].stripePriceIdEnv;
-  const priceId =
-    process.env[envKey] ||
-    (plan === "annual"
-      ? process.env.STRIPE_PRICE_ANNUAL_USD
-      : process.env.STRIPE_PRICE_MONTHLY_USD);
+  const priceId = process.env[envKey];
 
   if (!priceId) {
-    throw new Error(
-      `Missing Stripe price for plan=${plan} (env ${envKey} or STRIPE_PRICE_*_USD)`,
-    );
+    throw new Error(`Missing Stripe price for plan=${plan} (env ${envKey})`);
   }
 
   return priceId;

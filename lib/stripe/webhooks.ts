@@ -30,6 +30,17 @@ function planFromPriceId(priceId: string | null | undefined): BillingPlan | null
 }
 
 /**
+ * Onboarding checkout writes `userId` (camelCase); the marketing checkout writes
+ * `user_id` (snake_case). Accept either so the auth link is always captured.
+ */
+function userIdFromMetadata(
+  metadata: Stripe.Metadata | null | undefined,
+): string | null {
+  if (!metadata) return null;
+  return metadata.user_id ?? metadata.userId ?? null;
+}
+
+/**
  * Best-effort mirror of the subscription status onto the auth-linked recovery
  * profile so onboarding UI and the access fallback do not read stale state.
  */
@@ -55,44 +66,43 @@ function subscriptionPeriodEnd(
   return end ? new Date(end * 1000).toISOString() : null;
 }
 
-async function upsertSubscription(row: SubscriptionRow) {
+/**
+ * Idempotent, order-independent write of subscription state. Stripe does not
+ * guarantee event ordering, so every subscription-bearing event upserts by
+ * customer id (self-healing if `customer.subscription.*` arrives before
+ * `checkout.session.completed`). `email`/`user_id` are only written when known,
+ * so a later event never clobbers a value captured by an earlier one.
+ */
+async function upsertSubscriptionState(
+  row: Omit<SubscriptionRow, "email" | "user_id"> &
+    Partial<Pick<SubscriptionRow, "email" | "user_id">>,
+) {
   const supabase = createServiceClient();
-  const { error } = await supabase.from("subscriptions").upsert(row, {
-    onConflict: "stripe_customer_id",
-  });
+  const payload: Record<string, unknown> = { ...row };
+  if (row.email == null) delete payload.email;
+  if (row.user_id == null) delete payload.user_id;
+
+  let { error } = await supabase
+    .from("subscriptions")
+    .upsert(payload, { onConflict: "stripe_customer_id" });
+
+  // `user_id` -> auth.users is a best-effort link. Stripe metadata can carry an
+  // id that no longer exists (deleted/recreated user, stale session), raising a
+  // foreign-key violation (23503). Never fail the webhook over the link: drop
+  // user_id and retry so premium access is still recorded. Otherwise Stripe
+  // sees a 500 and retries the event for days.
+  if (error?.code === "23503" && "user_id" in payload) {
+    delete payload.user_id;
+    ({ error } = await supabase
+      .from("subscriptions")
+      .upsert(payload, { onConflict: "stripe_customer_id" }));
+  }
 
   if (error) {
     throw new Error(`Failed to upsert subscription: ${error.message}`);
   }
-}
 
-async function updateSubscriptionByCustomerId(
-  customerId: string,
-  patch: Partial<
-    Pick<
-      SubscriptionRow,
-      | "stripe_subscription_id"
-      | "status"
-      | "price_id"
-      | "plan"
-      | "current_period_end"
-      | "is_premium"
-    >
-  >,
-) {
-  const supabase = createServiceClient();
-  const { error } = await supabase
-    .from("subscriptions")
-    .update(patch)
-    .eq("stripe_customer_id", customerId);
-
-  if (error) {
-    throw new Error(`Failed to update subscription: ${error.message}`);
-  }
-
-  if (patch.status) {
-    await mirrorStatusToRecoveryProfile(customerId, patch.status);
-  }
+  await mirrorStatusToRecoveryProfile(row.stripe_customer_id, row.status);
 }
 
 export async function handleCheckoutSessionCompleted(
@@ -116,9 +126,11 @@ export async function handleCheckoutSessionCompleted(
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
   const priceId = subscription.items.data[0]?.price.id ?? null;
   const email = session.customer_details?.email ?? session.customer_email ?? null;
-  const userId = session.metadata?.user_id ?? null;
+  const userId =
+    userIdFromMetadata(session.metadata) ??
+    userIdFromMetadata(subscription.metadata);
 
-  await upsertSubscription({
+  await upsertSubscriptionState({
     stripe_customer_id: customerId,
     stripe_subscription_id: subscription.id,
     email,
@@ -129,8 +141,6 @@ export async function handleCheckoutSessionCompleted(
     current_period_end: subscriptionPeriodEnd(subscription),
     is_premium: isPremiumStatus(subscription.status),
   });
-
-  await mirrorStatusToRecoveryProfile(customerId, subscription.status);
 }
 
 export async function handleSubscriptionUpdated(
@@ -143,8 +153,10 @@ export async function handleSubscriptionUpdated(
 
   const priceId = subscription.items.data[0]?.price.id ?? null;
 
-  await updateSubscriptionByCustomerId(customerId, {
+  await upsertSubscriptionState({
+    stripe_customer_id: customerId,
     stripe_subscription_id: subscription.id,
+    user_id: userIdFromMetadata(subscription.metadata),
     status: subscription.status,
     price_id: priceId,
     plan: planFromPriceId(priceId),
@@ -167,8 +179,10 @@ export async function handleSubscriptionDeleted(
       ? subscription.customer
       : subscription.customer.id;
 
-  await updateSubscriptionByCustomerId(customerId, {
+  await upsertSubscriptionState({
+    stripe_customer_id: customerId,
     stripe_subscription_id: subscription.id,
+    user_id: userIdFromMetadata(subscription.metadata),
     status: "canceled",
     price_id: subscription.items.data[0]?.price.id ?? null,
     plan: planFromPriceId(subscription.items.data[0]?.price.id),
