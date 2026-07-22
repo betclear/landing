@@ -12,6 +12,7 @@ import { cn } from "@/lib/cn";
 const TABS = [
   { href: "/admin/domains", label: "Domains" },
   { href: "/admin/requests", label: "Requests" },
+  { href: "/admin/users", label: "Users" },
 ] as const;
 
 export function AdminNav() {
