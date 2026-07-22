@@ -37,19 +37,24 @@ export default async function TermsPage({ params }: PageProps) {
           <h1 className="text-4xl font-semibold tracking-[-0.04em] text-foreground">
             {dict.legal.termsTitle}
           </h1>
-          <div className="mt-8 space-y-5 text-base leading-relaxed text-muted-foreground">
-            {dict.legal.termsBody.map((paragraph) => (
-              <p key={paragraph.slice(0, 48)}>{paragraph}</p>
+          <p className="mt-3 text-sm text-muted-foreground">
+            {dict.legal.lastUpdatedLabel}: {dict.legal.lastUpdated}
+          </p>
+          <div className="mt-10 space-y-10 text-base leading-relaxed text-muted-foreground">
+            {dict.legal.termsSections.map((section) => (
+              <section
+                key={section.heading}
+                id={"anchor" in section ? section.anchor : undefined}
+                className="scroll-mt-24 space-y-3"
+              >
+                <h2 className="text-xl font-semibold tracking-[-0.03em] text-foreground">
+                  {section.heading}
+                </h2>
+                {section.paragraphs.map((paragraph) => (
+                  <p key={paragraph.slice(0, 64)}>{paragraph}</p>
+                ))}
+              </section>
             ))}
-            <p>{dict.legal.termsNote}</p>
-            <section id="billing" className="scroll-mt-24 space-y-3">
-              <h2 className="text-xl font-semibold tracking-[-0.03em] text-foreground">
-                {dict.legal.termsHeadings.billing}
-              </h2>
-              <p>{dict.legal.termsBillingIntro}</p>
-              <p>{dict.legal.termsBillingCancel}</p>
-              <p>{dict.legal.termsBillingEstimates}</p>
-            </section>
             <p>
               {dict.legal.questionsLabel}{" "}
               <a

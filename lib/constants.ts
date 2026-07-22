@@ -14,6 +14,17 @@ export const SITE = {
   installHref: "/install",
 } as const;
 
+/** Legal entity operating BetClear (Estonian private limited company). */
+export const COMPANY = {
+  name: "Deploy Global OÜ",
+  registryCode: "17065498",
+  vatId: "EE102777765",
+  registered: "09.09.2024",
+  address:
+    "Sepapaja tn 6, Lasnamäe linnaosa, Tallinn, Harju maakond, Estonia",
+  email: SITE.email,
+} as const;
+
 export const NAV_LINKS = [
   { href: "/#how-it-works", label: "How it works" },
   { href: "/#protection", label: "Protection" },

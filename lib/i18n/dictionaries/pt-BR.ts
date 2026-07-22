@@ -20,10 +20,10 @@ export const ptBR: Dictionary = {
       "Escolha proteção mensal ou anual do BetClear para o seu iPhone. Assine para liberar a instalação.",
     privacyTitle: "Privacidade",
     privacyDescription:
-      "Como o BetClear trata a privacidade na proteção contra sites de apostas no iPhone.",
+      "Como a Deploy Global OÜ / BetClear coleta e usa dados pessoais.",
     termsTitle: "Termos",
     termsDescription:
-      "Termos de uso da proteção BetClear contra sites de apostas no iPhone.",
+      "Termos de uso do BetClear, operado pela Deploy Global OÜ.",
     loginTitle: "Entrar",
     loginDescription:
       "Entre no BetClear antes de assinar ou instalar a proteção.",
@@ -708,40 +708,187 @@ export const ptBR: Dictionary = {
     backToPlans: "Voltar aos planos",
   },
   legal: {
-    privacyTitle: "Privacidade",
-    termsTitle: "Termos",
-    privacyHeadings: {
-      overview: "Visão geral",
-      dns: "DNS criptografado",
-      browsing: "Dados de navegação",
-      contact: "Contato",
-    },
-    termsHeadings: {
-      overview: "Visão geral",
-      medicalDisclaimer: "Não é um serviço médico",
-      billing: "Termos de cobrança",
-      contact: "Contato",
-    },
-    privacyNote:
-      "Uma política de privacidade mais completa será publicada antes do checkout pago.",
-    termsNote:
-      "O BetClear não é um serviço médico e não substitui ajuda profissional.",
-    privacyBody: [
-      "O BetClear foi feito para bloquear sites de apostas por meio de DNS protegido — não para monitorar a sua vida pessoal.",
-      "O perfil de configuração do iPhone configura DNS criptografado (DNS-over-HTTPS). Ele não dá ao BetClear acesso às suas fotos, mensagens, senhas ou arquivos pessoais.",
-      "O BetClear não precisa do histórico de navegação do Safari para bloquear domínios de apostas. Como qualquer serviço baseado em DNS, o resolvedor recebe as consultas de nomes de domínio necessárias para responder às requisições DNS — não o conteúdo completo das páginas que você visita.",
-    ],
-    termsBody: [
-      "O BetClear oferece ferramentas para ajudar a bloquear sites de apostas no iPhone usando perfis de configuração da Apple e DNS protegido.",
-    ],
-    termsBillingIntro:
-      "Você é cobrado conforme o plano e a moeda mostrados no checkout do seu mercado.",
-    termsBillingCancel:
-      "Você pode cancelar renovações futuras no portal do cliente Stripe ou entrando em contato com o suporte. Impostos podem se aplicar conforme a sua localização.",
-    termsBillingEstimates:
-      "As estimativas de impacto mostradas no onboarding são apenas informativas e se baseiam nas informações que você fornece. Elas não são uma garantia de economia ou resultados.",
+    privacyTitle: "Política de Privacidade",
+    termsTitle: "Termos de Uso",
+    lastUpdatedLabel: "Última atualização",
+    lastUpdated: "22 de julho de 2026",
     questionsLabel: "Dúvidas:",
+    privacySections: [
+      {
+        heading: "Quem somos",
+        paragraphs: [
+          "O BetClear é operado pela Deploy Global OÜ (“nós”, “nosso”), uma sociedade de responsabilidade limitada da Estônia (osaühing).",
+          "Código de registro: 17065498. Número de identificação de IVA: EE102777765. Sede registrada: Sepapaja tn 6, Lasnamäe linnaosa, Tallinn, Harju maakond, Estônia.",
+          "Você pode falar conosco sobre privacidade em hello@betclear.app. Nos termos da legislação da UE, somos o controlador dos dados pessoais tratados por meio de betclear.app e dos serviços relacionados do BetClear (os “Serviços”).",
+          "Você também pode apresentar uma reclamação à Autoridade de Proteção de Dados da Estônia (Andmekaitse Inspektsioon) ou a outra autoridade supervisora competente. Pedimos que entre em contato conosco primeiro para tentarmos resolver a questão.",
+        ],
+      },
+      {
+        heading: "O que esta política cobre",
+        paragraphs: [
+          "Esta política explica como coletamos, usamos, compartilhamos e protegemos dados pessoais quando você usa nosso site, cria uma conta, assina, instala o perfil de configuração do iPhone ou interage de outra forma com o BetClear.",
+          "O BetClear foi feito para bloquear sites de apostas por meio de DNS protegido — não para monitorar a sua vida pessoal. O perfil de configuração não nos dá acesso às suas fotos, mensagens, senhas ou arquivos pessoais.",
+        ],
+      },
+      {
+        heading: "Informações que coletamos",
+        paragraphs: [
+          "Dados de conta e identidade: endereço de e-mail e detalhes de autenticação quando você entra com e-mail (magic link) ou Google por meio do nosso provedor de autenticação.",
+          "Dados de onboarding e perfil de recuperação: informações que você escolhe fornecer na configuração, como gasto mensal estimado com apostas, horas semanais de jogo, data da última aposta (incluindo se é aproximada), moeda e plano selecionado. Armazenamos isso para personalizar sua experiência e também podemos anexar metadados limitados de configuração aos registros de cliente ou assinatura no Stripe.",
+          "Dados de cobrança e transação: status da assinatura, plano, identificadores de cliente e assinatura do Stripe e detalhes relacionados a pagamento processados pelo Stripe. Não armazenamos números completos de cartão em nossos servidores.",
+          "Dados técnicos e de uso: endereço IP (para segurança, roteamento de idioma e limitação de taxa), informações de dispositivo/navegador, cookies e tecnologias semelhantes necessárias para sessões e preferências, e eventos de uso do produto.",
+          "Dados de consultas DNS: quando a proteção está ativa, nosso resolvedor de DNS criptografado recebe as consultas de nomes de domínio necessárias para responder às requisições DNS e aplicar a lista de bloqueio de apostas. Isso não é o conteúdo completo das páginas nem o histórico de navegação do Safari.",
+          "Denúncias de domínio: se você reportar um site faltante, armazenamos o hostname e a URL bruta enviada (sem vincular à sua conta).",
+          "Comunicações de suporte: conteúdo que você envia para hello@betclear.app se entrar em contato conosco.",
+          "Também podemos processar estatísticas agregadas ou anonimizadas que não identificam você.",
+        ],
+      },
+      {
+        heading: "Como e por que usamos seus dados",
+        paragraphs: [
+          "Processamos dados pessoais para criar e gerenciar sua conta, prestar os Serviços (incluindo checkout, acesso à assinatura e download do perfil), enviar mensagens de serviço sobre cobrança e instalação, melhorar confiabilidade e segurança, analisar o uso do produto e cumprir obrigações legais.",
+          "As bases legais no GDPR incluem: execução de contrato (conta, assinatura e entrega do bloqueio); interesses legítimos (segurança, prevenção a fraude, melhoria do produto, comunicações de serviço); obrigação legal quando aplicável; e consentimento quando nos basearmos nele (por exemplo, marketing opcional se você optar por receber). Você pode retirar o consentimento a qualquer momento sem afetar o tratamento lícito anterior.",
+        ],
+      },
+      {
+        heading: "Com quem compartilhamos dados",
+        paragraphs: [
+          "Usamos processadores e prestadores de confiança para operar o BetClear, incluindo: Stripe (pagamentos e portal do cliente), Supabase (autenticação e banco de dados), Vercel (hospedagem), nossa infraestrutura de DNS/lista de bloqueio (incluindo ferramentas relacionadas ao AdGuard quando usadas), Microsoft Clarity (analítica de produto) e Firebase Analytics quando habilitado.",
+          "Também podemos compartilhar dados com assessores profissionais, ou com autoridades quando exigido por lei, ou em conexão com fusão, aquisição ou transferência do nosso negócio, com salvaguardas adequadas.",
+          "Não vendemos seus dados pessoais.",
+        ],
+      },
+      {
+        heading: "Transferências internacionais",
+        paragraphs: [
+          "Alguns provedores processam dados fora do Espaço Econômico Europeu (por exemplo, nos Estados Unidos). Quando transferimos dados pessoais internacionalmente, usamos salvaguardas apropriadas reconhecidas pela legislação da UE, como decisões de adequação ou cláusulas contratuais-padrão, conforme aplicável.",
+        ],
+      },
+      {
+        heading: "Retenção",
+        paragraphs: [
+          "Mantemos dados de conta, assinatura e perfil de recuperação enquanto sua conta ou assinatura estiver ativa e por um período razoável depois, conforme necessário para registros de cobrança, tratamento de disputas, segurança e cumprimento legal (em geral até 12 meses após o fim da assinatura, salvo se a lei exigir período maior).",
+          "Logs operacionais do resolvedor DNS, se retidos por nossa infraestrutura, são mantidos apenas pelo tempo necessário para segurança, prevenção de abuso e confiabilidade do serviço.",
+          "Denúncias de domínio são retidas enquanto forem úteis para revisão da lista de bloqueio. E-mails de suporte são retidos pelo tempo necessário para tratar seu pedido e o acompanhamento relacionado.",
+        ],
+      },
+      {
+        heading: "Segurança",
+        paragraphs: [
+          "Usamos medidas técnicas e organizacionais adequadas para proteger dados pessoais, incluindo transporte criptografado (HTTPS / DNS-over-HTTPS), controles de acesso e limitação de acesso às pessoas que precisam operar os Serviços. Nenhum método de transmissão ou armazenamento é completamente seguro.",
+        ],
+      },
+      {
+        heading: "Cookies e tecnologias semelhantes",
+        paragraphs: [
+          "Usamos cookies e tecnologias semelhantes para funções essenciais como sessões de autenticação, preferência de idioma e verificações de acesso à assinatura. Também usamos ferramentas de analítica (incluindo Microsoft Clarity e Firebase Analytics quando configurado) para entender como o site é usado.",
+          "Você pode controlar cookies nas configurações do navegador. Bloquear cookies essenciais pode impedir o login ou outros recursos principais.",
+        ],
+      },
+      {
+        heading: "Seus direitos",
+        paragraphs: [
+          "Sujeito à legislação aplicável (incluindo o GDPR), você pode ter o direito de acessar, corrigir, apagar, restringir ou se opor a determinado tratamento dos seus dados pessoais, e o direito à portabilidade. Quando o tratamento se basear em consentimento, você pode retirá-lo a qualquer momento.",
+          "Para exercer esses direitos, envie um e-mail para hello@betclear.app. Podemos precisar verificar sua identidade antes de responder. Buscamos responder em até um mês.",
+        ],
+      },
+      {
+        heading: "Crianças",
+        paragraphs: [
+          "O BetClear é destinado a adultos. Os Serviços não são direcionados a crianças menores de 13 anos, e não coletamos intencionalmente dados pessoais de crianças menores de 13 anos. Se você acredita que uma criança nos forneceu dados pessoais, entre em contato e tomaremos as medidas adequadas para excluí-los.",
+        ],
+      },
+      {
+        heading: "Alterações",
+        paragraphs: [
+          "Podemos atualizar esta política de privacidade periodicamente. A data de “Última atualização” no topo desta página mudará quando isso ocorrer. O uso continuado dos Serviços após uma atualização significa que você reconhece a política revisada.",
+        ],
+      },
+    ],
+    termsSections: [
+      {
+        heading: "Quem somos",
+        paragraphs: [
+          "O BetClear (betclear.app) é operado pela Deploy Global OÜ, código de registro 17065498, IVA EE102777765, sede registrada em Sepapaja tn 6, Lasnamäe linnaosa, Tallinn, Harju maakond, Estônia.",
+          "Contato: hello@betclear.app.",
+        ],
+      },
+      {
+        heading: "Aceitação destes termos",
+        paragraphs: [
+          "Ao acessar ou usar o BetClear, você concorda com estes Termos de Uso e com nossa Política de Privacidade. Se não concordar, não use os Serviços.",
+          "Você deve ter pelo menos 18 anos para criar uma conta e assinar. Ao usar os Serviços, você confirma que atende a esse requisito.",
+        ],
+      },
+      {
+        heading: "O serviço",
+        paragraphs: [
+          "O BetClear oferece ferramentas para ajudar a bloquear sites de apostas no iPhone usando um perfil de configuração da Apple e DNS criptografado (DNS-over-HTTPS) contra uma lista de bloqueio de apostas mantida.",
+          "O bloqueio depende de instalação correta, condições de rede, configurações do dispositivo e da completude da nossa lista. Não garantimos que todo site, app, espelho ou contorno de apostas será sempre bloqueado, nem que a proteção não possa ser removida ou contornada.",
+          "O BetClear não é um serviço médico, clínico ou terapêutico e não substitui ajuda profissional, aconselhamento ou tratamento para danos relacionados a jogos de azar.",
+        ],
+      },
+      {
+        heading: "Contas",
+        paragraphs: [
+          "Você é responsável por manter seguros seus dados de acesso e o acesso ao dispositivo, e pela atividade na sua conta. Avise-nos imediatamente em hello@betclear.app se suspeitar de acesso não autorizado.",
+          "Podemos suspender ou encerrar o acesso se razoavelmente acreditarmos que você violou estes termos, abusou dos Serviços ou criou risco de segurança ou jurídico.",
+        ],
+      },
+      {
+        heading: "Cobrança e cancelamento",
+        anchor: "billing",
+        paragraphs: [
+          "Planos pagos são cobrados conforme o preço, intervalo de cobrança e moeda mostrados no checkout. Pagamentos são processados pelo Stripe. Impostos podem se aplicar conforme a sua localização.",
+          "As assinaturas renovam automaticamente até você cancelar. Você pode cancelar renovações futuras pelo portal do cliente Stripe ou entrando em contato com o suporte antes da próxima data de renovação. O cancelamento interrompe cobranças futuras; não reembolsa automaticamente o período de cobrança atual, salvo se a lei exigir ou se concordarmos por escrito.",
+          "Remover o perfil de configuração do iPhone encerra o bloqueio naquele dispositivo, mas não cancela por si só a sua assinatura.",
+          "As estimativas de impacto mostradas no onboarding são apenas informativas e se baseiam nas informações que você fornece. Elas não são uma garantia de economia ou resultados.",
+        ],
+      },
+      {
+        heading: "Uso aceitável",
+        paragraphs: [
+          "Você pode usar o BetClear apenas para fins lícitos e apenas em conexão com dispositivos e contas que você está autorizado a gerenciar.",
+          "Você não deve tentar interromper, fazer engenharia reversa, sobrecarregar ou comprometer os Serviços, fazer scraping abusivo do site, interferir em outros usuários ou usar o BetClear para violar a lei aplicável.",
+        ],
+      },
+      {
+        heading: "Propriedade intelectual",
+        paragraphs: [
+          "O nome BetClear, o site, o software, os perfis de configuração, as listas de bloqueio e materiais relacionados pertencem à Deploy Global OÜ ou aos seus licenciadores. Você recebe um direito limitado, não exclusivo e intransferível de usar os Serviços para uso pessoal e não comercial enquanto sua assinatura (quando exigida) estiver ativa e estes termos forem observados.",
+          "Você não pode copiar, modificar, distribuir ou explorar comercialmente nosso conteúdo ou listas de bloqueio, salvo se expressamente autorizado por nós por escrito.",
+        ],
+      },
+      {
+        heading: "Isenções e limitação de responsabilidade",
+        paragraphs: [
+          "Os Serviços são fornecidos “no estado em que se encontram” e “conforme disponibilidade”, na máxima extensão permitida por lei. Não garantimos operação ininterrupta ou livre de erros, cobertura completa da lista de bloqueio, nem resultados comportamentais ou financeiros específicos.",
+          "Nada nestes termos exclui ou limita responsabilidade que não possa ser excluída ou limitada pela legislação aplicável (incluindo responsabilidade por morte ou lesão pessoal causada por negligência, ou por fraude).",
+          "Na máxima extensão permitida por lei, a Deploy Global OÜ não responde por danos indiretos, incidentais, especiais, consequenciais ou punitivos, nem por perda de lucros, dados, goodwill ou oportunidade de negócio decorrentes do uso ou da impossibilidade de usar os Serviços.",
+          "Nossa responsabilidade agregada total decorrente dos Serviços ou relacionada a eles fica limitada ao maior valor entre (a) os valores que você nos pagou pelo BetClear nos 12 meses anteriores à reclamação ou (b) €50, salvo quando a lei imperativa dispuser de outra forma.",
+        ],
+      },
+      {
+        heading: "Serviços e links de terceiros",
+        paragraphs: [
+          "Os Serviços dependem de terceiros como Apple (perfis de dispositivo), Stripe (pagamentos) e outros provedores de infraestrutura. Os termos e políticas deles também se aplicam aos respectivos serviços. Não somos responsáveis por sites de terceiros vinculados a partir do BetClear.",
+        ],
+      },
+      {
+        heading: "Alterações",
+        paragraphs: [
+          "Podemos atualizar estes termos periodicamente. A data de “Última atualização” mudará quando isso ocorrer. Se você continuar usando os Serviços após as alterações entrarem em vigor, você concorda com os termos atualizados. Se não concordar, pare de usar os Serviços e cancele qualquer assinatura.",
+        ],
+      },
+      {
+        heading: "Lei aplicável",
+        paragraphs: [
+          "Estes termos são regidos pelas leis da República da Estônia. Os tribunais da Estônia têm jurisdição, sem prejuízo de quaisquer direitos mandatórios de proteção ao consumidor que você possa ter no seu país de residência.",
+        ],
+      },
+    ],
   },
+
   support: {
     title: "Suporte",
     description:

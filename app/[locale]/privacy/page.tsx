@@ -37,12 +37,22 @@ export default async function PrivacyPage({ params }: PageProps) {
           <h1 className="text-4xl font-semibold tracking-[-0.04em] text-foreground">
             {dict.legal.privacyTitle}
           </h1>
-          <div className="mt-8 space-y-5 text-base leading-relaxed text-muted-foreground">
-            {dict.legal.privacyBody.map((paragraph) => (
-              <p key={paragraph.slice(0, 48)}>{paragraph}</p>
+          <p className="mt-3 text-sm text-muted-foreground">
+            {dict.legal.lastUpdatedLabel}: {dict.legal.lastUpdated}
+          </p>
+          <div className="mt-10 space-y-10 text-base leading-relaxed text-muted-foreground">
+            {dict.legal.privacySections.map((section) => (
+              <section key={section.heading} className="space-y-3">
+                <h2 className="text-xl font-semibold tracking-[-0.03em] text-foreground">
+                  {section.heading}
+                </h2>
+                {section.paragraphs.map((paragraph) => (
+                  <p key={paragraph.slice(0, 64)}>{paragraph}</p>
+                ))}
+              </section>
             ))}
             <p>
-              {dict.legal.privacyNote} {dict.legal.questionsLabel}{" "}
+              {dict.legal.questionsLabel}{" "}
               <a
                 href={`mailto:${SITE.email}`}
                 className="text-foreground underline-offset-4 hover:underline"
