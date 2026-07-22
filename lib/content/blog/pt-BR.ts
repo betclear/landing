@@ -18,12 +18,12 @@ export const blogPtBr: BlogModule = {
       "A BetClear é um bloqueador de sites de apostas, não um serviço médico. Se você precisa de apoio clínico ou em momento de crise, procure um profissional qualificado ou uma linha de apoio ao jogador. No Brasil, o CVV atende gratuitamente no 188.",
     cta: {
       title: "Dificulte a próxima aposta",
-      body: "A BetClear bloqueia mais de 348.000 sites de apostas no seu iPhone, para que a vontade não tenha para onde ir. Instale uma vez e fique protegido automaticamente.",
-      button: "Começar proteção",
+      body: "A BetClear bloqueia mais de 348.000 sites de apostas no seu iPhone, para que a vontade não tenha para onde ir. Instale uma vez e fique protegido automaticamente — comece com 7 dias grátis.",
+      button: "Começar proteção grátis",
     },
     ctaClosing: {
       title: "Pronto para colocar uma barreira entre você e a próxima aposta?",
-      body: "A BetClear bloqueia mais de 348.000 sites de apostas no seu iPhone usando DNS criptografado. Instale uma vez e fique protegido automaticamente.",
+      body: "A BetClear bloqueia mais de 348.000 sites de apostas no seu iPhone usando DNS criptografado. Instale uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
     },
   },
   posts: {

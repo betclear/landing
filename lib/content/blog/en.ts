@@ -18,12 +18,12 @@ export const blogEn: BlogModule = {
       "BetClear is a gambling website blocker, not a medical service. If you need clinical or crisis support, please contact a qualified professional or a responsible-gambling helpline.",
     cta: {
       title: "Make the next bet harder to reach",
-      body: "BetClear blocks 348,000+ gambling websites across your iPhone, so the urge has nowhere to go. Install once and stay protected automatically.",
-      button: "Start Protection",
+      body: "BetClear blocks 348,000+ gambling websites across your iPhone, so the urge has nowhere to go. Install once and stay protected automatically — start with a 7-day free trial.",
+      button: "Start Free Protection",
     },
     ctaClosing: {
       title: "Ready to put a barrier between you and the next bet?",
-      body: "BetClear blocks 348,000+ gambling websites across your iPhone using encrypted DNS. Install once and stay protected automatically.",
+      body: "BetClear blocks 348,000+ gambling websites across your iPhone using encrypted DNS. Install once, stay protected automatically, and start with a 7-day free trial.",
     },
   },
   posts: {

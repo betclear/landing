@@ -4,10 +4,10 @@ export const ptBR: Dictionary = {
   meta: {
     homeTitle: "BetClear — Bloqueie sites de apostas no iPhone",
     homeDescription:
-      "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu iPhone. Instale uma vez e fique protegido automaticamente.",
+      "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu iPhone. Instale uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
     homeOgTitle: "BetClear — Bloqueie sites de apostas no iPhone",
     homeOgDescription:
-      "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu iPhone. Instale uma vez e fique protegido automaticamente.",
+      "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu iPhone. Instale uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
     homeOgImageAlt: "Bloqueador de sites de apostas BetClear no iPhone",
     installTitle: "Instalar proteção",
     installDescription:
@@ -17,7 +17,7 @@ export const ptBR: Dictionary = {
       "Instruções passo a passo para instalar o perfil de configuração do BetClear no seu iPhone.",
     pricingTitle: "Preços",
     pricingDescription:
-      "Escolha proteção mensal ou anual do BetClear para o seu iPhone. Assine para liberar a instalação.",
+      "Escolha proteção mensal ou anual do BetClear para o seu iPhone. Comece com 7 dias grátis.",
     privacyTitle: "Privacidade",
     privacyDescription:
       "Como a Deploy Global OÜ / BetClear coleta e usa dados pessoais.",
@@ -115,9 +115,9 @@ export const ptBR: Dictionary = {
     titleWithCount: "Bloqueie {domainCount} sites de apostas.",
     description:
       "O BetClear bloqueia o acesso a sites de apostas no seu iPhone, tornando mais difícil fazer outra aposta quando o impulso aparece.",
-    primaryCta: "Começar proteção",
+    primaryCta: "Começar proteção gratuita",
     secondaryCta: "Veja como funciona",
-    microcopy: "Configuração personalizada e depois assine para instalar.",
+    microcopy: "Configuração personalizada e depois 7 dias grátis.",
     visualCaption:
       "Você tenta abrir um site de apostas. O BetClear bloqueia.",
   },
@@ -249,12 +249,12 @@ export const ptBR: Dictionary = {
   },
   pricing: {
     eyebrow: "Preços",
-    title: "Escolha seu plano de proteção.",
+    title: "Comece com 7 dias grátis.",
     description:
       "Escolha proteção anual ou mensal depois da configuração personalizada.",
     pageTitle: "Proteção que permanece ativa",
     pageDescription:
-      "Assine uma vez, baixe o perfil no iPhone e mantenha sites de apostas bloqueados em todo o sistema. Cancele quando quiser no portal de cobrança.",
+      "Comece com 7 dias grátis. Assine uma vez, baixe o perfil no iPhone e mantenha sites de apostas bloqueados em todo o sistema. Cancele quando quiser no portal de cobrança.",
     features: [
       "Bloqueio de sites de apostas",
       "Atualizações automáticas da lista de bloqueio",
@@ -267,13 +267,16 @@ export const ptBR: Dictionary = {
     monthlyLabel: "Plano mensal",
     annualBadge: "Melhor custo-benefício",
     savePercent: "Economize {percent}%",
-    annualDescription: "{price} cobrado anualmente.",
-    monthlyDescription: "{price} cobrado mensalmente.",
+    annualDescription:
+      "Após o período gratuito de 7 dias, você será cobrado em {price} por ano.",
+    monthlyDescription:
+      "Após o período gratuito de 7 dias, você será cobrado em {price} por mês.",
     annualEquivalent: "Equivale a {equivalent}",
-    monthlyBilledNote: "Cobrado mensalmente",
-    trialCta: "Assinar agora",
-    startFreeProtection: "Começar proteção",
-    cancelNote: "Cancele quando quiser no portal de cobrança.",
+    monthlyBilledNote: "Cobrado mensalmente após o período gratuito",
+    trialCta: "Começar 7 dias grátis",
+    startFreeProtection: "Começar proteção gratuita",
+    cancelNote:
+      "Cancele antes do fim do período gratuito para não ser cobrado.",
     preferGuided: "Prefere um início guiado?",
     beginOnboarding: "Começar onboarding personalizado",
     alreadySubscribed:
@@ -334,9 +337,9 @@ export const ptBR: Dictionary = {
           "Sim. Sites do dia a dia devem continuar funcionando. Apenas domínios identificados como relacionados a apostas são bloqueados.",
       },
       {
-        question: "Quando sou cobrado?",
+        question: "O que acontece depois dos 7 dias grátis?",
         answer:
-          "Você é cobrado no checkout pelo plano escolhido. Pode cancelar renovações a qualquer momento no portal de cobrança.",
+          "O período gratuito vira o plano que você escolheu no checkout, a menos que você cancele antes do fim do trial.",
       },
       {
         question: "Como cancelo?",
@@ -355,12 +358,12 @@ export const ptBR: Dictionary = {
     title: "Torne a próxima aposta mais difícil de alcançar.",
     description:
       "Instale o BetClear antes do próximo impulso e bloqueie o acesso a {domainCount} sites de apostas no seu iPhone.",
-    primaryCta: "Começar proteção",
+    primaryCta: "Começar proteção gratuita",
     secondaryCta: "Ver guia de instalação",
-    microcopy: "Configuração personalizada e depois assine para instalar.",
+    microcopy: "Configuração personalizada e depois 7 dias grátis.",
   },
   stickyCta: {
-    label: "Começar proteção",
+    label: "Começar proteção gratuita",
   },
   phone: {
     siteBlocked: "Site bloqueado",
@@ -497,15 +500,19 @@ export const ptBR: Dictionary = {
     },
     pricing: {
       title: "Escolha seu plano de proteção",
-      description: "Assine para liberar a instalação. Cancele quando quiser.",
-      trialCta: "Assinar agora",
-      cancelNote: "Cancele quando quiser no portal de cobrança.",
+      description:
+        "Comece com 7 dias grátis. Cancele quando quiser antes do fim do período.",
+      trialCta: "Começar 7 dias grátis",
+      cancelNote:
+        "Cancele a qualquer momento antes do fim do período gratuito para não ser cobrado.",
       annualPlan: "Plano anual",
       monthlyPlan: "Plano mensal",
       bestValue: "Melhor custo-benefício",
       savePercent: "Economize {percent}%",
-      annualDescription: "{price} cobrado anualmente.",
-      monthlyDescription: "{price} cobrado mensalmente.",
+      annualDescription:
+        "Após o período gratuito de 7 dias, você será cobrado em {price} por ano.",
+      monthlyDescription:
+        "Após o período gratuito de 7 dias, você será cobrado em {price} por mês.",
       durationRecommendation:
         "Recomendado para sua meta de proteção de 12 meses",
     },
@@ -574,7 +581,7 @@ export const ptBR: Dictionary = {
     steps: [
       {
         title: "Assinar",
-        detail: "Conclua o onboarding e assine para liberar a instalação.",
+        detail: "Conclua o onboarding e comece seus 7 dias grátis.",
       },
       {
         title: "Baixar",

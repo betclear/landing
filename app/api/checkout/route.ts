@@ -3,7 +3,7 @@ import { getSiteUrl, type BillingPlan } from "@/lib/stripe/config";
 import { getAuthUser } from "@/lib/auth/user";
 import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/client";
-import { getStripePriceId, isAppLocaleParam } from "@/lib/stripe/prices";
+import { getStripePriceId, isAppLocaleParam, TRIAL_PERIOD_DAYS } from "@/lib/stripe/prices";
 import { localizePath } from "@/lib/i18n/routing";
 import type { AppLocale } from "@/lib/i18n/config";
 
@@ -67,6 +67,7 @@ export async function POST(request: Request) {
       mode: "subscription",
       line_items: [{ price: priceId, quantity: 1 }],
       subscription_data: {
+        trial_period_days: TRIAL_PERIOD_DAYS,
         metadata: {
           app: "betclear",
           plan,

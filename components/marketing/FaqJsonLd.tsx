@@ -36,7 +36,7 @@ export function FaqJsonLd({ locale }: FaqJsonLdProps) {
       "@type": "Offer",
       price: String(annual.amount),
       priceCurrency: annual.currency,
-      description: `Annual plan at ${annual.formattedAmount}; monthly plan available at ${monthly.formattedAmount}`,
+      description: `Annual plan with 7-day free trial; monthly plan available at ${monthly.formattedAmount}`,
     },
   };
 

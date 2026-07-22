@@ -31,7 +31,7 @@ export function GET(): Response {
 
 ## Product
 - [Home](${SITE.url}${localizePath("en", "/")}): What BetClear does and how it blocks gambling sites on iPhone.
-- [Pricing](${SITE.url}${localizePath("en", "/pricing")}): Annual or monthly protection plans.
+- [Pricing](${SITE.url}${localizePath("en", "/pricing")}): 7-day free trial, then annual or monthly protection.
 - [Install](${SITE.url}${localizePath("en", "/install")}): Download and install the iPhone configuration profile in Safari.
 - [Support](${SITE.url}${localizePath("en", "/support")}): Help with installation, billing, and responsible-gambling resources.
 

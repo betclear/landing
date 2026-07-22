@@ -2,10 +2,10 @@ export const en = {
   meta: {
     homeTitle: "BetClear — Block Gambling Websites on iPhone",
     homeDescription:
-      "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your iPhone. Install once and stay protected automatically.",
+      "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your iPhone. Install once, stay protected automatically, and start with a 7-day free trial.",
     homeOgTitle: "BetClear — Block Gambling Websites on iPhone",
     homeOgDescription:
-      "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your iPhone. Install once and stay protected automatically.",
+      "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your iPhone. Install once, stay protected automatically, and start with a 7-day free trial.",
     homeOgImageAlt: "BetClear gambling website blocker on iPhone",
     installTitle: "Install Protection",
     installDescription:
@@ -15,7 +15,7 @@ export const en = {
       "Step-by-step instructions to install the BetClear configuration profile on your iPhone.",
     pricingTitle: "Pricing",
     pricingDescription:
-      "Choose monthly or annual BetClear protection for your iPhone. Subscribe to unlock installation.",
+      "Choose monthly or annual BetClear protection for your iPhone. Start with a 7-day free trial.",
     privacyTitle: "Privacy Policy",
     privacyDescription:
       "How Deploy Global OÜ / BetClear collects and uses personal data.",
@@ -112,9 +112,9 @@ export const en = {
     titleWithCount: "Block {domainCount} gambling websites.",
     description:
       "BetClear blocks access to gambling websites across your iPhone, making it harder to place another bet when the urge hits.",
-    primaryCta: "Start Protection",
+    primaryCta: "Start Free Protection",
     secondaryCta: "See How It Works",
-    microcopy: "Personalized setup, then subscribe to install protection.",
+    microcopy: "Personalized setup, then a 7-day free trial.",
     visualCaption: "You try to open a gambling site. BetClear blocks it.",
   },
   trust: {
@@ -240,12 +240,12 @@ export const en = {
   },
   pricing: {
     eyebrow: "Pricing",
-    title: "Choose your protection plan.",
+    title: "Start with a 7-day free trial.",
     description:
       "Choose annual or monthly protection after your personalized setup.",
     pageTitle: "Protection that stays on",
     pageDescription:
-      "Subscribe once, download your iPhone profile, and keep gambling sites blocked system-wide. Cancel anytime from your billing portal.",
+      "Start with a 7-day free trial. Subscribe once, download your iPhone profile, and keep gambling sites blocked system-wide. Cancel anytime from your billing portal.",
     features: [
       "Gambling website blocking",
       "Automatic blocklist updates",
@@ -258,13 +258,15 @@ export const en = {
     monthlyLabel: "Monthly",
     annualBadge: "Best value",
     savePercent: "Save {percent}%",
-    annualDescription: "{price} billed annually.",
-    monthlyDescription: "{price} billed monthly.",
+    annualDescription:
+      "7-day free trial, then {price} billed annually.",
+    monthlyDescription:
+      "7-day free trial, then {price} billed monthly.",
     annualEquivalent: "Equivalent to {equivalent}",
-    monthlyBilledNote: "Billed monthly",
-    trialCta: "Subscribe now",
-    startFreeProtection: "Start Protection",
-    cancelNote: "Cancel anytime from your billing portal.",
+    monthlyBilledNote: "Billed monthly after the trial",
+    trialCta: "Start 7-day free trial",
+    startFreeProtection: "Start Free Protection",
+    cancelNote: "Cancel before the trial ends to avoid being charged.",
     preferGuided: "Prefer a guided start?",
     beginOnboarding: "Begin personalized onboarding",
     alreadySubscribed:
@@ -323,9 +325,9 @@ export const en = {
           "Yes. Everyday websites should continue to work. Only domains identified as gambling-related are intended for blocking.",
       },
       {
-        question: "When am I charged?",
+        question: "What happens after the 7-day trial?",
         answer:
-          "You are charged at checkout for the plan you select. You can cancel renewals anytime from the billing portal.",
+          "Your trial converts to the plan you selected at checkout unless you cancel before the trial ends.",
       },
       {
         question: "How do I cancel?",
@@ -343,12 +345,12 @@ export const en = {
     title: "Make your next bet harder to reach.",
     description:
       "Install BetClear before the next urge arrives and block access to {domainCount} gambling websites across your iPhone.",
-    primaryCta: "Start Protection",
+    primaryCta: "Start Free Protection",
     secondaryCta: "View Installation Guide",
-    microcopy: "Personalized setup, then subscribe to install protection.",
+    microcopy: "Personalized setup, then a 7-day free trial.",
   },
   stickyCta: {
-    label: "Start Protection",
+    label: "Start Free Protection",
   },
   phone: {
     siteBlocked: "Site blocked",
@@ -483,15 +485,19 @@ export const en = {
     },
     pricing: {
       title: "Choose your protection plan",
-      description: "Subscribe to unlock installation. Cancel anytime.",
-      trialCta: "Subscribe now",
-      cancelNote: "Cancel anytime from your billing portal.",
+      description:
+        "Start with a 7-day free trial. Cancel anytime before it ends.",
+      trialCta: "Start my 7-day free trial",
+      cancelNote:
+        "Cancel anytime before the trial ends to avoid being charged.",
       annualPlan: "Annual plan",
       monthlyPlan: "Monthly plan",
       bestValue: "Best value",
       savePercent: "Save {percent}%",
-      annualDescription: "{price} billed annually.",
-      monthlyDescription: "{price} billed monthly.",
+      annualDescription:
+        "7-day free trial, then {price} billed annually.",
+      monthlyDescription:
+        "7-day free trial, then {price} billed monthly.",
       durationRecommendation:
         "Recommended for your 12-month protection goal",
     },
@@ -558,7 +564,7 @@ export const en = {
     steps: [
       {
         title: "Subscribe",
-        detail: "Complete onboarding and subscribe to unlock installation.",
+        detail: "Complete onboarding and start your 7-day free trial.",
       },
       {
         title: "Download",
