@@ -7,7 +7,6 @@ import { Container } from "@/components/ui/Container";
 import { getBlogUi, listPosts } from "@/lib/content/blog";
 import { isAppLocale, type AppLocale } from "@/lib/i18n/config";
 import { buildPageMetadata } from "@/lib/i18n/metadata";
-import { getPathname } from "@/lib/i18n/navigation";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -61,7 +60,8 @@ export default async function BlogHubPage({ params }: PageProps) {
 
           {featured ? (
             <Link
-              href={getPathname({ locale: locale, href: `/blog/${featured.slug}` })}
+              href={`/blog/${featured.slug}`}
+              locale={locale}
               className="group mt-12 grid gap-6 rounded-[var(--radius-lg)] border border-border bg-card p-4 transition-colors hover:border-primary/40 sm:grid-cols-2 sm:p-5"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -94,7 +94,8 @@ export default async function BlogHubPage({ params }: PageProps) {
               {rest.map((post) => (
                 <Link
                   key={post.slug}
-                  href={getPathname({ locale: locale, href: `/blog/${post.slug}` })}
+                  href={`/blog/${post.slug}`}
+                  locale={locale}
                   className="group flex h-full flex-col overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card transition-colors hover:border-primary/40"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}

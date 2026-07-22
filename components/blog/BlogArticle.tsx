@@ -12,7 +12,6 @@ import {
 } from "@/lib/content/blog";
 import type { BlogUi } from "@/lib/content/blog";
 import type { AppLocale } from "@/lib/i18n/config";
-import { getPathname } from "@/lib/i18n/navigation";
 
 type BlogArticleProps = {
   locale: AppLocale;
@@ -77,8 +76,8 @@ function Block({ block }: { block: BlogBlock }) {
 }
 
 export function BlogArticle({ locale, id, post, ui }: BlogArticleProps) {
-  const blogHref = getPathname({ locale: locale, href: "/blog" });
-  const startHref = getPathname({ locale: locale, href: SITE.startHref });
+  const blogHref = "/blog";
+  const startHref = SITE.startHref;
   const related = getRelatedPosts(locale, post, id);
   const minutes = readingMinutes(post);
   // Insert the conversion CTA after the intro so it sits high on most posts.
@@ -91,7 +90,7 @@ export function BlogArticle({ locale, id, post, ui }: BlogArticleProps) {
           aria-label="Breadcrumb"
           className="flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground"
         >
-          <Link href={blogHref} className="hover:text-foreground">
+          <Link href={blogHref} locale={locale} className="hover:text-foreground">
             {ui.breadcrumbBlog}
           </Link>
           <span aria-hidden="true">/</span>
@@ -159,7 +158,8 @@ export function BlogArticle({ locale, id, post, ui }: BlogArticleProps) {
               {related.map(({ id: relatedId, post: relatedPost }) => (
                 <Link
                   key={relatedId}
-                  href={getPathname({ locale: locale, href: `/blog/${relatedPost.slug}` })}
+                  href={`/blog/${relatedPost.slug}`}
+                  locale={locale}
                   className="group flex items-center justify-between gap-4 rounded-[var(--radius-md)] border border-border bg-card px-5 py-4 transition-colors hover:border-primary/40"
                 >
                   <span>
@@ -184,6 +184,7 @@ export function BlogArticle({ locale, id, post, ui }: BlogArticleProps) {
         <div className="mt-10">
           <Link
             href={blogHref}
+            locale={locale}
             className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft size={16} aria-hidden="true" />
