@@ -1,3 +1,4 @@
+import type { DevicePlatform } from "@/lib/device/platform";
 import type { Dictionary } from "@/lib/i18n/dictionaries/types";
 import { en } from "@/lib/i18n/dictionaries/en";
 
@@ -28,11 +29,25 @@ export function interpolate(
  * Look up a translation key. Falls back to English, then the key itself
  * only in production if both miss (should not happen with typed dictionaries).
  */
+function resolvePlatformKey(key: string, platform?: DevicePlatform): string {
+  return platform === "android" ? `${key}_android` : key;
+}
+
 export function translate(
   dictionary: Dictionary,
   key: string,
   vars?: Record<string, string | number | null | undefined>,
+  platform?: DevicePlatform,
 ): string {
+  const platformKey = resolvePlatformKey(key, platform);
+  const fromPlatform = getByPath(
+    dictionary as unknown as NestedValue,
+    platformKey,
+  );
+  if (typeof fromPlatform === "string") {
+    return interpolate(fromPlatform, vars);
+  }
+
   const fromLocale = getByPath(dictionary as unknown as NestedValue, key);
   if (typeof fromLocale === "string") {
     return interpolate(fromLocale, vars);
@@ -57,7 +72,20 @@ export function translate(
 export function translateList(
   dictionary: Dictionary,
   key: string,
+  platform?: DevicePlatform,
 ): string[] {
+  const platformKey = resolvePlatformKey(key, platform);
+  const platformValue = getByPath(
+    dictionary as unknown as NestedValue,
+    platformKey,
+  );
+  if (
+    Array.isArray(platformValue) &&
+    platformValue.every((item) => typeof item === "string")
+  ) {
+    return platformValue as string[];
+  }
+
   const value = getByPath(dictionary as unknown as NestedValue, key);
   if (Array.isArray(value) && value.every((item) => typeof item === "string")) {
     return value as string[];

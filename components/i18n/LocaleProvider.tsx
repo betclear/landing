@@ -7,6 +7,7 @@ import {
   useMemo,
   type ReactNode,
 } from "react";
+import type { DevicePlatform } from "@/lib/device/platform";
 import type { AppLocale, LocaleMarket } from "@/lib/i18n/config";
 import { localeConfig, localeToLanguage } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries/types";
@@ -16,6 +17,7 @@ type LocaleContextValue = {
   locale: AppLocale;
   language: "en" | "pt-BR";
   market: LocaleMarket;
+  platform: DevicePlatform;
   dictionary: Dictionary;
   t: (
     key: string,
@@ -29,23 +31,25 @@ const LocaleContext = createContext<LocaleContextValue | null>(null);
 export function LocaleProvider({
   locale,
   dictionary,
+  platform = "unknown",
   children,
 }: {
   locale: AppLocale;
   dictionary: Dictionary;
+  platform?: DevicePlatform;
   children: ReactNode;
 }) {
   const t = useCallback(
     (
       key: string,
       vars?: Record<string, string | number | null | undefined>,
-    ) => translate(dictionary, key, vars),
-    [dictionary],
+    ) => translate(dictionary, key, vars, platform),
+    [dictionary, platform],
   );
 
   const tList = useCallback(
-    (key: string) => translateList(dictionary, key),
-    [dictionary],
+    (key: string) => translateList(dictionary, key, platform),
+    [dictionary, platform],
   );
 
   const value = useMemo<LocaleContextValue>(
@@ -53,11 +57,12 @@ export function LocaleProvider({
       locale,
       language: localeToLanguage(locale),
       market: localeConfig[locale].market,
+      platform,
       dictionary,
       t,
       tList,
     }),
-    [locale, dictionary, t, tList],
+    [locale, platform, dictionary, t, tList],
   );
 
   return (

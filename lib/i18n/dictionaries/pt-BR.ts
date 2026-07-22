@@ -9,6 +9,13 @@ export const ptBR: Dictionary = {
     homeOgDescription:
       "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu iPhone. Instale uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
     homeOgImageAlt: "Bloqueador de sites de apostas BetClear no iPhone",
+    homeTitle_android: "BetClear — Bloqueie sites de apostas no Android",
+    homeDescription_android:
+      "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu Android. Configure o DNS Privado uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
+    homeOgTitle_android: "BetClear — Bloqueie sites de apostas no Android",
+    homeOgDescription_android:
+      "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu Android. Configure o DNS Privado uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
+    homeOgImageAlt_android: "Bloqueador de sites de apostas BetClear no Android",
     installTitle: "Instalar proteção",
     installDescription:
       "Baixe e instale o perfil de configuração do BetClear no iPhone para proteção DNS criptografada.",
@@ -100,6 +107,10 @@ export const ptBR: Dictionary = {
     supportHeading: "Suporte",
     disclaimer:
       "Proteção contra sites de apostas para iPhone. Não é um serviço médico.",
+    blurb_android:
+      "Bloqueador de sites de apostas para Android. Configure o DNS Privado uma vez e continue protegido automaticamente.",
+    disclaimer_android:
+      "Proteção contra sites de apostas para Android. Não é um serviço médico.",
     contact: "Contato",
     privacy: "Política de privacidade",
     terms: "Termos",
@@ -123,6 +134,9 @@ export const ptBR: Dictionary = {
     microcopy: "Configuração personalizada e depois 7 dias grátis.",
     visualCaption:
       "Você tenta abrir um site de apostas. O BetClear bloqueia.",
+    eyebrow_android: "Bloqueio de apostas para Android",
+    description_android:
+      "O BetClear bloqueia o acesso a sites de apostas no seu Android, tornando mais difícil fazer outra aposta quando o impulso aparece.",
   },
   trust: {
     ariaLabel: "Provas do produto",
@@ -137,6 +151,10 @@ export const ptBR: Dictionary = {
       "Novos domínios de apostas podem ser adicionados sem reinstalar.",
     guidedTitle: "Instalação guiada",
     guidedDetail: "Passo a passo claro no iPhone.",
+    worksTitle_android: "Funciona no seu Android",
+    worksDetail_android:
+      "A proteção vale no Chrome e em outros apps que usam DNS Privado.",
+    guidedDetail_android: "Passo a passo claro no Android.",
   },
   howItWorks: {
     eyebrow: "Como funciona",
@@ -168,6 +186,8 @@ export const ptBR: Dictionary = {
     title: "Instale uma vez. Continue protegido.",
     description:
       "Uma configuração. Bloqueio contínuo de sites de apostas no seu iPhone.",
+    description_android:
+      "Uma configuração. Bloqueio contínuo de sites de apostas no seu Android.",
     features: [
       {
         id: "blocks",
@@ -249,6 +269,34 @@ export const ptBR: Dictionary = {
       "O perfil apenas configura a proteção DNS criptografada.",
     cta: "Começar instalação",
     detailedGuide: "Ver guia detalhado",
+    eyebrow_android: "Configuração simples no Android",
+    steps_android: [
+      {
+        step: "1",
+        title: "Abra o BetClear no seu Android",
+        detail:
+          "Assine e copie o hostname de DNS Privado na página de instalação.",
+      },
+      {
+        step: "2",
+        title: "Abra Ajustes → Rede e internet",
+        detail:
+          "Em Samsung, procure em Conexões → Mais configurações de conexão.",
+      },
+      {
+        step: "3",
+        title: "Ative o DNS Privado",
+        detail:
+          "Escolha hostname do provedor de DNS Privado e cole o hostname BetClear.",
+      },
+      {
+        step: "4",
+        title: "Confirme que a proteção está ativa",
+        detail: "Tente abrir um site de apostas conhecido. Ele não deve carregar.",
+      },
+    ],
+    privacyDetail_android:
+      "O DNS Privado só encaminha consultas pelo DNS criptografado da BetClear.",
   },
   pricing: {
     eyebrow: "Preços",
@@ -262,6 +310,14 @@ export const ptBR: Dictionary = {
       "Bloqueio de sites de apostas",
       "Atualizações automáticas da lista de bloqueio",
       "Instalação guiada no iPhone",
+      "Estimativas personalizadas de recuperação",
+      "Acompanhamento de progresso (em breve)",
+      "Recursos de responsabilidade (em breve)",
+    ],
+    features_android: [
+      "Bloqueio de sites de apostas",
+      "Atualizações automáticas da lista de bloqueio",
+      "Configuração guiada no Android",
       "Estimativas personalizadas de recuperação",
       "Acompanhamento de progresso (em breve)",
       "Recursos de responsabilidade (em breve)",
@@ -356,6 +412,70 @@ export const ptBR: Dictionary = {
           "Não. O BetClear é um bloqueador de sites de apostas. Se você precisar de apoio clínico ou em crise, procure profissionais qualificados e recursos locais de jogo responsável.",
       },
     ],
+    items_android: [
+      {
+        question: "O BetClear bloqueia todos os sites de apostas?",
+        answer:
+          "O BetClear bloqueia uma lista ampla e focada em apostas, atualizada com o tempo. Nenhum bloqueador garante que todo serviço de apostas fique inacessível para sempre, mas o BetClear cobre sites conhecidos de betting, cassino, loteria, poker e relacionados.",
+      },
+      {
+        question: "Funciona no Chrome?",
+        answer:
+          "Sim. O BetClear funciona no Chrome e em outros apps que usam DNS Privado no seu Android.",
+      },
+      {
+        question: "Ele bloqueia apps de apostas?",
+        answer:
+          "O BetClear bloqueia sites de apostas por domínio. Apps nativos da Play Store não são removidos. Apps que carregam conteúdo por domínios bloqueados podem falhar, mas o bloqueio de apps não é uma garantia do produto.",
+      },
+      {
+        question: "O BetClear vê meu histórico de navegação?",
+        answer:
+          "O BetClear não precisa do histórico de navegação para bloquear domínios de apostas. O serviço recebe as consultas de domínio necessárias para responder às requisições DNS, não o conteúdo completo das páginas que você visita.",
+      },
+      {
+        question:
+          "O BetClear acessa minhas fotos, mensagens ou senhas?",
+        answer:
+          "Não. O DNS Privado não concede acesso a fotos, mensagens, senhas ou arquivos pessoais.",
+      },
+      {
+        question: "Por que o BetClear usa DNS Privado no Android?",
+        answer:
+          "O DNS Privado é como o BetClear aplica bloqueio de sites em todo o sistema no Android, sem pedir que você instale um app bloqueador separado.",
+      },
+      {
+        question: "Dá para desativar a proteção?",
+        answer:
+          "Sim. Vá em Ajustes → Rede e internet → DNS Privado e desative ou altere o hostname. O bloqueio termina quando o DNS Privado deixa de apontar para a BetClear.",
+      },
+      {
+        question: "Como a lista de bloqueio de apostas é atualizada?",
+        answer:
+          "O BetClear atualiza a lista de bloqueio centralmente. Novos domínios podem ser adicionados sem pedir que você altere a configuração de DNS Privado.",
+      },
+      {
+        question: "Sites normais continuam funcionando?",
+        answer:
+          "Sim. Sites do dia a dia devem continuar funcionando. Apenas domínios identificados como relacionados a apostas são bloqueados.",
+      },
+      {
+        question: "O que acontece depois dos 7 dias grátis?",
+        answer:
+          "Seu teste vira o plano escolhido no checkout, a menos que você cancele antes do fim do período gratuito.",
+      },
+      {
+        question: "Como cancelo?",
+        answer:
+          "Cancele pelo portal de cobrança ou entrando em contato com o suporte antes da renovação. Você também pode desativar o DNS Privado em Ajustes no Android para encerrar o bloqueio naquele aparelho.",
+      },
+      {
+        question:
+          "O BetClear substitui apoio profissional?",
+        answer:
+          "Não. O BetClear é um bloqueador de sites de apostas. Se você precisar de apoio clínico ou em crise, procure profissionais qualificados e recursos locais de jogo responsável.",
+      },
+    ],
   },
   finalCta: {
     title: "Torne a próxima aposta mais difícil de alcançar.",
@@ -364,6 +484,8 @@ export const ptBR: Dictionary = {
     primaryCta: "Começar proteção gratuita",
     secondaryCta: "Ver guia de instalação",
     microcopy: "Configuração personalizada e depois 7 dias grátis.",
+    description_android:
+      "Instale o BetClear antes do próximo impulso e bloqueie o acesso a {domainCount} sites de apostas no seu Android.",
   },
   stickyCta: {
     label: "Começar proteção gratuita",
@@ -577,6 +699,10 @@ export const ptBR: Dictionary = {
     viewPricing: "Ver preços",
     signIn: "Entrar",
     usingAndroid: "Usa Android?",
+    graceBanner:
+      "A janela do seu trial está acabando. Assine para continuar com o bloqueio após o período de cortesia — o perfil pode permanecer instalado.",
+    reinstallBanner:
+      "Para uma proteção ligada à sua assinatura, baixe um perfil novo (ou digite de novo o host no Android). Configurações antigas compartilhadas podem deixar de filtrar quando a migração terminar.",
     manageBilling: "Gerenciar cobrança",
     manageBillingPrompt:
       "Precisa atualizar o cartão, trocar de plano ou cancelar?",
@@ -743,7 +869,7 @@ export const ptBR: Dictionary = {
       {
         title: "Digite o host da BetClear.",
         detail:
-          "Cole dns.betclear.app no campo. Use o botão Copiar host acima para ficar exato.",
+          "Cole o host mostrado acima no campo. Use Copiar host para ficar exato — cada conta tem o seu próprio host.",
       },
       {
         title: "Toque em Salvar.",

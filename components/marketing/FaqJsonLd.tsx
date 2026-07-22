@@ -1,21 +1,28 @@
+import type { DevicePlatform } from "@/lib/device/platform";
 import { SITE } from "@/lib/constants";
 import type { AppLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { translate } from "@/lib/i18n/translate";
 import { getPlanDisplay } from "@/lib/stripe/prices";
 
 type FaqJsonLdProps = {
   locale: AppLocale;
+  platform?: DevicePlatform;
 };
 
-export function FaqJsonLd({ locale }: FaqJsonLdProps) {
+export function FaqJsonLd({ locale, platform = "unknown" }: FaqJsonLdProps) {
   const dictionary = getDictionary(locale);
+  const faqItems =
+    platform === "android" && dictionary.faq.items_android
+      ? dictionary.faq.items_android
+      : dictionary.faq.items;
   const annual = getPlanDisplay(locale, "annual");
   const monthly = getPlanDisplay(locale, "monthly");
 
   const data = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: dictionary.faq.items.map((item) => ({
+    mainEntity: faqItems.map((item) => ({
       "@type": "Question",
       name: item.question,
       acceptedAnswer: {
@@ -30,8 +37,8 @@ export function FaqJsonLd({ locale }: FaqJsonLdProps) {
     "@type": "SoftwareApplication",
     name: SITE.name,
     applicationCategory: "UtilitiesApplication",
-    operatingSystem: "iOS",
-    description: dictionary.meta.homeDescription,
+    operatingSystem: platform === "android" ? "Android" : "iOS",
+    description: translate(dictionary, "meta.homeDescription", undefined, platform),
     offers: {
       "@type": "Offer",
       price: String(annual.amount),

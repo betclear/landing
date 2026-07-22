@@ -7,6 +7,13 @@ export const en = {
     homeOgDescription:
       "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your iPhone. Install once, stay protected automatically, and start with a 7-day free trial.",
     homeOgImageAlt: "BetClear gambling website blocker on iPhone",
+    homeTitle_android: "BetClear — Block Gambling Websites on Android",
+    homeDescription_android:
+      "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your Android phone. Set up Private DNS once, stay protected automatically, and start with a 7-day free trial.",
+    homeOgTitle_android: "BetClear — Block Gambling Websites on Android",
+    homeOgDescription_android:
+      "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your Android phone. Set up Private DNS once, stay protected automatically, and start with a 7-day free trial.",
+    homeOgImageAlt_android: "BetClear gambling website blocker on Android",
     installTitle: "Install Protection",
     installDescription:
       "Download and install the BetClear iPhone configuration profile for encrypted DNS protection.",
@@ -97,6 +104,10 @@ export const en = {
     productHeading: "Product",
     supportHeading: "Support",
     disclaimer: "Gambling website protection for iPhone. Not a medical service.",
+    blurb_android:
+      "Gambling website blocker for Android. Set up Private DNS once and stay protected automatically.",
+    disclaimer_android:
+      "Gambling website protection for Android. Not a medical service.",
     contact: "Contact",
     privacy: "Privacy policy",
     terms: "Terms",
@@ -119,6 +130,9 @@ export const en = {
     secondaryCta: "See How It Works",
     microcopy: "Personalized setup, then a 7-day free trial.",
     visualCaption: "You try to open a gambling site. BetClear blocks it.",
+    eyebrow_android: "Gambling blocking for Android",
+    description_android:
+      "BetClear blocks access to gambling websites across your Android phone, making it harder to place another bet when the urge hits.",
   },
   trust: {
     ariaLabel: "Product proof",
@@ -133,6 +147,10 @@ export const en = {
       "New gambling domains can be added without reinstalling.",
     guidedTitle: "Guided installation",
     guidedDetail: "Clear step-by-step setup on iPhone.",
+    worksTitle_android: "Works across your Android phone",
+    worksDetail_android:
+      "Protection applies in Chrome and other apps using Private DNS.",
+    guidedDetail_android: "Clear step-by-step setup on Android.",
   },
   howItWorks: {
     eyebrow: "How it works",
@@ -164,6 +182,8 @@ export const en = {
     title: "Install once. Stay protected.",
     description:
       "One setup. Ongoing gambling website blocking across your iPhone.",
+    description_android:
+      "One setup. Ongoing gambling website blocking across your Android phone.",
     features: [
       {
         id: "blocks",
@@ -240,6 +260,32 @@ export const en = {
     privacyDetail: "The profile only configures encrypted DNS protection.",
     cta: "Start Installation",
     detailedGuide: "View Detailed Guide",
+    eyebrow_android: "Simple Android setup",
+    steps_android: [
+      {
+        step: "1",
+        title: "Open BetClear on your Android phone",
+        detail: "Subscribe, then copy your Private DNS hostname from the install page.",
+      },
+      {
+        step: "2",
+        title: "Open Settings → Network & internet",
+        detail: "On Samsung phones, look under Connections → More connection settings.",
+      },
+      {
+        step: "3",
+        title: "Turn on Private DNS",
+        detail:
+          "Choose Private DNS provider hostname and paste your BetClear hostname.",
+      },
+      {
+        step: "4",
+        title: "Confirm that protection is active",
+        detail: "Try a known gambling website. It should fail to load.",
+      },
+    ],
+    privacyDetail_android:
+      "Private DNS only routes lookups through BetClear encrypted DNS.",
   },
   pricing: {
     eyebrow: "Pricing",
@@ -253,6 +299,14 @@ export const en = {
       "Gambling website blocking",
       "Automatic blocklist updates",
       "Guided iPhone installation",
+      "Personalized recovery estimates",
+      "Future progress tracking",
+      "Future accountability features",
+    ],
+    features_android: [
+      "Gambling website blocking",
+      "Automatic blocklist updates",
+      "Guided Android setup",
       "Personalized recovery estimates",
       "Future progress tracking",
       "Future accountability features",
@@ -343,6 +397,68 @@ export const en = {
           "No. BetClear is a gambling website blocker. If you need clinical or crisis support, please use qualified professionals and local responsible-gambling resources.",
       },
     ],
+    items_android: [
+      {
+        question: "Does BetClear block all gambling websites?",
+        answer:
+          "BetClear blocks a large, gambling-focused list of domains that is updated over time. No blocker can guarantee that every gambling service will always be inaccessible, but BetClear is built to cover known betting, casino, lottery, poker, and related sites.",
+      },
+      {
+        question: "Does it work in Chrome?",
+        answer:
+          "Yes. BetClear works in Chrome and other apps that use your Android phone’s Private DNS settings.",
+      },
+      {
+        question: "Does it block gambling apps?",
+        answer:
+          "BetClear blocks gambling websites by domain. Native Play Store apps are not removed. Apps that load content through blocked domains may fail, but app blocking is not a guaranteed product claim.",
+      },
+      {
+        question: "Can BetClear see my browsing history?",
+        answer:
+          "BetClear does not need browsing history to block gambling domains. The service receives domain lookups needed to answer DNS requests, not the full contents of pages you visit.",
+      },
+      {
+        question: "Can BetClear access my photos, messages, or passwords?",
+        answer:
+          "No. Private DNS does not grant access to photos, messages, passwords, or personal files.",
+      },
+      {
+        question: "Why does BetClear use Android Private DNS?",
+        answer:
+          "Private DNS is how BetClear applies system-wide website blocking on Android without asking you to install a separate blocker app.",
+      },
+      {
+        question: "Can I turn off protection?",
+        answer:
+          "Yes. Go to Settings → Network & internet → Private DNS and switch it off or change the hostname. Blocking ends when Private DNS no longer points to BetClear.",
+      },
+      {
+        question: "How is the gambling blocklist updated?",
+        answer:
+          "BetClear updates the gambling blocklist centrally. New domains can be added without asking you to change your Private DNS setup.",
+      },
+      {
+        question: "Will normal websites still work?",
+        answer:
+          "Yes. Everyday websites should continue to work. Only domains identified as gambling-related are intended for blocking.",
+      },
+      {
+        question: "What happens after the 7-day trial?",
+        answer:
+          "Your trial converts to the plan you selected at checkout unless you cancel before the trial ends.",
+      },
+      {
+        question: "How do I cancel?",
+        answer:
+          "Cancel from the billing portal or by contacting support before renewal. You can also turn off Private DNS in Android Settings to end blocking on that device.",
+      },
+      {
+        question: "Is BetClear a replacement for professional support?",
+        answer:
+          "No. BetClear is a gambling website blocker. If you need clinical or crisis support, please use qualified professionals and local responsible-gambling resources.",
+      },
+    ],
   },
   finalCta: {
     title: "Make your next bet harder to reach.",
@@ -351,6 +467,8 @@ export const en = {
     primaryCta: "Start Free Protection",
     secondaryCta: "View Installation Guide",
     microcopy: "Personalized setup, then a 7-day free trial.",
+    description_android:
+      "Install BetClear before the next urge arrives and block access to {domainCount} gambling websites across your Android phone.",
   },
   stickyCta: {
     label: "Start Free Protection",
@@ -560,6 +678,10 @@ export const en = {
     viewPricing: "View pricing",
     signIn: "Sign in",
     usingAndroid: "Using Android?",
+    graceBanner:
+      "Your trial payment window is ending. Subscribe to keep blocking after the grace period — your profile can stay installed.",
+    reinstallBanner:
+      "For protection that follows your subscription, download a fresh profile (or re-enter your Android hostname). Older shared setups may stop filtering when we finish the migration.",
     manageBilling: "Manage billing",
     manageBillingPrompt:
       "Need to update your card, switch plans, or cancel?",
@@ -721,9 +843,9 @@ export const en = {
         detail: "Select the option that lets you type a custom hostname.",
       },
       {
-        title: "Enter the BetClear hostname.",
+        title: "Enter your BetClear hostname.",
         detail:
-          "Paste dns.betclear.app into the field. Use the Copy hostname button above so it’s exact.",
+          "Paste the hostname shown above into the field. Use Copy hostname so it’s exact — each account has its own hostname.",
       },
       {
         title: "Tap Save.",

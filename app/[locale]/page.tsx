@@ -13,9 +13,12 @@ import { FinalCTA } from "@/components/marketing/FinalCTA";
 import { StickyMobileCTA } from "@/components/marketing/StickyMobileCTA";
 import { FaqJsonLd } from "@/components/marketing/FaqJsonLd";
 import { getProductStats } from "@/lib/product-stats";
+import { detectDevicePlatform } from "@/lib/device/platform";
 import { isAppLocale, type AppLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { translate } from "@/lib/i18n/translate";
 import { buildPageMetadata } from "@/lib/i18n/metadata";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 
 type PageProps = {
@@ -27,14 +30,16 @@ export async function generateMetadata({ params }: PageProps) {
   if (!isAppLocale(raw)) return {};
   const locale = raw as AppLocale;
   const dict = getDictionary(locale);
+  const userAgent = (await headers()).get("user-agent") ?? "";
+  const platform = detectDevicePlatform(userAgent);
 
   return buildPageMetadata(locale, {
     path: "/",
-    title: dict.meta.homeTitle,
-    description: dict.meta.homeDescription,
-    ogTitle: dict.meta.homeOgTitle,
-    ogDescription: dict.meta.homeOgDescription,
-    ogImageAlt: dict.meta.homeOgImageAlt,
+    title: translate(dict, "meta.homeTitle", undefined, platform),
+    description: translate(dict, "meta.homeDescription", undefined, platform),
+    ogTitle: translate(dict, "meta.homeOgTitle", undefined, platform),
+    ogDescription: translate(dict, "meta.homeOgDescription", undefined, platform),
+    ogImageAlt: translate(dict, "meta.homeOgImageAlt", undefined, platform),
     keywords: dict.meta.keywords,
   });
 }
@@ -44,10 +49,12 @@ export default async function HomePage({ params }: PageProps) {
   if (!isAppLocale(raw)) notFound();
   const locale = raw as AppLocale;
   const stats = await getProductStats();
+  const userAgent = (await headers()).get("user-agent") ?? "";
+  const platform = detectDevicePlatform(userAgent);
 
   return (
     <>
-      <FaqJsonLd locale={locale} />
+      <FaqJsonLd locale={locale} platform={platform} />
       <Header />
       <main>
         <Hero domainCountLabel={stats.domainCountLabel} />

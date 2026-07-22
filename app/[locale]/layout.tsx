@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { AnalyticsLocaleSync } from "@/components/i18n/AnalyticsLocaleSync";
@@ -11,6 +12,7 @@ import {
   type AppLocale,
 } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { detectDevicePlatform } from "@/lib/device/platform";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -29,10 +31,12 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
   setRequestLocale(locale);
   const messages = await getMessages();
   const dictionary = getDictionary(locale);
+  const userAgent = (await headers()).get("user-agent") ?? "";
+  const platform = detectDevicePlatform(userAgent);
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <LocaleProvider locale={locale} dictionary={dictionary}>
+      <LocaleProvider locale={locale} dictionary={dictionary} platform={platform}>
         <SiteJsonLd locale={locale} />
         <AnalyticsLocaleSync />
         {children}

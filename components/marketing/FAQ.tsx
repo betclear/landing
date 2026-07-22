@@ -11,8 +11,11 @@ import { cn } from "@/lib/cn";
 
 export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
-  const { t, dictionary } = useLocale();
-  const items = dictionary.faq.items;
+  const { t, dictionary, platform } = useLocale();
+  const items =
+    platform === "android" && dictionary.faq.items_android
+      ? dictionary.faq.items_android
+      : dictionary.faq.items;
 
   return (
     <section id="faq" className="py-20 sm:py-28">

@@ -13,8 +13,11 @@ import { trackEvent } from "@/lib/analytics";
 export function InstallationSteps() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
-  const { t, dictionary } = useLocale();
-  const steps = dictionary.installSection.steps;
+  const { t, dictionary, platform } = useLocale();
+  const steps =
+    platform === "android" && dictionary.installSection.steps_android
+      ? dictionary.installSection.steps_android
+      : dictionary.installSection.steps;
 
   useEffect(() => {
     if (inView) trackEvent("installation_section_viewed");
