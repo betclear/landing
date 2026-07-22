@@ -83,20 +83,23 @@ export function AnalyticsConsent() {
           aria-modal="false"
           aria-labelledby="cookie-consent-title"
           aria-describedby="cookie-consent-description"
-          className="fixed inset-x-0 bottom-0 z-50 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:p-4"
+          className="fixed inset-x-0 bottom-0 z-50 px-5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-4 sm:py-4"
         >
-          <div className="mx-auto max-w-3xl rounded-2xl border border-border/80 bg-card/96 p-4 shadow-elevated backdrop-blur-xl sm:p-5">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+          <div
+            className="mx-auto max-w-2xl rounded-xl border border-border bg-card py-4 shadow-soft"
+            style={{ paddingLeft: 28, paddingRight: 28 }}
+          >
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
               <div className="min-w-0 flex-1">
                 <p
                   id="cookie-consent-title"
-                  className="text-sm font-semibold tracking-[-0.02em] text-foreground"
+                  className="text-xs font-semibold tracking-[-0.02em] text-foreground"
                 >
                   {t("cookieConsent.title")}
                 </p>
                 <p
                   id="cookie-consent-description"
-                  className="mt-1.5 text-sm leading-relaxed text-muted-foreground"
+                  className="mt-0.5 text-xs leading-snug text-muted-foreground"
                 >
                   {t("cookieConsent.description")}{" "}
                   <LocaleLink
@@ -108,11 +111,11 @@ export function AnalyticsConsent() {
                   .
                 </p>
               </div>
-              <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
+              <div className="flex shrink-0 gap-2">
                 <Button
                   type="button"
                   variant="secondary"
-                  className="w-full sm:w-auto"
+                  className="h-8 flex-1 px-3 text-xs sm:flex-none"
                   showArrow={false}
                   onClick={() => {
                     const hadAnalytics = consent === "granted";
@@ -126,7 +129,7 @@ export function AnalyticsConsent() {
                 <Button
                   type="button"
                   variant="primary"
-                  className="w-full sm:w-auto"
+                  className="h-8 flex-1 px-3 text-xs sm:flex-none"
                   showArrow={false}
                   onClick={() => writeAnalyticsConsent("granted")}
                 >

@@ -997,8 +997,8 @@ export const en = {
   cookieConsent: {
     title: "Analytics cookies",
     description:
-      "We use Microsoft Clarity (and Firebase Analytics when enabled) to understand how BetClear is used. Essential cookies for sign-in and preferences always work. See our",
-    accept: "Accept analytics",
+      "We use analytics to improve BetClear. Essential cookies always work. See our",
+    accept: "Accept",
     reject: "Reject",
     privacyLink: "Privacy Policy",
     settings: "Cookie settings",

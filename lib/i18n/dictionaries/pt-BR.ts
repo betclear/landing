@@ -1018,8 +1018,8 @@ export const ptBR: Dictionary = {
   cookieConsent: {
     title: "Cookies de analítica",
     description:
-      "Usamos o Microsoft Clarity (e o Firebase Analytics quando habilitado) para entender como o BetClear é usado. Cookies essenciais de login e preferências sempre funcionam. Veja nossa",
-    accept: "Aceitar analítica",
+      "Usamos analítica para melhorar o BetClear. Cookies essenciais sempre funcionam. Veja nossa",
+    accept: "Aceitar",
     reject: "Recusar",
     privacyLink: "Política de Privacidade",
     settings: "Configurações de cookies",
