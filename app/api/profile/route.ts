@@ -8,7 +8,9 @@ import {
   ProfileSigningError,
   signAndVerifyMobileConfig,
 } from "@/lib/profile/sign";
-import { hasPaywallAccess } from "@/lib/stripe/access";
+import { resolveInstallIdentity } from "@/lib/stripe/access";
+import { getOrCreateDeviceInstall } from "@/lib/devices/installs";
+import { dohUrlForClient } from "@/lib/dns/config";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -20,7 +22,6 @@ const PROFILE_HEADERS = {
 } as const;
 
 function signingFailureResponse(message: string, status: number) {
-  // Never include private key material; callers only get a safe public error.
   console.error(`[api/profile] ${message}`);
   return NextResponse.json(
     {
@@ -38,8 +39,8 @@ function signingFailureResponse(message: string, status: number) {
 
 export async function GET(request: Request) {
   const accessToken = new URL(request.url).searchParams.get("access");
-  const allowed = await hasPaywallAccess(accessToken);
-  if (!allowed) {
+  const identity = await resolveInstallIdentity(accessToken);
+  if (!identity) {
     return NextResponse.json(
       {
         error: "Active subscription required",
@@ -49,7 +50,27 @@ export async function GET(request: Request) {
     );
   }
 
-  const unsignedXml = generateMobileConfig();
+  let dohUrl: string;
+  try {
+    const install = await getOrCreateDeviceInstall({
+      userId: identity.userId,
+      stripeCustomerId: identity.stripeCustomerId,
+      platform: "ios",
+      ensureAdGuard: true,
+    });
+    dohUrl = dohUrlForClient(install.client_id);
+  } catch (error) {
+    console.error("[api/profile] device install failed", error);
+    return NextResponse.json(
+      {
+        error: "device_install_failed",
+        message: "Unable to prepare your protection profile. Please try again.",
+      },
+      { status: 503 },
+    );
+  }
+
+  const unsignedXml = generateMobileConfig(dohUrl);
 
   let credentials;
   try {

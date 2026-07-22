@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/ui/Container";
 import { InstallActions } from "@/components/install/InstallActions";
 import { InstallDownloadButton } from "@/components/install/InstallDownloadButton";
+import { EntitlementNotice } from "@/components/install/EntitlementNotice";
 import { InstallPageTracker } from "@/components/onboarding/InstallPageTracker";
 import { hasPaywallAccess, profileDownloadPath } from "@/lib/stripe/access";
 import { isAndroidUserAgent } from "@/lib/stripe/browser";
@@ -72,6 +73,8 @@ export default async function InstallPage({ params, searchParams }: PageProps) {
             profileUrl={profileUrl}
             accessToken={access}
           />
+
+          <EntitlementNotice locale={locale} accessToken={access} />
 
           <InstallActions />
 

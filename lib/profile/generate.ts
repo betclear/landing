@@ -1,7 +1,6 @@
 import { randomUUID } from "crypto";
 import { DOH_URL } from "@/lib/dns/config";
 
-const DNS_SERVER_URL = DOH_URL;
 const ROOT_IDENTIFIER = "app.betclear.protection";
 const DNS_IDENTIFIER = "app.betclear.protection.dns";
 
@@ -16,10 +15,10 @@ function escapeXml(value: string): string {
 
 /**
  * Generates an Apple configuration profile that configures managed DNS-over-HTTPS.
- * Blocked domains are NOT embedded; the future DoH resolver at dns.betclear.app
- * will consume the dynamic blocklist API.
+ * Blocked domains are NOT embedded; the DoH resolver enforces the blocklist.
+ * Pass a per-user DoH URL so entitlement can be revoked without reinstall.
  */
-export function generateMobileConfig(): string {
+export function generateMobileConfig(dohUrl: string = DOH_URL): string {
   const rootUuid = randomUUID().toUpperCase();
   const dnsUuid = randomUUID().toUpperCase();
 
@@ -38,7 +37,7 @@ export function generateMobileConfig(): string {
 				<key>DNSProtocol</key>
 				<string>HTTPS</string>
 				<key>ServerURL</key>
-				<string>${escapeXml(DNS_SERVER_URL)}</string>
+				<string>${escapeXml(dohUrl)}</string>
 			</dict>
 			<key>PayloadDescription</key>
 			<string>${escapeXml(description)}</string>

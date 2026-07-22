@@ -59,6 +59,7 @@ export async function POST(request: Request) {
       const customer = await stripe.customers.create({
         email: user.email ?? undefined,
         metadata: {
+          user_id: user.id,
           userId: user.id,
         },
       });
@@ -81,6 +82,7 @@ export async function POST(request: Request) {
       subscription_data: {
         trial_period_days: TRIAL_PERIOD_DAYS,
         metadata: {
+          user_id: user.id,
           userId: user.id,
           selectedPlan: plan,
           locale,
@@ -94,6 +96,7 @@ export async function POST(request: Request) {
         },
       },
       metadata: {
+        user_id: user.id,
         userId: user.id,
         selectedPlan: plan,
         locale,

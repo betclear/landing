@@ -90,6 +90,14 @@ describe("profile signing", () => {
     expect(xml.startsWith("<?xml")).toBe(true);
   });
 
+  it("embeds a per-user DoH URL when provided", () => {
+    const xml = generateMobileConfig(
+      "https://bcabc123.dns.betclear.app/dns-query",
+    );
+    expect(xml).toContain("https://bcabc123.dns.betclear.app/dns-query");
+    expect(xml).not.toContain("https://dns.betclear.app/dns-query");
+  });
+
   it("signs with OpenSSL CMS DER and verifies embedded content", async () => {
     const { certPem, keyPem } = generateSelfSignedPem();
     const unsigned = generateMobileConfig();

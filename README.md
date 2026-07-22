@@ -284,9 +284,25 @@ Expected: HTTP 200, `Content-Type: text/plain; charset=utf-8`, rules like:
 - Direct API: [https://www.betclear.app/api/profile](https://www.betclear.app/api/profile)
 - Legacy alias: `/install-test` redirects to `/install`
 
-The profile configures managed DNS-over-HTTPS to `https://dns.betclear.app/dns-query`. That endpoint is **not implemented yet**. Installing the profile today only validates the install path.
+The profile configures managed DNS-over-HTTPS to a **per-user** URL:
 
-`GET /api/profile` generates the same DNS payload as before, then **CMS/PKCS#7-signs** it in-process with WebCrypto/pkijs (DER, non-detached) before returning:
+`https://<clientId>.dns.betclear.app/dns-query`
+
+Android Private DNS uses the matching hostname `<clientId>.dns.betclear.app` (DoT on port 853).
+
+`clientId` rows live in Supabase `device_installs`. Stripe webhooks update `subscriptions.entitlement_mode` (`full` | `grace_24h` | `none`) and sync AdGuard Home clients (`/control/clients/*`) so canceled / post-grace users stop receiving the blocklist without removing the profile.
+
+### DNS entitlement cutover (ops)
+
+Until cutover, keep AdGuard **global filtering ON** so legacy shared `dns.betclear.app` installs still block. When enough users have re-provisioned:
+
+1. Turn AdGuard global filtering **OFF**
+2. Entitled users keep filtering via per-client settings
+3. Shared / unknown hostnames resolve unfiltered (stops free forever use)
+
+Requires `ADGUARD_BASE_URL`, `ADGUARD_USERNAME`, `ADGUARD_PASSWORD`, wildcard DNS `*.dns.betclear.app`, and a TLS cert covering `dns.betclear.app` + `*.dns.betclear.app`.
+
+`GET /api/profile` issues (or reuses) a device ClientID, embeds the per-user DoH URL, then **CMS/PKCS#7-signs** the profile in-process with WebCrypto/pkijs (DER, non-detached) before returning:
 
 - `Content-Type: application/x-apple-aspen-config`
 - `Content-Disposition: attachment; filename="BetClear.mobileconfig"`

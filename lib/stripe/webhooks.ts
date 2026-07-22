@@ -1,6 +1,12 @@
 import type Stripe from "stripe";
+import { after } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import type { BillingPlan } from "@/lib/stripe/config";
+import {
+  computeEntitlement,
+  type EntitlementMode,
+} from "@/lib/entitlement/mode";
+import { syncDnsFilteringForOwner } from "@/lib/devices/installs";
 
 type SubscriptionRow = {
   stripe_customer_id: string;
@@ -11,6 +17,9 @@ type SubscriptionRow = {
   price_id: string | null;
   plan: BillingPlan | null;
   current_period_end: string | null;
+  trial_ends_at: string | null;
+  grace_ends_at: string | null;
+  entitlement_mode: EntitlementMode;
   is_premium: boolean;
 };
 
@@ -30,8 +39,7 @@ function planFromPriceId(priceId: string | null | undefined): BillingPlan | null
 }
 
 /**
- * Onboarding checkout writes `userId` (camelCase); the marketing checkout writes
- * `user_id` (snake_case). Accept either so the auth link is always captured.
+ * Prefer snake_case `user_id`; accept camelCase `userId` for older sessions.
  */
 function userIdFromMetadata(
   metadata: Stripe.Metadata | null | undefined,
@@ -40,10 +48,6 @@ function userIdFromMetadata(
   return metadata.user_id ?? metadata.userId ?? null;
 }
 
-/**
- * Best-effort mirror of the subscription status onto the auth-linked recovery
- * profile so onboarding UI and the access fallback do not read stale state.
- */
 async function mirrorStatusToRecoveryProfile(
   customerId: string,
   status: string,
@@ -66,13 +70,67 @@ function subscriptionPeriodEnd(
   return end ? new Date(end * 1000).toISOString() : null;
 }
 
+function subscriptionTrialEnd(
+  subscription: Stripe.Subscription,
+): string | null {
+  return subscription.trial_end
+    ? new Date(subscription.trial_end * 1000).toISOString()
+    : null;
+}
+
+async function loadPreviousEntitlementState(customerId: string): Promise<{
+  graceEndsAt: Date | null;
+  userId: string | null;
+}> {
+  const supabase = createServiceClient();
+  const { data } = await supabase
+    .from("subscriptions")
+    .select("grace_ends_at, user_id")
+    .eq("stripe_customer_id", customerId)
+    .maybeSingle();
+
+  return {
+    graceEndsAt: data?.grace_ends_at ? new Date(data.grace_ends_at) : null,
+    userId: data?.user_id ?? null,
+  };
+}
+
 /**
- * Idempotent, order-independent write of subscription state. Stripe does not
- * guarantee event ordering, so every subscription-bearing event upserts by
- * customer id (self-healing if `customer.subscription.*` arrives before
- * `checkout.session.completed`). `email`/`user_id` are only written when known,
- * so a later event never clobbers a value captured by an earlier one.
+ * When leaving a full-access status without converting, open a 24h DNS grace
+ * window once (persisted as grace_ends_at).
  */
+function resolveGraceEndsAt(options: {
+  status: string;
+  trialEndsAt: Date | null;
+  previousGraceEndsAt: Date | null;
+  previousWasFull: boolean;
+}): Date | null {
+  if (PREMIUM_STATUSES.has(options.status)) {
+    return null;
+  }
+
+  if (options.previousGraceEndsAt) {
+    return options.previousGraceEndsAt;
+  }
+
+  // First transition out of entitled status → start grace.
+  if (options.previousWasFull) {
+    return new Date(Date.now() + 1000 * 60 * 60 * 24);
+  }
+
+  // Cold start with expired trial still inside 24h of trial_end.
+  if (options.trialEndsAt) {
+    const graceFromTrial = new Date(
+      options.trialEndsAt.getTime() + 1000 * 60 * 60 * 24,
+    );
+    if (graceFromTrial.getTime() > Date.now()) {
+      return graceFromTrial;
+    }
+  }
+
+  return null;
+}
+
 async function upsertSubscriptionState(
   row: Omit<SubscriptionRow, "email" | "user_id"> &
     Partial<Pick<SubscriptionRow, "email" | "user_id">>,
@@ -86,11 +144,6 @@ async function upsertSubscriptionState(
     .from("subscriptions")
     .upsert(payload, { onConflict: "stripe_customer_id" });
 
-  // `user_id` -> auth.users is a best-effort link. Stripe metadata can carry an
-  // id that no longer exists (deleted/recreated user, stale session), raising a
-  // foreign-key violation (23503). Never fail the webhook over the link: drop
-  // user_id and retry so premium access is still recorded. Otherwise Stripe
-  // sees a 500 and retries the event for days.
   if (error?.code === "23503" && "user_id" in payload) {
     delete payload.user_id;
     ({ error } = await supabase
@@ -103,6 +156,83 @@ async function upsertSubscriptionState(
   }
 
   await mirrorStatusToRecoveryProfile(row.stripe_customer_id, row.status);
+
+  const userId = (payload.user_id as string | undefined) ?? row.user_id ?? null;
+  after(() => {
+    void syncDnsFilteringForOwner({
+      userId,
+      stripeCustomerId: row.stripe_customer_id,
+      filtersDns: row.entitlement_mode === "full" || row.entitlement_mode === "grace_24h",
+    });
+  });
+}
+
+async function upsertFromStripeSubscription(
+  subscription: Stripe.Subscription,
+  overrides?: {
+    email?: string | null;
+    userId?: string | null;
+    status?: string;
+  },
+) {
+  const customerId =
+    typeof subscription.customer === "string"
+      ? subscription.customer
+      : subscription.customer.id;
+
+  const priceId = subscription.items.data[0]?.price.id ?? null;
+  const status = overrides?.status ?? subscription.status;
+  const trialEndsAtIso = subscriptionTrialEnd(subscription);
+  const trialEndsAt = trialEndsAtIso ? new Date(trialEndsAtIso) : null;
+
+  const previous = await loadPreviousEntitlementState(customerId);
+  const supabase = createServiceClient();
+  const { data: prevRow } = await supabase
+    .from("subscriptions")
+    .select("entitlement_mode, status, is_premium")
+    .eq("stripe_customer_id", customerId)
+    .maybeSingle();
+
+  const wasEntitled =
+    prevRow?.entitlement_mode === "full" ||
+    prevRow?.entitlement_mode === "grace_24h" ||
+    isPremiumStatus(prevRow?.status) ||
+    prevRow?.is_premium === true;
+
+  const graceEndsAt = resolveGraceEndsAt({
+    status,
+    trialEndsAt,
+    previousGraceEndsAt: previous.graceEndsAt,
+    previousWasFull: wasEntitled && !PREMIUM_STATUSES.has(status),
+  });
+
+  const entitlement = computeEntitlement({
+    status,
+    trialEndsAt,
+    previousGraceEndsAt: graceEndsAt,
+  });
+
+  const userId =
+    overrides?.userId ??
+    userIdFromMetadata(subscription.metadata) ??
+    previous.userId;
+
+  await upsertSubscriptionState({
+    stripe_customer_id: customerId,
+    stripe_subscription_id: subscription.id,
+    email: overrides?.email ?? null,
+    user_id: userId,
+    status,
+    price_id: priceId,
+    plan: planFromPriceId(priceId),
+    current_period_end: subscriptionPeriodEnd(subscription),
+    trial_ends_at: trialEndsAtIso,
+    grace_ends_at: entitlement.graceEndsAt
+      ? entitlement.graceEndsAt.toISOString()
+      : null,
+    entitlement_mode: entitlement.mode,
+    is_premium: entitlement.isPremium,
+  });
 }
 
 export async function handleCheckoutSessionCompleted(
@@ -124,45 +254,18 @@ export async function handleCheckoutSessionCompleted(
 
   const stripe = (await import("@/lib/stripe/client")).getStripe();
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-  const priceId = subscription.items.data[0]?.price.id ?? null;
   const email = session.customer_details?.email ?? session.customer_email ?? null;
   const userId =
     userIdFromMetadata(session.metadata) ??
     userIdFromMetadata(subscription.metadata);
 
-  await upsertSubscriptionState({
-    stripe_customer_id: customerId,
-    stripe_subscription_id: subscription.id,
-    email,
-    user_id: userId,
-    status: subscription.status,
-    price_id: priceId,
-    plan: planFromPriceId(priceId),
-    current_period_end: subscriptionPeriodEnd(subscription),
-    is_premium: isPremiumStatus(subscription.status),
-  });
+  await upsertFromStripeSubscription(subscription, { email, userId });
 }
 
 export async function handleSubscriptionUpdated(
   subscription: Stripe.Subscription,
 ) {
-  const customerId =
-    typeof subscription.customer === "string"
-      ? subscription.customer
-      : subscription.customer.id;
-
-  const priceId = subscription.items.data[0]?.price.id ?? null;
-
-  await upsertSubscriptionState({
-    stripe_customer_id: customerId,
-    stripe_subscription_id: subscription.id,
-    user_id: userIdFromMetadata(subscription.metadata),
-    status: subscription.status,
-    price_id: priceId,
-    plan: planFromPriceId(priceId),
-    current_period_end: subscriptionPeriodEnd(subscription),
-    is_premium: isPremiumStatus(subscription.status),
-  });
+  await upsertFromStripeSubscription(subscription);
 }
 
 export async function handleSubscriptionCreated(
@@ -174,21 +277,7 @@ export async function handleSubscriptionCreated(
 export async function handleSubscriptionDeleted(
   subscription: Stripe.Subscription,
 ) {
-  const customerId =
-    typeof subscription.customer === "string"
-      ? subscription.customer
-      : subscription.customer.id;
-
-  await upsertSubscriptionState({
-    stripe_customer_id: customerId,
-    stripe_subscription_id: subscription.id,
-    user_id: userIdFromMetadata(subscription.metadata),
-    status: "canceled",
-    price_id: subscription.items.data[0]?.price.id ?? null,
-    plan: planFromPriceId(subscription.items.data[0]?.price.id),
-    current_period_end: subscriptionPeriodEnd(subscription),
-    is_premium: false,
-  });
+  await upsertFromStripeSubscription(subscription, { status: "canceled" });
 }
 
 function getInvoiceSubscriptionId(invoice: Stripe.Invoice): string | null {

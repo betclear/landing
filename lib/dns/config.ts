@@ -1,12 +1,20 @@
 /**
- * Single source of truth for the BetClear DNS resolver identity, shared by
- * the iOS configuration profile (DNS-over-HTTPS) and the Android Private DNS
- * setup guide (DNS-over-TLS). Both platforms point at the same resolver and
- * therefore enforce the same dynamic blocklist.
+ * Single source of truth for the BetClear DNS resolver identity.
+ * Shared base hostname for migration; per-user installs use a ClientID subdomain.
  */
 
-/** Bare hostname entered in Android Settings → Private DNS (DoT, TCP 853). */
+/** Bare shared hostname (legacy installs + migration window). */
 export const DNS_HOSTNAME = "dns.betclear.app";
 
-/** DNS-over-HTTPS endpoint embedded in the iOS configuration profile. */
+/** DNS-over-HTTPS endpoint for the shared hostname (legacy). */
 export const DOH_URL = `https://${DNS_HOSTNAME}/dns-query`;
+
+/** Per-user Android Private DNS hostname: <clientId>.dns.betclear.app */
+export function dnsHostnameForClient(clientId: string): string {
+  return `${clientId}.${DNS_HOSTNAME}`;
+}
+
+/** Per-user iOS DoH URL. AdGuard also accepts /dns-query/<clientId> on the base host. */
+export function dohUrlForClient(clientId: string): string {
+  return `https://${dnsHostnameForClient(clientId)}/dns-query`;
+}

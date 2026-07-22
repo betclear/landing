@@ -39,6 +39,8 @@ export type UserRecoveryProfileRow = {
   updated_at: string;
 };
 
+export type EntitlementMode = "full" | "grace_24h" | "none";
+
 export type SubscriptionRow = {
   id: string;
   stripe_customer_id: string;
@@ -49,9 +51,23 @@ export type SubscriptionRow = {
   price_id: string | null;
   plan: PlanId | null;
   current_period_end: string | null;
+  trial_ends_at: string | null;
+  grace_ends_at: string | null;
+  entitlement_mode: EntitlementMode;
   is_premium: boolean;
   created_at: string;
   updated_at: string;
+};
+
+export type DeviceInstallRow = {
+  id: string;
+  user_id: string | null;
+  stripe_customer_id: string | null;
+  client_id: string;
+  platform: "ios" | "android" | "unknown" | null;
+  created_at: string;
+  last_seen_at: string;
+  revoked_at: string | null;
 };
 
 /** Flattened registered-user row for the admin users table. */

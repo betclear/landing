@@ -6,7 +6,7 @@ export type AdGuardRefreshResult = {
   warning?: string;
 };
 
-type AdGuardConfig = {
+export type AdGuardConfig = {
   baseUrl: string;
   username: string;
   password: string;
@@ -14,7 +14,7 @@ type AdGuardConfig = {
 
 const ADGUARD_TIMEOUT_MS = 8_000;
 
-function getAdGuardConfig(): AdGuardConfig | null {
+export function getAdGuardConfig(): AdGuardConfig | null {
   const baseUrl = process.env.ADGUARD_BASE_URL?.trim().replace(/\/$/, "");
   const username = process.env.ADGUARD_USERNAME?.trim();
   const password = process.env.ADGUARD_PASSWORD;
@@ -26,7 +26,7 @@ function getAdGuardConfig(): AdGuardConfig | null {
   return { baseUrl, username, password };
 }
 
-function authHeaders(config: AdGuardConfig): HeadersInit {
+export function authHeaders(config: AdGuardConfig): HeadersInit {
   const token = Buffer.from(
     `${config.username}:${config.password}`,
     "utf8",
@@ -39,7 +39,7 @@ function authHeaders(config: AdGuardConfig): HeadersInit {
   };
 }
 
-async function fetchAdGuard(
+export async function fetchAdGuard(
   url: string,
   init: RequestInit,
 ): Promise<Response> {

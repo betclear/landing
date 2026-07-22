@@ -341,6 +341,49 @@ export function profileDownloadPath(accessToken?: string | null): string {
   return `/api/profile?access=${encodeURIComponent(accessToken)}`;
 }
 
+/**
+ * Resolve the authenticated / cookie-linked owner used to issue a per-user
+ * DNS ClientID. Returns null when paywall access is missing.
+ */
+export async function resolveInstallIdentity(
+  accessToken?: string | null,
+): Promise<{ userId: string | null; stripeCustomerId: string | null } | null> {
+  if (!(await hasPaywallAccess(accessToken))) {
+    return null;
+  }
+
+  const user = await getAuthUser();
+  if (user) {
+    const record = await getSubscriptionForUser(user.id, user.email);
+    return {
+      userId: user.id,
+      stripeCustomerId: record?.stripe_customer_id ?? null,
+    };
+  }
+
+  const jar = await cookies();
+  const candidates = [accessToken, jar.get(ACCESS_COOKIE)?.value];
+  for (const raw of candidates) {
+    const access = verifyAccessToken(raw ?? undefined);
+    if (!access) continue;
+    if (!(await isCustomerPremium(access.customerId))) continue;
+
+    const supabase = createServiceClient();
+    const { data } = await supabase
+      .from("subscriptions")
+      .select("user_id")
+      .eq("stripe_customer_id", access.customerId)
+      .limit(1);
+
+    return {
+      userId: data?.[0]?.user_id ?? null,
+      stripeCustomerId: access.customerId,
+    };
+  }
+
+  return null;
+}
+
 async function isCheckoutSessionSubscribed(
   session: Awaited<
     ReturnType<ReturnType<typeof getStripe>["checkout"]["sessions"]["retrieve"]>

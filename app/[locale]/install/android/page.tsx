@@ -4,9 +4,11 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/ui/Container";
 import { AndroidPrivateDnsGuide } from "@/components/install/AndroidPrivateDnsGuide";
+import { EntitlementNotice } from "@/components/install/EntitlementNotice";
 import { InstallPageTracker } from "@/components/onboarding/InstallPageTracker";
-import { hasPaywallAccess } from "@/lib/stripe/access";
-import { DNS_HOSTNAME } from "@/lib/dns/config";
+import { resolveInstallIdentity } from "@/lib/stripe/access";
+import { getOrCreateDeviceInstall } from "@/lib/devices/installs";
+import { dnsHostnameForClient } from "@/lib/dns/config";
 import { isAppLocale, type AppLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { buildPageMetadata } from "@/lib/i18n/metadata";
@@ -39,11 +41,31 @@ export default async function InstallAndroidPage({
   const dict = getDictionary(locale);
 
   const { access } = await searchParams;
-  const hasAccess = await hasPaywallAccess(access);
+  const identity = await resolveInstallIdentity(access);
 
-  if (!hasAccess) {
+  if (!identity) {
     redirect({ href: "/pricing", locale });
   }
+
+  const owner = identity as NonNullable<typeof identity>;
+
+  const install = await getOrCreateDeviceInstall({
+    userId: owner.userId,
+    stripeCustomerId: owner.stripeCustomerId,
+    platform: "android",
+    ensureAdGuard: true,
+  }).catch((error) => {
+    console.error("[install/android] device install failed", error);
+    return null;
+  });
+
+  if (!install) {
+    redirect({ href: "/pricing", locale });
+  }
+
+  const hostname = dnsHostnameForClient(
+    (install as NonNullable<typeof install>).client_id,
+  );
 
   return (
     <>
@@ -51,7 +73,8 @@ export default async function InstallAndroidPage({
       <InstallPageTracker />
       <main className="py-16 sm:py-24">
         <Container className="max-w-2xl">
-          <AndroidPrivateDnsGuide hostname={DNS_HOSTNAME} />
+          <AndroidPrivateDnsGuide hostname={hostname} />
+          <EntitlementNotice locale={locale} accessToken={access} />
 
           <p className="mt-10 text-center text-sm text-muted-foreground">
             <Link
