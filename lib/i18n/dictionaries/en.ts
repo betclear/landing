@@ -2,10 +2,10 @@ export const en = {
   meta: {
     homeTitle: "BetClear — Block Gambling Websites on iPhone",
     homeDescription:
-      "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your iPhone. Install once, stay protected automatically, and start with a 7-day free trial.",
+      "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your iPhone. Install once and stay protected automatically.",
     homeOgTitle: "BetClear — Block Gambling Websites on iPhone",
     homeOgDescription:
-      "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your iPhone. Install once, stay protected automatically, and start with a 7-day free trial.",
+      "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your iPhone. Install once and stay protected automatically.",
     homeOgImageAlt: "BetClear gambling website blocker on iPhone",
     installTitle: "Install Protection",
     installDescription:
@@ -15,7 +15,7 @@ export const en = {
       "Step-by-step instructions to install the BetClear configuration profile on your iPhone.",
     pricingTitle: "Pricing",
     pricingDescription:
-      "Choose monthly or annual BetClear protection for your iPhone. Start with a 7-day free trial.",
+      "Choose monthly or annual BetClear protection for your iPhone. Subscribe to unlock installation.",
     privacyTitle: "Privacy",
     privacyDescription:
       "How BetClear handles privacy for iPhone gambling website protection.",
@@ -102,6 +102,7 @@ export const en = {
     pricing: "Pricing",
     faq: "FAQ",
     guides: "Guides",
+    reportSite: "Report a site",
     beGambleAware: "BeGambleAware",
     gamblersAnonymous: "Gamblers Anonymous",
   },
@@ -113,7 +114,7 @@ export const en = {
       "BetClear blocks access to gambling websites across your iPhone, making it harder to place another bet when the urge hits.",
     primaryCta: "Start Free Protection",
     secondaryCta: "See How It Works",
-    microcopy: "Personalized setup, then a 7-day free trial.",
+    microcopy: "Personalized setup, then subscribe to install protection.",
     visualCaption: "You try to open a gambling site. BetClear blocks it.",
   },
   trust: {
@@ -239,12 +240,12 @@ export const en = {
   },
   pricing: {
     eyebrow: "Pricing",
-    title: "Start with a 7-day free trial.",
+    title: "Choose your protection plan.",
     description:
       "Choose annual or monthly protection after your personalized setup.",
     pageTitle: "Protection that stays on",
     pageDescription:
-      "Start with a 7-day free trial. Subscribe once, download your iPhone profile, and keep gambling sites blocked system-wide. Cancel anytime from your billing portal.",
+      "Subscribe once, download your iPhone profile, and keep gambling sites blocked system-wide. Cancel anytime from your billing portal.",
     features: [
       "Gambling website blocking",
       "Automatic blocklist updates",
@@ -257,15 +258,13 @@ export const en = {
     monthlyLabel: "Monthly",
     annualBadge: "Best value",
     savePercent: "Save {percent}%",
-    annualDescription:
-      "7-day free trial, then {price} billed annually.",
-    monthlyDescription:
-      "7-day free trial, then {price} billed monthly.",
+    annualDescription: "{price} billed annually.",
+    monthlyDescription: "{price} billed monthly.",
     annualEquivalent: "Equivalent to {equivalent}",
-    monthlyBilledNote: "Billed monthly after the trial",
-    trialCta: "Start 7-day free trial",
-    startFreeProtection: "Start Free Protection",
-    cancelNote: "Cancel before the trial ends to avoid being charged.",
+    monthlyBilledNote: "Billed monthly",
+    trialCta: "Subscribe now",
+    startFreeProtection: "Start Protection",
+    cancelNote: "Cancel anytime from your billing portal.",
     preferGuided: "Prefer a guided start?",
     beginOnboarding: "Begin personalized onboarding",
     alreadySubscribed:
@@ -324,9 +323,9 @@ export const en = {
           "Yes. Everyday websites should continue to work. Only domains identified as gambling-related are intended for blocking.",
       },
       {
-        question: "What happens after the 7-day trial?",
+        question: "When am I charged?",
         answer:
-          "Your trial converts to the plan you selected at checkout unless you cancel before the trial ends.",
+          "You are charged at checkout for the plan you select. You can cancel renewals anytime from the billing portal.",
       },
       {
         question: "How do I cancel?",
@@ -344,12 +343,12 @@ export const en = {
     title: "Make your next bet harder to reach.",
     description:
       "Install BetClear before the next urge arrives and block access to {domainCount} gambling websites across your iPhone.",
-    primaryCta: "Start Free Protection",
+    primaryCta: "Start Protection",
     secondaryCta: "View Installation Guide",
-    microcopy: "Personalized setup, then a 7-day free trial.",
+    microcopy: "Personalized setup, then subscribe to install protection.",
   },
   stickyCta: {
-    label: "Start Free Protection",
+    label: "Start Protection",
   },
   phone: {
     siteBlocked: "Site blocked",
@@ -462,19 +461,15 @@ export const en = {
     },
     pricing: {
       title: "Choose your protection plan",
-      description:
-        "Start with a 7-day free trial. Cancel anytime before it ends.",
-      trialCta: "Start my 7-day free trial",
-      cancelNote:
-        "Cancel anytime before the trial ends to avoid being charged.",
+      description: "Subscribe to unlock installation. Cancel anytime.",
+      trialCta: "Subscribe now",
+      cancelNote: "Cancel anytime from your billing portal.",
       annualPlan: "Annual plan",
       monthlyPlan: "Monthly plan",
       bestValue: "Best value",
       savePercent: "Save {percent}%",
-      annualDescription:
-        "7-day free trial, then {price} billed annually.",
-      monthlyDescription:
-        "7-day free trial, then {price} billed monthly.",
+      annualDescription: "{price} billed annually.",
+      monthlyDescription: "{price} billed monthly.",
     },
     auth: {
       title: "Save your progress",
@@ -539,7 +534,7 @@ export const en = {
     steps: [
       {
         title: "Subscribe",
-        detail: "Complete onboarding and start your 7-day free trial.",
+        detail: "Complete onboarding and subscribe to unlock installation.",
       },
       {
         title: "Download",
@@ -724,9 +719,9 @@ export const en = {
       "BetClear provides tools to help block gambling websites on iPhone using Apple configuration profiles and protected DNS.",
     ],
     termsBillingIntro:
-      "Paid plans begin with a 7-day free trial. After the trial, you will be billed according to the plan and currency shown at checkout for your market.",
+      "You are billed according to the plan and currency shown at checkout for your market.",
     termsBillingCancel:
-      "Cancel anytime before the trial ends to avoid being charged. After billing begins, you can cancel future renewals from your Stripe customer portal or by contacting support. Taxes may apply based on your location.",
+      "You can cancel future renewals from your Stripe customer portal or by contacting support. Taxes may apply based on your location.",
     termsBillingEstimates:
       "Impact estimates shown during onboarding are informational only and are based on the information you provide. They are not a guarantee of savings or outcomes.",
     questionsLabel: "Questions:",
@@ -737,6 +732,24 @@ export const en = {
       "Need help with installation, billing, or your BetClear account? Email us and we’ll get back to you.",
     emailCta: "Email support",
     resourcesHeading: "Responsible gambling resources",
+  },
+  reportSite: {
+    eyebrow: "Help improve BetClear",
+    title: "Report a site we missed",
+    description:
+      "Found a gambling website that still opens? Paste the link and we’ll review it for blocking.",
+    inputLabel: "Website link",
+    inputPlaceholder: "https://example-casino.com",
+    submit: "Submit",
+    submitting: "Submitting...",
+    successTitle: "Thanks — we got it",
+    successDescription:
+      "Our team will review this site and add it to the blocklist if it should be blocked.",
+    submitAnother: "Submit another site",
+    alreadyBlocked: "This site is already in our blocklist.",
+    alreadyPending: "This site is already waiting for review.",
+    rateLimited: "Too many submissions. Please try again later.",
+    error: "Something went wrong. Please try again.",
   },
   language: {
     label: "Language",

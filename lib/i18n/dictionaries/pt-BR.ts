@@ -4,10 +4,10 @@ export const ptBR: Dictionary = {
   meta: {
     homeTitle: "BetClear — Bloqueie sites de apostas no iPhone",
     homeDescription:
-      "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu iPhone. Instale uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
+      "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu iPhone. Instale uma vez e fique protegido automaticamente.",
     homeOgTitle: "BetClear — Bloqueie sites de apostas no iPhone",
     homeOgDescription:
-      "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu iPhone. Instale uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
+      "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu iPhone. Instale uma vez e fique protegido automaticamente.",
     homeOgImageAlt: "Bloqueador de sites de apostas BetClear no iPhone",
     installTitle: "Instalar proteção",
     installDescription:
@@ -17,7 +17,7 @@ export const ptBR: Dictionary = {
       "Instruções passo a passo para instalar o perfil de configuração do BetClear no seu iPhone.",
     pricingTitle: "Preços",
     pricingDescription:
-      "Escolha proteção mensal ou anual do BetClear para o seu iPhone. Comece com 7 dias grátis.",
+      "Escolha proteção mensal ou anual do BetClear para o seu iPhone. Assine para liberar a instalação.",
     privacyTitle: "Privacidade",
     privacyDescription:
       "Como o BetClear trata a privacidade na proteção contra sites de apostas no iPhone.",
@@ -105,6 +105,7 @@ export const ptBR: Dictionary = {
     pricing: "Preços",
     faq: "Perguntas frequentes",
     guides: "Guias",
+    reportSite: "Denunciar um site",
     beGambleAware: "BeGambleAware",
     gamblersAnonymous: "Gamblers Anonymous",
   },
@@ -116,7 +117,7 @@ export const ptBR: Dictionary = {
       "O BetClear bloqueia o acesso a sites de apostas no seu iPhone, tornando mais difícil fazer outra aposta quando o impulso aparece.",
     primaryCta: "Começar proteção gratuita",
     secondaryCta: "Veja como funciona",
-    microcopy: "Configuração personalizada e depois 7 dias grátis.",
+    microcopy: "Configuração personalizada e depois assine para instalar.",
     visualCaption:
       "Você tenta abrir um site de apostas. O BetClear bloqueia.",
   },
@@ -248,12 +249,12 @@ export const ptBR: Dictionary = {
   },
   pricing: {
     eyebrow: "Preços",
-    title: "Comece com 7 dias grátis.",
+    title: "Escolha seu plano de proteção.",
     description:
       "Escolha proteção anual ou mensal depois da configuração personalizada.",
     pageTitle: "Proteção que permanece ativa",
     pageDescription:
-      "Comece com 7 dias grátis. Assine uma vez, baixe o perfil no iPhone e mantenha sites de apostas bloqueados em todo o sistema. Cancele quando quiser no portal de cobrança.",
+      "Assine uma vez, baixe o perfil no iPhone e mantenha sites de apostas bloqueados em todo o sistema. Cancele quando quiser no portal de cobrança.",
     features: [
       "Bloqueio de sites de apostas",
       "Atualizações automáticas da lista de bloqueio",
@@ -266,16 +267,13 @@ export const ptBR: Dictionary = {
     monthlyLabel: "Plano mensal",
     annualBadge: "Melhor custo-benefício",
     savePercent: "Economize {percent}%",
-    annualDescription:
-      "Após o período gratuito de 7 dias, você será cobrado em {price} por ano.",
-    monthlyDescription:
-      "Após o período gratuito de 7 dias, você será cobrado em {price} por mês.",
+    annualDescription: "{price} cobrado anualmente.",
+    monthlyDescription: "{price} cobrado mensalmente.",
     annualEquivalent: "Equivale a {equivalent}",
-    monthlyBilledNote: "Cobrado mensalmente após o período gratuito",
-    trialCta: "Começar 7 dias grátis",
-    startFreeProtection: "Começar proteção gratuita",
-    cancelNote:
-      "Cancele antes do fim do período gratuito para não ser cobrado.",
+    monthlyBilledNote: "Cobrado mensalmente",
+    trialCta: "Assinar agora",
+    startFreeProtection: "Começar proteção",
+    cancelNote: "Cancele quando quiser no portal de cobrança.",
     preferGuided: "Prefere um início guiado?",
     beginOnboarding: "Começar onboarding personalizado",
     alreadySubscribed:
@@ -359,7 +357,7 @@ export const ptBR: Dictionary = {
       "Instale o BetClear antes do próximo impulso e bloqueie o acesso a {domainCount} sites de apostas no seu iPhone.",
     primaryCta: "Começar proteção gratuita",
     secondaryCta: "Ver guia de instalação",
-    microcopy: "Configuração personalizada e depois 7 dias grátis.",
+    microcopy: "Configuração personalizada e depois assine para instalar.",
   },
   stickyCta: {
     label: "Começar proteção gratuita",
@@ -477,19 +475,15 @@ export const ptBR: Dictionary = {
     },
     pricing: {
       title: "Escolha seu plano de proteção",
-      description:
-        "Comece com 7 dias grátis. Cancele quando quiser antes do fim do período.",
-      trialCta: "Começar 7 dias grátis",
-      cancelNote:
-        "Cancele a qualquer momento antes do fim do período gratuito para não ser cobrado.",
+      description: "Assine para liberar a instalação. Cancele quando quiser.",
+      trialCta: "Assinar agora",
+      cancelNote: "Cancele quando quiser no portal de cobrança.",
       annualPlan: "Plano anual",
       monthlyPlan: "Plano mensal",
       bestValue: "Melhor custo-benefício",
       savePercent: "Economize {percent}%",
-      annualDescription:
-        "Após o período gratuito de 7 dias, você será cobrado em {price} por ano.",
-      monthlyDescription:
-        "Após o período gratuito de 7 dias, você será cobrado em {price} por mês.",
+      annualDescription: "{price} cobrado anualmente.",
+      monthlyDescription: "{price} cobrado mensalmente.",
     },
     auth: {
       title: "Salve seu progresso",
@@ -754,6 +748,24 @@ export const ptBR: Dictionary = {
       "Precisa de ajuda com instalação, cobrança ou sua conta BetClear? Envie um e-mail e retornaremos o contato.",
     emailCta: "Enviar e-mail ao suporte",
     resourcesHeading: "Recursos de jogo responsável",
+  },
+  reportSite: {
+    eyebrow: "Ajude a melhorar o BetClear",
+    title: "Denuncie um site que faltou",
+    description:
+      "Encontrou um site de apostas que ainda abre? Cole o link e vamos analisar para bloquear.",
+    inputLabel: "Link do site",
+    inputPlaceholder: "https://exemplo-cassino.com",
+    submit: "Enviar",
+    submitting: "Enviando...",
+    successTitle: "Obrigado — recebemos",
+    successDescription:
+      "Nossa equipe vai analisar este site e adicioná-lo à lista de bloqueio se for o caso.",
+    submitAnother: "Enviar outro site",
+    alreadyBlocked: "Este site já está na nossa lista de bloqueio.",
+    alreadyPending: "Este site já está aguardando análise.",
+    rateLimited: "Muitos envios. Tente novamente mais tarde.",
+    error: "Algo deu errado. Tente novamente.",
   },
   language: {
     label: "Idioma",

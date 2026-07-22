@@ -14,6 +14,7 @@ const INDEXABLE_PATHS = [
   "/privacy",
   "/terms",
   "/support",
+  "/report-site",
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {

@@ -2,7 +2,7 @@
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { MagnifyingGlass, SignOut, Trash } from "@phosphor-icons/react";
+import { MagnifyingGlass, Trash } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import type { BlockedDomain } from "@/lib/supabase/types";
@@ -146,41 +146,21 @@ export function DomainsAdmin() {
     await loadDomains(query, page);
   }
 
-  async function logout() {
-    await fetch("/api/admin/logout", { method: "POST" });
-    router.replace("/admin/login");
-    router.refresh();
-  }
-
   return (
     <Container>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-sm font-medium text-primary">Admin</p>
-          <h1 className="mt-1 text-3xl font-semibold tracking-[-0.035em] text-foreground">
-            Blocked domains
-          </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {total.toLocaleString()} domains in Supabase. Showing page {page} of{" "}
-            {totalPages}. Use search to find hosts.
-          </p>
-        </div>
-        <Button
-          type="button"
-          variant="secondary"
-          size="md"
-          showArrow={false}
-          onClick={() => void logout()}
-          className="self-start sm:self-auto"
-        >
-          <SignOut size={16} />
-          Sign out
-        </Button>
+      <div className="mt-8">
+        <h2 className="text-xl font-semibold tracking-[-0.03em] text-foreground">
+          Blocked domains
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {total.toLocaleString()} domains in Supabase. Showing page {page} of{" "}
+          {totalPages}. Use search to find hosts.
+        </p>
       </div>
 
       <form
         onSubmit={onAdd}
-        className="mt-8 flex flex-col gap-3 rounded-[var(--radius-xl)] border border-border bg-card p-4 shadow-soft sm:flex-row sm:items-end"
+        className="mt-6 flex flex-col gap-3 rounded-[var(--radius-xl)] border border-border bg-card p-4 shadow-soft sm:flex-row sm:items-end"
       >
         <div className="flex-1 space-y-2">
           <label
@@ -247,10 +227,7 @@ export function DomainsAdmin() {
       ) : null}
 
       {warning ? (
-        <p
-          className="mt-4 text-sm text-amber-700"
-          role="status"
-        >
+        <p className="mt-4 text-sm text-amber-700" role="status">
           {warning}
         </p>
       ) : null}

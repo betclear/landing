@@ -25,6 +25,11 @@ export function Footer() {
       external: false,
     },
     {
+      href: href("/report-site"),
+      label: t("footer.reportSite"),
+      external: false,
+    },
+    {
       href: `mailto:${SITE.email}`,
       label: t("footer.contact"),
       external: false,

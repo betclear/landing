@@ -9,6 +9,17 @@ export type BlockedDomain = {
   updated_at: string;
 };
 
+export type DomainSubmissionStatus = "pending" | "approved" | "rejected";
+
+export type DomainSubmission = {
+  id: string;
+  hostname: string;
+  raw_input: string;
+  status: DomainSubmissionStatus;
+  created_at: string;
+  reviewed_at: string | null;
+};
+
 export type UserRecoveryProfileRow = {
   id: string;
   user_id: string;

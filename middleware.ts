@@ -71,6 +71,7 @@ export async function middleware(request: NextRequest) {
     bare.startsWith("/privacy") ||
     bare.startsWith("/terms") ||
     bare.startsWith("/support") ||
+    bare.startsWith("/report-site") ||
     bare.startsWith("/pricing") ||
     bare.startsWith("/login") ||
     bare === "/auth" ||
