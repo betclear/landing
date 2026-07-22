@@ -6,16 +6,19 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/marketing/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
 import { useLocale } from "@/components/i18n/LocaleProvider";
+import { pickPlatformContent } from "@/lib/i18n/platform-content";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 
 export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const { t, dictionary, platform } = useLocale();
-  const items =
-    platform === "android" && dictionary.faq.items_android
-      ? dictionary.faq.items_android
-      : dictionary.faq.items;
+  const items = pickPlatformContent(
+    platform,
+    dictionary.faq.items,
+    dictionary.faq.items_ios,
+    dictionary.faq.items_android,
+  );
 
   return (
     <section id="faq" className="py-20 sm:py-28">

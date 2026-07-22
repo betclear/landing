@@ -29,8 +29,13 @@ export function interpolate(
  * Look up a translation key. Falls back to English, then the key itself
  * only in production if both miss (should not happen with typed dictionaries).
  */
-function resolvePlatformKey(key: string, platform?: DevicePlatform): string {
-  return platform === "android" ? `${key}_android` : key;
+function resolvePlatformKey(
+  key: string,
+  platform?: DevicePlatform,
+): string | null {
+  if (platform === "android") return `${key}_android`;
+  if (platform === "ios") return `${key}_ios`;
+  return null;
 }
 
 export function translate(
@@ -40,12 +45,14 @@ export function translate(
   platform?: DevicePlatform,
 ): string {
   const platformKey = resolvePlatformKey(key, platform);
-  const fromPlatform = getByPath(
-    dictionary as unknown as NestedValue,
-    platformKey,
-  );
-  if (typeof fromPlatform === "string") {
-    return interpolate(fromPlatform, vars);
+  if (platformKey) {
+    const fromPlatform = getByPath(
+      dictionary as unknown as NestedValue,
+      platformKey,
+    );
+    if (typeof fromPlatform === "string") {
+      return interpolate(fromPlatform, vars);
+    }
   }
 
   const fromLocale = getByPath(dictionary as unknown as NestedValue, key);
@@ -75,15 +82,17 @@ export function translateList(
   platform?: DevicePlatform,
 ): string[] {
   const platformKey = resolvePlatformKey(key, platform);
-  const platformValue = getByPath(
-    dictionary as unknown as NestedValue,
-    platformKey,
-  );
-  if (
-    Array.isArray(platformValue) &&
-    platformValue.every((item) => typeof item === "string")
-  ) {
-    return platformValue as string[];
+  if (platformKey) {
+    const platformValue = getByPath(
+      dictionary as unknown as NestedValue,
+      platformKey,
+    );
+    if (
+      Array.isArray(platformValue) &&
+      platformValue.every((item) => typeof item === "string")
+    ) {
+      return platformValue as string[];
+    }
   }
 
   const value = getByPath(dictionary as unknown as NestedValue, key);

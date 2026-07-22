@@ -2,6 +2,7 @@ import type { DevicePlatform } from "@/lib/device/platform";
 import { SITE } from "@/lib/constants";
 import type { AppLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { pickPlatformContent } from "@/lib/i18n/platform-content";
 import { translate } from "@/lib/i18n/translate";
 import { getPlanDisplay } from "@/lib/stripe/prices";
 
@@ -12,10 +13,12 @@ type FaqJsonLdProps = {
 
 export function FaqJsonLd({ locale, platform = "unknown" }: FaqJsonLdProps) {
   const dictionary = getDictionary(locale);
-  const faqItems =
-    platform === "android" && dictionary.faq.items_android
-      ? dictionary.faq.items_android
-      : dictionary.faq.items;
+  const faqItems = pickPlatformContent(
+    platform,
+    dictionary.faq.items,
+    dictionary.faq.items_ios,
+    dictionary.faq.items_android,
+  );
   const annual = getPlanDisplay(locale, "annual");
   const monthly = getPlanDisplay(locale, "monthly");
 
@@ -37,7 +40,12 @@ export function FaqJsonLd({ locale, platform = "unknown" }: FaqJsonLdProps) {
     "@type": "SoftwareApplication",
     name: SITE.name,
     applicationCategory: "UtilitiesApplication",
-    operatingSystem: platform === "android" ? "Android" : "iOS",
+    operatingSystem:
+      platform === "android"
+        ? "Android"
+        : platform === "ios"
+          ? "iOS"
+          : "iOS, Android",
     description: translate(dictionary, "meta.homeDescription", undefined, platform),
     offers: {
       "@type": "Offer",

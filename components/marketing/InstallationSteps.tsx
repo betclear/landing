@@ -8,16 +8,19 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/marketing/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
 import { useLocale } from "@/components/i18n/LocaleProvider";
+import { pickPlatformContent } from "@/lib/i18n/platform-content";
 import { trackEvent } from "@/lib/analytics";
 
 export function InstallationSteps() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
   const { t, dictionary, platform } = useLocale();
-  const steps =
-    platform === "android" && dictionary.installSection.steps_android
-      ? dictionary.installSection.steps_android
-      : dictionary.installSection.steps;
+  const steps = pickPlatformContent(
+    platform,
+    dictionary.installSection.steps,
+    dictionary.installSection.steps_ios,
+    dictionary.installSection.steps_android,
+  );
 
   useEffect(() => {
     if (inView) trackEvent("installation_section_viewed");

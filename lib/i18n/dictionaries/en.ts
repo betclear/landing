@@ -1,12 +1,19 @@
 export const en = {
   meta: {
-    homeTitle: "BetClear — Block Gambling Websites on iPhone",
+    homeTitle: "BetClear — Block Gambling Websites on Your Phone",
     homeDescription:
-      "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your iPhone. Install once, stay protected automatically, and start with a 7-day free trial.",
-    homeOgTitle: "BetClear — Block Gambling Websites on iPhone",
+      "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your phone. Set up once, stay protected automatically, and start with a 7-day free trial.",
+    homeOgTitle: "BetClear — Block Gambling Websites on Your Phone",
     homeOgDescription:
+      "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your phone. Set up once, stay protected automatically, and start with a 7-day free trial.",
+    homeOgImageAlt: "BetClear gambling website blocker on your phone",
+    homeTitle_ios: "BetClear — Block Gambling Websites on iPhone",
+    homeDescription_ios:
       "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your iPhone. Install once, stay protected automatically, and start with a 7-day free trial.",
-    homeOgImageAlt: "BetClear gambling website blocker on iPhone",
+    homeOgTitle_ios: "BetClear — Block Gambling Websites on iPhone",
+    homeOgDescription_ios:
+      "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your iPhone. Install once, stay protected automatically, and start with a 7-day free trial.",
+    homeOgImageAlt_ios: "BetClear gambling website blocker on iPhone",
     homeTitle_android: "BetClear — Block Gambling Websites on Android",
     homeDescription_android:
       "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your Android phone. Set up Private DNS once, stay protected automatically, and start with a 7-day free trial.",
@@ -100,10 +107,14 @@ export const en = {
   },
   footer: {
     blurb:
-      "Gambling website blocker for iPhone. Install once and stay protected automatically.",
+      "Gambling website blocker for your phone. Set up once and stay protected automatically.",
     productHeading: "Product",
     supportHeading: "Support",
-    disclaimer: "Gambling website protection for iPhone. Not a medical service.",
+    disclaimer: "Gambling website protection for your phone. Not a medical service.",
+    blurb_ios:
+      "Gambling website blocker for iPhone. Install once and stay protected automatically.",
+    disclaimer_ios:
+      "Gambling website protection for iPhone. Not a medical service.",
     blurb_android:
       "Gambling website blocker for Android. Set up Private DNS once and stay protected automatically.",
     disclaimer_android:
@@ -121,15 +132,18 @@ export const en = {
     gamblersAnonymous: "Gamblers Anonymous",
   },
   hero: {
-    eyebrow: "Gambling blocking for iPhone",
+    eyebrow: "Gambling blocking for your phone",
     title: "Block {domainCount} gambling websites.",
     titleWithCount: "Block {domainCount} gambling websites.",
     description:
-      "BetClear blocks access to gambling websites across your iPhone, making it harder to place another bet when the urge hits.",
+      "BetClear blocks access to gambling websites across your phone, making it harder to place another bet when the urge hits.",
     primaryCta: "Start Free Protection",
     secondaryCta: "See How It Works",
     microcopy: "Personalized setup, then a 7-day free trial.",
     visualCaption: "You try to open a gambling site. BetClear blocks it.",
+    eyebrow_ios: "Gambling blocking for iPhone",
+    description_ios:
+      "BetClear blocks access to gambling websites across your iPhone, making it harder to place another bet when the urge hits.",
     eyebrow_android: "Gambling blocking for Android",
     description_android:
       "BetClear blocks access to gambling websites across your Android phone, making it harder to place another bet when the urge hits.",
@@ -139,14 +153,18 @@ export const en = {
     domainsTitle: "{domainCount} sites blocked",
     domainsDetail:
       "Gambling-specific coverage from multiple blocklist sources.",
-    worksTitle: "Works across your iPhone",
+    worksTitle: "Works across your phone",
     worksDetail:
-      "Protection applies across Safari and supported apps using system DNS.",
+      "Protection applies across browsers and supported apps on your phone.",
     updatedTitle: "Updated automatically",
     updatedDetail:
       "New gambling domains can be added without reinstalling.",
     guidedTitle: "Guided installation",
-    guidedDetail: "Clear step-by-step setup on iPhone.",
+    guidedDetail: "Clear step-by-step setup on your phone.",
+    worksTitle_ios: "Works across your iPhone",
+    worksDetail_ios:
+      "Protection applies across Safari and supported apps using system DNS.",
+    guidedDetail_ios: "Clear step-by-step setup on iPhone.",
     worksTitle_android: "Works across your Android phone",
     worksDetail_android:
       "Protection applies in Chrome and other apps using Private DNS.",
@@ -181,6 +199,8 @@ export const en = {
     eyebrow: "Protection",
     title: "Install once. Stay protected.",
     description:
+      "One setup. Ongoing gambling website blocking across your phone.",
+    description_ios:
       "One setup. Ongoing gambling website blocking across your iPhone.",
     description_android:
       "One setup. Ongoing gambling website blocking across your Android phone.",
@@ -228,10 +248,40 @@ export const en = {
     cta: "Calculate Your Protection",
   },
   installSection: {
-    eyebrow: "Simple iPhone setup",
+    eyebrow: "Simple phone setup",
     title: "Protected in a few guided steps.",
-    description: "A clear path from download to active blocking.",
+    description: "A clear path from setup to active blocking.",
     steps: [
+      {
+        step: "1",
+        title: "Open BetClear on your phone",
+        detail: "Subscribe and follow the install guide for your device.",
+      },
+      {
+        step: "2",
+        title: "Follow the setup steps for your phone",
+        detail:
+          "BetClear walks you through iPhone or Android setup with clear instructions.",
+      },
+      {
+        step: "3",
+        title: "Turn on protection in your phone settings",
+        detail:
+          "Enable the BetClear profile or Private DNS hostname on your phone.",
+      },
+      {
+        step: "4",
+        title: "Confirm that protection is active",
+        detail: "Try a known gambling website. It should fail to load.",
+      },
+    ],
+    privacyNote:
+      "BetClear cannot access your photos, messages, passwords, or personal files.",
+    privacyDetail: "Setup only configures encrypted DNS protection on your phone.",
+    cta: "Start Installation",
+    detailedGuide: "View Detailed Guide",
+    eyebrow_ios: "Simple iPhone setup",
+    steps_ios: [
       {
         step: "1",
         title: "Open BetClear on your iPhone",
@@ -255,11 +305,7 @@ export const en = {
         detail: "Try a known gambling website. It should fail to load.",
       },
     ],
-    privacyNote:
-      "BetClear cannot access your photos, messages, passwords, or personal files.",
-    privacyDetail: "The profile only configures encrypted DNS protection.",
-    cta: "Start Installation",
-    detailedGuide: "View Detailed Guide",
+    privacyDetail_ios: "The profile only configures encrypted DNS protection.",
     eyebrow_android: "Simple Android setup",
     steps_android: [
       {
@@ -296,6 +342,14 @@ export const en = {
     pageDescription:
       "Start with a 7-day free trial. Subscribe once, download your iPhone profile, and keep gambling sites blocked system-wide. Cancel anytime from your billing portal.",
     features: [
+      "Gambling website blocking",
+      "Automatic blocklist updates",
+      "Guided phone setup",
+      "Personalized recovery estimates",
+      "Future progress tracking",
+      "Future accountability features",
+    ],
+    features_ios: [
       "Gambling website blocking",
       "Automatic blocklist updates",
       "Guided iPhone installation",
@@ -336,6 +390,68 @@ export const en = {
     description:
       "Clear answers about blocking, privacy, pricing, and cancellation.",
     items: [
+      {
+        question: "Does BetClear block all gambling websites?",
+        answer:
+          "BetClear blocks a large, gambling-focused list of domains that is updated over time. No blocker can guarantee that every gambling service will always be inaccessible, but BetClear is built to cover known betting, casino, lottery, poker, and related sites.",
+      },
+      {
+        question: "Does it work in my browser?",
+        answer:
+          "Yes. BetClear works across browsers and supported apps on iPhone and Android phones.",
+      },
+      {
+        question: "Does it block gambling apps?",
+        answer:
+          "BetClear blocks gambling websites by domain. Native apps are not removed from your phone. Apps that load content through blocked domains may fail, but app blocking is not a guaranteed product claim.",
+      },
+      {
+        question: "Can BetClear see my browsing history?",
+        answer:
+          "BetClear does not need browsing history to block gambling domains. The service receives domain lookups needed to answer DNS requests, not the full contents of pages you visit.",
+      },
+      {
+        question: "Can BetClear access my photos, messages, or passwords?",
+        answer:
+          "No. BetClear setup does not grant access to photos, messages, passwords, or personal files.",
+      },
+      {
+        question: "How does BetClear block gambling websites on my phone?",
+        answer:
+          "BetClear uses encrypted DNS to apply system-wide website blocking on supported phones without asking you to open a separate blocker app each time.",
+      },
+      {
+        question: "Can I turn off protection?",
+        answer:
+          "Yes. You can remove the iPhone profile or turn off Private DNS in your phone settings. Blocking ends when protection is disabled on that device.",
+      },
+      {
+        question: "How is the gambling blocklist updated?",
+        answer:
+          "BetClear updates the gambling blocklist centrally. New domains can be added without asking you to repeat setup.",
+      },
+      {
+        question: "Will normal websites still work?",
+        answer:
+          "Yes. Everyday websites should continue to work. Only domains identified as gambling-related are intended for blocking.",
+      },
+      {
+        question: "What happens after the 7-day trial?",
+        answer:
+          "Your trial converts to the plan you selected at checkout unless you cancel before the trial ends.",
+      },
+      {
+        question: "How do I cancel?",
+        answer:
+          "Cancel from the billing portal or by contacting support before renewal. You can also turn off protection in your phone settings to end blocking on that device.",
+      },
+      {
+        question: "Is BetClear a replacement for professional support?",
+        answer:
+          "No. BetClear is a gambling website blocker. If you need clinical or crisis support, please use qualified professionals and local responsible-gambling resources.",
+      },
+    ],
+    items_ios: [
       {
         question: "Does BetClear block all gambling websites?",
         answer:
@@ -463,10 +579,12 @@ export const en = {
   finalCta: {
     title: "Make your next bet harder to reach.",
     description:
-      "Install BetClear before the next urge arrives and block access to {domainCount} gambling websites across your iPhone.",
+      "Install BetClear before the next urge arrives and block access to {domainCount} gambling websites across your phone.",
     primaryCta: "Start Free Protection",
     secondaryCta: "View Installation Guide",
     microcopy: "Personalized setup, then a 7-day free trial.",
+    description_ios:
+      "Install BetClear before the next urge arrives and block access to {domainCount} gambling websites across your iPhone.",
     description_android:
       "Install BetClear before the next urge arrives and block access to {domainCount} gambling websites across your Android phone.",
   },
