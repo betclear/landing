@@ -114,14 +114,15 @@ export async function getSubscriptionForUser(
     .from("subscriptions")
     .select("stripe_customer_id, status, current_period_end")
     .eq("user_id", userId)
-    .maybeSingle();
+    .order("current_period_end", { ascending: false, nullsFirst: false })
+    .limit(1);
 
   if (byUserError) {
     console.error("subscription lookup by user failed", byUserError);
     return null;
   }
 
-  if (byUser) return byUser;
+  if (byUser?.[0]) return byUser[0];
 
   if (!email) return null;
 
@@ -129,14 +130,15 @@ export async function getSubscriptionForUser(
     .from("subscriptions")
     .select("stripe_customer_id, status, current_period_end")
     .eq("email", email)
-    .maybeSingle();
+    .order("current_period_end", { ascending: false, nullsFirst: false })
+    .limit(1);
 
   if (byEmailError) {
     console.error("subscription lookup by email failed", byEmailError);
     return null;
   }
 
-  return byEmail;
+  return byEmail?.[0] ?? null;
 }
 
 export async function isUserSubscribed(
@@ -156,65 +158,64 @@ export async function isCustomerSubscribed(
     .from("subscriptions")
     .select("status, current_period_end")
     .eq("stripe_customer_id", customerId)
-    .maybeSingle();
+    .order("current_period_end", { ascending: false, nullsFirst: false })
+    .limit(1);
 
   if (error) {
     console.error("subscription lookup failed", error);
     return false;
   }
 
-  if (!data) return false;
-  return isActiveSubscription(data);
+  const row = data?.[0];
+  if (!row) return false;
+  return isActiveSubscription(row);
+}
+
+async function findPremiumSubscription(filters: {
+  userId?: string;
+  email?: string | null;
+  customerId?: string;
+}): Promise<boolean> {
+  const supabase = createServiceClient();
+  let query = supabase.from("subscriptions").select("is_premium");
+
+  if (filters.userId) {
+    query = query.eq("user_id", filters.userId);
+  } else if (filters.customerId) {
+    query = query.eq("stripe_customer_id", filters.customerId);
+  } else if (filters.email) {
+    query = query.eq("email", filters.email);
+  } else {
+    return false;
+  }
+
+  // Prefer an entitled row when duplicates exist (e.g. same email, multiple customers).
+  const { data, error } = await query
+    .order("is_premium", { ascending: false })
+    .limit(1);
+
+  if (error) {
+    console.error("premium lookup failed", error);
+    return false;
+  }
+
+  return data?.[0]?.is_premium === true;
 }
 
 export async function isUserPremium(
   userId: string,
   email?: string | null,
 ): Promise<boolean> {
-  const supabase = createServiceClient();
-
-  const { data: byUser, error: byUserError } = await supabase
-    .from("subscriptions")
-    .select("is_premium")
-    .eq("user_id", userId)
-    .maybeSingle();
-
-  if (byUserError) {
-    console.error("premium lookup by user failed", byUserError);
-  } else if (byUser) {
-    return byUser.is_premium === true;
+  if (await findPremiumSubscription({ userId })) {
+    return true;
   }
 
   if (!email) return false;
-
-  const { data: byEmail, error: byEmailError } = await supabase
-    .from("subscriptions")
-    .select("is_premium")
-    .eq("email", email)
-    .maybeSingle();
-
-  if (byEmailError) {
-    console.error("premium lookup by email failed", byEmailError);
-    return false;
-  }
-
-  return byEmail?.is_premium === true;
+  return findPremiumSubscription({ email });
 }
 
 export async function isCustomerPremium(customerId: string): Promise<boolean> {
-  const supabase = createServiceClient();
-  const { data, error } = await supabase
-    .from("subscriptions")
-    .select("is_premium")
-    .eq("stripe_customer_id", customerId)
-    .maybeSingle();
-
-  if (error) {
-    console.error("premium lookup by customer failed", error);
-    return false;
-  }
-
-  return data?.is_premium === true;
+  return findPremiumSubscription({ customerId });
 }
 
 export async function getStripeCustomerIdForAccess(): Promise<string | null> {
@@ -235,10 +236,48 @@ export async function getStripeCustomerIdForAccess(): Promise<string | null> {
   return null;
 }
 
+async function isCustomerLinkedToUser(
+  customerId: string,
+  user: { id: string; email?: string | null },
+  profileCustomerId?: string | null,
+): Promise<boolean> {
+  if (profileCustomerId && profileCustomerId === customerId) {
+    return true;
+  }
+
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("subscriptions")
+    .select("user_id, email")
+    .eq("stripe_customer_id", customerId)
+    .limit(1);
+
+  if (error) {
+    console.error("customer link lookup failed", error);
+    return false;
+  }
+
+  const row = data?.[0];
+  if (!row) return false;
+  if (row.user_id && row.user_id === user.id) return true;
+  if (
+    row.email &&
+    user.email &&
+    row.email.toLowerCase() === user.email.toLowerCase()
+  ) {
+    return true;
+  }
+  return false;
+}
+
 export async function hasPaywallAccess(
   accessToken?: string | null,
 ): Promise<boolean> {
-  if (!isStripeConfigured()) return true;
+  // Fail closed: never allow profile install when billing is not configured.
+  if (!isStripeConfigured()) return false;
+
+  const jar = await cookies();
+  const candidates = [accessToken, jar.get(ACCESS_COOKIE)?.value];
 
   const user = await getAuthUser();
   if (user) {
@@ -250,10 +289,34 @@ export async function hasPaywallAccess(
     if (isSubscriptionEntitled(profile?.subscription_status)) {
       return true;
     }
-  }
 
-  const jar = await cookies();
-  const candidates = [accessToken, jar.get(ACCESS_COOKIE)?.value];
+    // Accept a post-checkout access token only when it belongs to this account.
+    // Never inherit another customer's leftover cookie on a shared device.
+    for (const raw of candidates) {
+      const access = verifyAccessToken(raw ?? undefined);
+      if (!access) continue;
+
+      const linked = await isCustomerLinkedToUser(
+        access.customerId,
+        user,
+        profile?.stripe_customer_id,
+      );
+      if (!linked) continue;
+
+      if (await isCustomerPremium(access.customerId)) {
+        return true;
+      }
+
+      const customerProfile = await getRecoveryProfileByStripeCustomerId(
+        access.customerId,
+      );
+      if (isSubscriptionEntitled(customerProfile?.subscription_status)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   for (const raw of candidates) {
     const access = verifyAccessToken(raw ?? undefined);

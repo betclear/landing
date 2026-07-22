@@ -15,7 +15,7 @@ export const BILLING_PLANS: PlanConfig[] = [
   {
     id: "monthly",
     name: "BetClear Monthly",
-    description: "7-day free trial, then flexible monthly protection you can cancel anytime.",
+    description: "Flexible monthly protection you can cancel anytime.",
     priceLabel: "$3.99",
     intervalLabel: "per month",
     priceIdEnv: "STRIPE_PRICE_MONTHLY",
@@ -29,7 +29,7 @@ export const BILLING_PLANS: PlanConfig[] = [
   {
     id: "annual",
     name: "BetClear Annual",
-    description: "7-day free trial, then best value for long-term protection.",
+    description: "Best value for long-term protection.",
     priceLabel: "$29.99",
     intervalLabel: "per year",
     priceIdEnv: "STRIPE_PRICE_ANNUAL",

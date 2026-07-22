@@ -46,7 +46,7 @@ export default async function InstallCompletePage({
   const dict = getDictionary(locale);
 
   if (!isStripeConfigured()) {
-    redirect(localizePath(locale, "/install"));
+    redirect(localizePath(locale, "/pricing"));
   }
 
   const { session_id: sessionId } = await searchParams;

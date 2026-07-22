@@ -1,12 +1,13 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/ui/Container";
 import { InstallGuide } from "@/components/install/InstallGuide";
-import { profileDownloadPath } from "@/lib/stripe/access";
+import { hasPaywallAccess, profileDownloadPath } from "@/lib/stripe/access";
 import { isAppLocale, type AppLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { buildPageMetadata } from "@/lib/i18n/metadata";
+import { localizePath } from "@/lib/i18n/routing";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -32,8 +33,14 @@ export default async function InstallGuidePage({
 }: PageProps) {
   const { locale: raw } = await params;
   if (!isAppLocale(raw)) notFound();
+  const locale = raw as AppLocale;
 
   const { access } = await searchParams;
+  const hasAccess = await hasPaywallAccess(access);
+  if (!hasAccess) {
+    redirect(localizePath(locale, "/pricing"));
+  }
+
   const profileUrl = profileDownloadPath(access);
 
   return (

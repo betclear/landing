@@ -95,9 +95,10 @@ export function Header() {
   }, [open]);
 
   const close = () => setOpen(false);
+  // Only send paying subscribers to install. Everyone else starts checkout.
   const startHref =
     authEnabled && user
-      ? subscribed
+      ? subscribed === true
         ? href("/install")
         : href("/pricing")
       : href("/onboarding/spend");

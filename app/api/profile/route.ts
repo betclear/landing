@@ -9,7 +9,6 @@ import {
   signAndVerifyMobileConfig,
 } from "@/lib/profile/sign";
 import { hasPaywallAccess } from "@/lib/stripe/access";
-import { isStripeConfigured } from "@/lib/stripe/client";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -38,18 +37,16 @@ function signingFailureResponse(message: string, status: number) {
 }
 
 export async function GET(request: Request) {
-  if (isStripeConfigured()) {
-    const accessToken = new URL(request.url).searchParams.get("access");
-    const allowed = await hasPaywallAccess(accessToken);
-    if (!allowed) {
-      return NextResponse.json(
-        {
-          error: "Active subscription required",
-          checkoutUrl: "/onboarding/pricing",
-        },
-        { status: 402 },
-      );
-    }
+  const accessToken = new URL(request.url).searchParams.get("access");
+  const allowed = await hasPaywallAccess(accessToken);
+  if (!allowed) {
+    return NextResponse.json(
+      {
+        error: "Active subscription required",
+        checkoutUrl: "/pricing",
+      },
+      { status: 402 },
+    );
   }
 
   const unsignedXml = generateMobileConfig();

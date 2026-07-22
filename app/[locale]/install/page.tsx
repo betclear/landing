@@ -1,20 +1,15 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/ui/Container";
-import { Button } from "@/components/ui/Button";
 import { InstallActions } from "@/components/install/InstallActions";
 import { InstallDownloadButton } from "@/components/install/InstallDownloadButton";
 import { InstallPageTracker } from "@/components/onboarding/InstallPageTracker";
-import { getAuthUser } from "@/lib/auth/user";
 import { hasPaywallAccess, profileDownloadPath } from "@/lib/stripe/access";
-import { isStripeConfigured } from "@/lib/stripe/client";
-import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
 import { isAppLocale, type AppLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { buildPageMetadata } from "@/lib/i18n/metadata";
 import { localizePath } from "@/lib/i18n/routing";
-import { interpolate } from "@/lib/i18n/translate";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -41,9 +36,12 @@ export default async function InstallPage({ params, searchParams }: PageProps) {
   const dict = getDictionary(locale);
 
   const { access } = await searchParams;
-  const paywallEnabled = isStripeConfigured();
-  const authUser = await getAuthUser();
-  const hasAccess = paywallEnabled ? await hasPaywallAccess(access) : true;
+  const hasAccess = await hasPaywallAccess(access);
+
+  if (!hasAccess) {
+    redirect(localizePath(locale, "/pricing"));
+  }
+
   const profileUrl = profileDownloadPath(access);
 
   return (
@@ -62,58 +60,18 @@ export default async function InstallPage({ params, searchParams }: PageProps) {
             {dict.install.description}
           </p>
 
-          {hasAccess ? (
-            <>
-              <InstallDownloadButton
-                profileUrl={profileUrl}
-                accessToken={access}
-              />
+          <InstallDownloadButton
+            profileUrl={profileUrl}
+            accessToken={access}
+          />
 
-              {paywallEnabled ? <InstallActions /> : null}
+          <InstallActions />
 
-              <div className="mt-10 rounded-[1.5rem] bg-card p-5 ring-1 ring-border">
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  {dict.install.privacyNote}
-                </p>
-              </div>
-            </>
-          ) : (
-            <div className="mt-8 rounded-[var(--radius-xl)] border border-border bg-surface p-6">
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {dict.install.subscribeRequired}
-              </p>
-              {authUser?.email ? (
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {interpolate(dict.install.signedInNoSub, {
-                    email: authUser.email,
-                  })}
-                </p>
-              ) : (
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {isSupabaseAuthConfigured()
-                    ? dict.install.signInSafariNote
-                    : dict.install.otherBrowserNote}
-                </p>
-              )}
-              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                {!authUser && isSupabaseAuthConfigured() ? (
-                  <Button
-                    href={`${localizePath(locale, "/login")}?next=${encodeURIComponent(localizePath(locale, "/install"))}`}
-                    size="lg"
-                  >
-                    {dict.install.signIn}
-                  </Button>
-                ) : null}
-                <Button
-                  href={localizePath(locale, "/pricing")}
-                  size="lg"
-                  variant={authUser ? "primary" : "secondary"}
-                >
-                  {dict.install.choosePlan}
-                </Button>
-              </div>
-            </div>
-          )}
+          <div className="mt-10 rounded-[1.5rem] bg-card p-5 ring-1 ring-border">
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {dict.install.privacyNote}
+            </p>
+          </div>
         </Container>
       </main>
       <Footer />

@@ -115,7 +115,7 @@ export const ptBR: Dictionary = {
     titleWithCount: "Bloqueie {domainCount} sites de apostas.",
     description:
       "O BetClear bloqueia o acesso a sites de apostas no seu iPhone, tornando mais difícil fazer outra aposta quando o impulso aparece.",
-    primaryCta: "Começar proteção gratuita",
+    primaryCta: "Começar proteção",
     secondaryCta: "Veja como funciona",
     microcopy: "Configuração personalizada e depois assine para instalar.",
     visualCaption:
@@ -334,9 +334,9 @@ export const ptBR: Dictionary = {
           "Sim. Sites do dia a dia devem continuar funcionando. Apenas domínios identificados como relacionados a apostas são bloqueados.",
       },
       {
-        question: "O que acontece depois dos 7 dias grátis?",
+        question: "Quando sou cobrado?",
         answer:
-          "O período gratuito vira o plano que você escolheu no checkout, a menos que você cancele antes do fim do trial.",
+          "Você é cobrado no checkout pelo plano escolhido. Pode cancelar renovações a qualquer momento no portal de cobrança.",
       },
       {
         question: "Como cancelo?",
@@ -355,12 +355,12 @@ export const ptBR: Dictionary = {
     title: "Torne a próxima aposta mais difícil de alcançar.",
     description:
       "Instale o BetClear antes do próximo impulso e bloqueie o acesso a {domainCount} sites de apostas no seu iPhone.",
-    primaryCta: "Começar proteção gratuita",
+    primaryCta: "Começar proteção",
     secondaryCta: "Ver guia de instalação",
     microcopy: "Configuração personalizada e depois assine para instalar.",
   },
   stickyCta: {
-    label: "Começar proteção gratuita",
+    label: "Começar proteção",
   },
   phone: {
     siteBlocked: "Site bloqueado",
@@ -550,7 +550,7 @@ export const ptBR: Dictionary = {
     steps: [
       {
         title: "Assinar",
-        detail: "Conclua o onboarding e comece seus 7 dias grátis.",
+        detail: "Conclua o onboarding e assine para liberar a instalação.",
       },
       {
         title: "Baixar",
@@ -735,9 +735,9 @@ export const ptBR: Dictionary = {
       "O BetClear oferece ferramentas para ajudar a bloquear sites de apostas no iPhone usando perfis de configuração da Apple e DNS protegido.",
     ],
     termsBillingIntro:
-      "Os planos pagos começam com 7 dias grátis. Depois do período gratuito, você será cobrado conforme o plano e a moeda mostrados no checkout do seu mercado.",
+      "Você é cobrado conforme o plano e a moeda mostrados no checkout do seu mercado.",
     termsBillingCancel:
-      "Cancele a qualquer momento antes do fim do período gratuito para evitar a cobrança. Depois que a cobrança começar, você pode cancelar renovações futuras no portal do cliente Stripe ou entrando em contato com o suporte. Impostos podem se aplicar conforme a sua localização.",
+      "Você pode cancelar renovações futuras no portal do cliente Stripe ou entrando em contato com o suporte. Impostos podem se aplicar conforme a sua localização.",
     termsBillingEstimates:
       "As estimativas de impacto mostradas no onboarding são apenas informativas e se baseiam nas informações que você fornece. Elas não são uma garantia de economia ou resultados.",
     questionsLabel: "Dúvidas:",

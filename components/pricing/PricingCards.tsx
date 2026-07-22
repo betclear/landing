@@ -57,7 +57,7 @@ export function PricingCards({ plans }: PricingCardsProps) {
         <p className="mb-6 text-center text-sm text-red-600">{error}</p>
       ) : null}
 
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div className="mx-auto grid max-w-3xl gap-6 md:grid-cols-2">
         {plans.map((plan) => (
           <article
             key={plan.id}

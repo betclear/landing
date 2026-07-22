@@ -4,12 +4,12 @@ export const SITE = {
   description:
     "BetClear blocks access to gambling websites across your iPhone, making it harder to place another bet when the urge hits.",
   longDescription:
-    "Block 348,000+ gambling websites across your iPhone. Install BetClear once, stay protected automatically, and start with a 7-day free trial.",
+    "Block 348,000+ gambling websites across your iPhone. Install BetClear once and stay protected automatically.",
   email: "hello@betclear.app",
   url: "https://betclear.app",
-  ctaPrimary: "Start Free Protection",
+  ctaPrimary: "Start Protection",
   ctaSecondary: "See How It Works",
-  ctaMicrocopy: "Personalized setup, then a 7-day free trial.",
+  ctaMicrocopy: "Personalized setup, then subscribe to install protection.",
   startHref: "/onboarding/spend",
   installHref: "/install",
 } as const;
@@ -165,9 +165,9 @@ export const FAQ_ITEMS = [
       "Yes. Everyday websites should continue to work. Only domains identified as gambling-related are intended for blocking.",
   },
   {
-    question: "What happens after the 7-day trial?",
+    question: "When am I charged?",
     answer:
-      "Your trial converts to the plan you selected at checkout unless you cancel before the trial ends.",
+      "You are charged at checkout for the plan you select. You can cancel renewals anytime from the billing portal.",
   },
   {
     question: "How do I cancel?",

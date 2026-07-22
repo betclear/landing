@@ -18,7 +18,7 @@ export const PLAN_PRICING = {
     label: "Annual",
     priceLabel: "$29.99/year",
     equivalentLabel: "$2.50/month",
-    description: "7-day free trial, then $29.99 billed annually.",
+    description: "$29.99 billed annually.",
   },
   monthly: {
     id: "monthly" as const,
@@ -26,11 +26,9 @@ export const PLAN_PRICING = {
     interval: "month" as const,
     label: "Monthly",
     priceLabel: "$3.99/month",
-    description: "7-day free trial, then $3.99 billed monthly.",
+    description: "$3.99 billed monthly.",
   },
 } as const;
-
-export const TRIAL_PERIOD_DAYS = 7;
 
 export function getPlanDisplay(locale: AppLocale, plan: PlanId) {
   const pricing = getPlanPricing(locale, plan);

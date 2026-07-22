@@ -112,7 +112,7 @@ export const en = {
     titleWithCount: "Block {domainCount} gambling websites.",
     description:
       "BetClear blocks access to gambling websites across your iPhone, making it harder to place another bet when the urge hits.",
-    primaryCta: "Start Free Protection",
+    primaryCta: "Start Protection",
     secondaryCta: "See How It Works",
     microcopy: "Personalized setup, then subscribe to install protection.",
     visualCaption: "You try to open a gambling site. BetClear blocks it.",

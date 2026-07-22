@@ -90,7 +90,7 @@ export async function GET(request: Request) {
           subscription?.id ?? profile.stripe_subscription_id ?? null,
         subscription_status:
           subscription?.status ??
-          (paymentOk ? "trialing" : profile.subscription_status ?? null),
+          (paymentOk ? "active" : profile.subscription_status ?? null),
         selected_plan: plan ?? null,
         trial_ends_at: subscription
           ? unixToIso(subscription.trial_end)
@@ -111,7 +111,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       ok: true,
-      status: subscription?.status ?? "trialing",
+      status: subscription?.status ?? "active",
       source: "checkout_session",
     });
   } catch (error) {

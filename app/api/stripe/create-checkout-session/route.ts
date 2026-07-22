@@ -8,7 +8,6 @@ import {
   getStripePriceId,
   isAppLocaleParam,
   isPlanId,
-  TRIAL_PERIOD_DAYS,
 } from "@/lib/stripe/prices";
 import { localizePath } from "@/lib/i18n/routing";
 import type { AppLocale } from "@/lib/i18n/config";
@@ -79,7 +78,6 @@ export async function POST(request: Request) {
       client_reference_id: user.id,
       line_items: [{ price: priceId, quantity: 1 }],
       subscription_data: {
-        trial_period_days: TRIAL_PERIOD_DAYS,
         metadata: {
           userId: user.id,
           selectedPlan: plan,

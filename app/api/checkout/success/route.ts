@@ -42,7 +42,7 @@ export async function GET(request: Request) {
 
   if (!isStripeConfigured()) {
     return NextResponse.redirect(
-      new URL(localizePath("en", "/install"), request.url),
+      new URL(localizePath("en", "/pricing"), request.url),
     );
   }
 
