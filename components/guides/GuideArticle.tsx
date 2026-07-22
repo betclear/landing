@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/lib/i18n/navigation";
 import { ArrowLeft, ArrowRight, CheckCircle } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -11,7 +11,7 @@ import {
 } from "@/lib/content/guides";
 import type { GuidesUi } from "@/lib/content/guides/types";
 import type { AppLocale } from "@/lib/i18n/config";
-import { localizePath } from "@/lib/i18n/routing";
+import { getPathname } from "@/lib/i18n/navigation";
 
 type GuideArticleProps = {
   locale: AppLocale;
@@ -30,9 +30,9 @@ function formatUpdated(locale: AppLocale, iso: string): string {
 }
 
 export function GuideArticle({ locale, id, guide, ui }: GuideArticleProps) {
-  const guidesHref = localizePath(locale, "/guides");
-  const homeHref = localizePath(locale, "/");
-  const startHref = localizePath(locale, SITE.startHref);
+  const guidesHref = getPathname({ locale: locale, href: "/guides" });
+  const homeHref = getPathname({ locale: locale, href: "/" });
+  const startHref = getPathname({ locale: locale, href: SITE.startHref });
   const minutes = guideReadingMinutes(guide);
   const related = guide.related
     .filter((relatedId) => relatedId !== id)
@@ -164,7 +164,7 @@ export function GuideArticle({ locale, id, guide, ui }: GuideArticleProps) {
               {related.map(({ id: relatedId, guide: relatedGuide }) => (
                 <Link
                   key={relatedId}
-                  href={localizePath(locale, `/guides/${relatedGuide.slug}`)}
+                  href={getPathname({ locale: locale, href: `/guides/${relatedGuide.slug}` })}
                   className="group flex items-center justify-between gap-4 rounded-[var(--radius-md)] border border-border bg-card px-5 py-4 transition-colors hover:border-primary/40"
                 >
                   <span>

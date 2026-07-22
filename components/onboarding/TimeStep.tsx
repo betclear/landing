@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { OptionButton } from "@/components/onboarding/OptionButton";
@@ -38,7 +38,7 @@ function matchPreset(hours: number | null): WeeklyHourPresetId | null {
 
 export function TimeStep() {
   const router = useRouter();
-  const { href, t } = useLocale();
+  const { t  } = useLocale();
   const { state, update, setStep } = useOnboarding();
   const [selected, setSelected] = useState<WeeklyHourPresetId | null>(
     matchPreset(state.weeklyGamblingHours),
@@ -59,7 +59,7 @@ export function TimeStep() {
     update({ weeklyGamblingHours: hours });
     setStep(3);
     trackEvent("onboarding_time_completed", { step: "time" });
-    router.push(href("/onboarding/last-gamble"));
+    router.push("/onboarding/last-gamble");
   }
 
   return (

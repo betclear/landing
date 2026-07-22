@@ -1,5 +1,6 @@
 export * from "@/lib/i18n/config";
 export * from "@/lib/i18n/routing";
+export * from "@/lib/i18n/navigation";
 export * from "@/lib/i18n/format";
 export * from "@/lib/i18n/pricing";
 export * from "@/lib/i18n/translate";

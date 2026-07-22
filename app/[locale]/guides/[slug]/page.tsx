@@ -1,4 +1,5 @@
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
+import { permanentRedirect } from "@/lib/i18n/navigation";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { GuideArticle } from "@/components/guides/GuideArticle";
@@ -11,7 +12,6 @@ import {
 } from "@/lib/content/guides";
 import { isAppLocale, locales, type AppLocale } from "@/lib/i18n/config";
 import { buildPageMetadata } from "@/lib/i18n/metadata";
-import { localizePath } from "@/lib/i18n/routing";
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -53,7 +53,7 @@ export default async function GuidePage({ params }: PageProps) {
       const foreign = getGuideBySlug(other, slug);
       if (foreign) {
         const target = guidePathByLocale(foreign.id)[locale];
-        if (target) permanentRedirect(localizePath(locale, target));
+        if (target) permanentRedirect({ href: target, locale });
       }
     }
     notFound();

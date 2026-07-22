@@ -1,5 +1,6 @@
 import { Suspense } from "react";
-import { notFound, redirect } from "next/navigation";
+import { notFound, redirect as nextRedirect } from "next/navigation";
+import { redirect } from "@/lib/i18n/navigation";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/ui/Container";
@@ -9,7 +10,8 @@ import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
 import { isAppLocale, type AppLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { buildPageMetadata } from "@/lib/i18n/metadata";
-import { hasLocalePrefix, localizePath } from "@/lib/i18n/routing";
+import { hasLocalePrefix } from "@/lib/i18n/routing";
+import { getPathname } from "@/lib/i18n/navigation";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -32,12 +34,12 @@ export async function generateMetadata({ params }: PageProps) {
 
 function safeNextPath(value: string | undefined, locale: AppLocale): string {
   if (!value || !value.startsWith("/") || value.startsWith("//")) {
-    return localizePath(locale, "/pricing");
+    return getPathname({ locale: locale, href: "/pricing" });
   }
   if (hasLocalePrefix(value)) {
     return value;
   }
-  return localizePath(locale, value);
+  return getPathname({ locale: locale, href: value });
 }
 
 export default async function LoginPage({ params, searchParams }: PageProps) {
@@ -47,7 +49,7 @@ export default async function LoginPage({ params, searchParams }: PageProps) {
   const dict = getDictionary(locale);
 
   if (!isSupabaseAuthConfigured()) {
-    redirect(localizePath(locale, "/pricing"));
+    redirect({ href: "/pricing", locale });
   }
 
   const { next } = await searchParams;
@@ -55,7 +57,7 @@ export default async function LoginPage({ params, searchParams }: PageProps) {
   const user = await getAuthUser();
 
   if (user) {
-    redirect(nextPath);
+    nextRedirect(nextPath);
   }
 
   return (

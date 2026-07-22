@@ -11,7 +11,7 @@ type FinalCTAProps = {
 };
 
 export function FinalCTA({ domainCountLabel }: FinalCTAProps) {
-  const { t, href } = useLocale();
+  const { t } = useLocale();
 
   return (
     <section className="relative overflow-hidden pb-24 pt-8 sm:pb-32 sm:pt-12">
@@ -30,14 +30,14 @@ export function FinalCTA({ domainCountLabel }: FinalCTAProps) {
             </p>
             <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button
-                href={href("/onboarding/spend")}
+                href={"/onboarding/spend"}
                 size="lg"
                 onClick={() => trackEvent("final_cta_clicked")}
               >
                 {t("finalCta.primaryCta")}
               </Button>
               <Button
-                href={href("/install")}
+                href={"/install"}
                 variant="secondary"
                 size="lg"
                 showArrow={false}

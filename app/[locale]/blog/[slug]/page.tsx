@@ -1,4 +1,5 @@
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
+import { permanentRedirect } from "@/lib/i18n/navigation";
 import { BlogArticle } from "@/components/blog/BlogArticle";
 import { BlogJsonLd } from "@/components/blog/BlogJsonLd";
 import { Header } from "@/components/layout/Header";
@@ -11,7 +12,6 @@ import {
 } from "@/lib/content/blog";
 import { isAppLocale, locales, type AppLocale } from "@/lib/i18n/config";
 import { buildPageMetadata } from "@/lib/i18n/metadata";
-import { localizePath } from "@/lib/i18n/routing";
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -53,7 +53,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       const foreign = getPostBySlug(other, slug);
       if (foreign) {
         const target = blogPathByLocale(foreign.id)[locale];
-        if (target) permanentRedirect(localizePath(locale, target));
+        if (target) permanentRedirect({ href: target, locale });
       }
     }
     notFound();

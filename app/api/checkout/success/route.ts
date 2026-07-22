@@ -6,7 +6,7 @@ import {
 } from "@/lib/stripe/access";
 import { isStripeConfigured } from "@/lib/stripe/client";
 import { isAppLocale, type AppLocale } from "@/lib/i18n/config";
-import { localizePath } from "@/lib/i18n/routing";
+import { getPathname } from "@/lib/i18n/navigation";
 import { getStripe } from "@/lib/stripe/client";
 
 export const dynamic = "force-dynamic";
@@ -29,7 +29,7 @@ function redirectWithAccess(
   token: string,
   locale: AppLocale,
 ) {
-  const path = localizePath(locale, "/install");
+  const path = getPathname({ locale: locale, href: "/install" });
   const url = new URL(path, request.url);
   url.searchParams.set("access", token);
   const response = NextResponse.redirect(url);
@@ -42,13 +42,13 @@ export async function GET(request: Request) {
 
   if (!isStripeConfigured()) {
     return NextResponse.redirect(
-      new URL(localizePath("en", "/pricing"), request.url),
+      new URL(getPathname({ locale: "en", href: "/pricing" }), request.url),
     );
   }
 
   if (!sessionId) {
     return NextResponse.redirect(
-      new URL(localizePath("en", "/pricing"), request.url),
+      new URL(getPathname({ locale: "en", href: "/pricing" }), request.url),
     );
   }
 
@@ -59,7 +59,7 @@ export async function GET(request: Request) {
     if (!token) {
       return NextResponse.redirect(
         new URL(
-          `${localizePath(locale, "/pricing")}?error=checkout`,
+          `${getPathname({ locale: locale, href: "/pricing" })}?error=checkout`,
           request.url,
         ),
       );
@@ -70,7 +70,7 @@ export async function GET(request: Request) {
     console.error("checkout success error", error);
     return NextResponse.redirect(
       new URL(
-        `${localizePath(locale, "/pricing")}?error=checkout`,
+        `${getPathname({ locale: locale, href: "/pricing" })}?error=checkout`,
         request.url,
       ),
     );

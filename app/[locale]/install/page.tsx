@@ -1,4 +1,6 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
+import { Link, redirect } from "@/lib/i18n/navigation";
+import { headers } from "next/headers";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/ui/Container";
@@ -6,10 +8,10 @@ import { InstallActions } from "@/components/install/InstallActions";
 import { InstallDownloadButton } from "@/components/install/InstallDownloadButton";
 import { InstallPageTracker } from "@/components/onboarding/InstallPageTracker";
 import { hasPaywallAccess, profileDownloadPath } from "@/lib/stripe/access";
+import { isAndroidUserAgent } from "@/lib/stripe/browser";
 import { isAppLocale, type AppLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { buildPageMetadata } from "@/lib/i18n/metadata";
-import { localizePath } from "@/lib/i18n/routing";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -36,10 +38,16 @@ export default async function InstallPage({ params, searchParams }: PageProps) {
   const dict = getDictionary(locale);
 
   const { access } = await searchParams;
+
+  const userAgent = (await headers()).get("user-agent") ?? "";
+  if (isAndroidUserAgent(userAgent)) {
+    redirect({ href: access ? `/install/android?access=${encodeURIComponent(access)}` : "/install/android", locale });
+  }
+
   const hasAccess = await hasPaywallAccess(access);
 
   if (!hasAccess) {
-    redirect(localizePath(locale, "/pricing"));
+    redirect({ href: "/pricing", locale });
   }
 
   const profileUrl = profileDownloadPath(access);
@@ -72,6 +80,19 @@ export default async function InstallPage({ params, searchParams }: PageProps) {
               {dict.install.privacyNote}
             </p>
           </div>
+
+          <p className="mt-10 text-center text-sm text-muted-foreground">
+            <Link
+              href={
+                access
+                  ? `/install/android?access=${encodeURIComponent(access)}`
+                  : "/install/android"
+              }
+              className="font-medium text-foreground underline-offset-4 hover:underline"
+            >
+              {dict.install.usingAndroid}
+            </Link>
+          </p>
         </Container>
       </main>
       <Footer />

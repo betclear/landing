@@ -20,3 +20,11 @@ export function isSafariUserAgent(userAgent: string): boolean {
 export function isIosUserAgent(userAgent: string): boolean {
   return /iphone|ipad|ipod/i.test(userAgent);
 }
+
+/**
+ * True for Android devices. Used to route to the Android Private DNS guide
+ * instead of the iOS profile install flow.
+ */
+export function isAndroidUserAgent(userAgent: string): boolean {
+  return /android/i.test(userAgent);
+}

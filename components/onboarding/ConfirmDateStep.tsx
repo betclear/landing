@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
@@ -10,7 +10,7 @@ import { formatLongDate } from "@/lib/i18n/format";
 
 export function ConfirmDateStep() {
   const router = useRouter();
-  const { locale, href, t } = useLocale();
+  const { locale, t } = useLocale();
   const { state, setStep } = useOnboarding();
 
   const hasDate = Boolean(state.lastGamblingDate);
@@ -38,7 +38,7 @@ export function ConfirmDateStep() {
   function confirm() {
     setStep(5);
     trackEvent("onboarding_date_confirmed", { step: "confirm-date" });
-    router.push(href("/onboarding/impact"));
+    router.push("/onboarding/impact");
   }
 
   return (
@@ -65,7 +65,7 @@ export function ConfirmDateStep() {
             variant="secondary"
             className="w-full justify-center"
             showArrow={false}
-            href={href("/onboarding/last-gamble")}
+            href={"/onboarding/last-gamble"}
           >
             {t("common.back")}
           </Button>

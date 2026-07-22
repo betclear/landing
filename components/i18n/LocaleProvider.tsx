@@ -10,7 +10,6 @@ import {
 import type { AppLocale, LocaleMarket } from "@/lib/i18n/config";
 import { localeConfig, localeToLanguage } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries/types";
-import { localizePath } from "@/lib/i18n/routing";
 import { interpolate, translate, translateList } from "@/lib/i18n/translate";
 
 type LocaleContextValue = {
@@ -23,7 +22,6 @@ type LocaleContextValue = {
     vars?: Record<string, string | number | null | undefined>,
   ) => string;
   tList: (key: string) => string[];
-  href: (path: string) => string;
 };
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
@@ -50,11 +48,6 @@ export function LocaleProvider({
     [dictionary],
   );
 
-  const href = useCallback(
-    (path: string) => localizePath(locale, path),
-    [locale],
-  );
-
   const value = useMemo<LocaleContextValue>(
     () => ({
       locale,
@@ -63,9 +56,8 @@ export function LocaleProvider({
       dictionary,
       t,
       tList,
-      href,
     }),
-    [locale, dictionary, t, tList, href],
+    [locale, dictionary, t, tList],
   );
 
   return (

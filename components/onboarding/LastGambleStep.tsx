@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { OptionButton } from "@/components/onboarding/OptionButton";
@@ -19,7 +19,7 @@ type Choice = "today" | "yesterday" | "choose" | "unsure" | null;
 
 export function LastGambleStep() {
   const router = useRouter();
-  const { href, t } = useLocale();
+  const { t  } = useLocale();
   const { state, update, setStep } = useOnboarding();
   const [choice, setChoice] = useState<Choice>(() => {
     if (state.lastGamblingDateIsApproximate && !state.lastGamblingDate) {
@@ -73,7 +73,7 @@ export function LastGambleStep() {
 
     setStep(4);
     trackEvent("onboarding_date_completed", { step: "last-gamble" });
-    router.push(href("/onboarding/confirm-date"));
+    router.push("/onboarding/confirm-date");
   }
 
   return (

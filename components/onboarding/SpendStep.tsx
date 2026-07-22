@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/i18n/navigation";
 import { CaretDown } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
@@ -19,7 +19,7 @@ import { cn } from "@/lib/cn";
 
 export function SpendStep() {
   const router = useRouter();
-  const { href, t } = useLocale();
+  const { t  } = useLocale();
   const { state, update, setStep } = useOnboarding();
   const currency = isSupportedCurrency(state.currency) ? state.currency : "USD";
   const [amountText, setAmountText] = useState(
@@ -70,7 +70,7 @@ export function SpendStep() {
       currency,
       step: "spend",
     });
-    router.push(href("/onboarding/time"));
+    router.push("/onboarding/time");
   }
 
   return (

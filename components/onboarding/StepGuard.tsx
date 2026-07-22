@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, type ReactNode } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/i18n/navigation";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { canAccessStep } from "@/lib/onboarding/storage";
@@ -16,7 +16,7 @@ export function StepGuard({
 }) {
   const { state, hydrated } = useOnboarding();
   const router = useRouter();
-  const { href, t } = useLocale();
+  const { t  } = useLocale();
 
   useEffect(() => {
     if (!hydrated) return;
@@ -25,8 +25,8 @@ export function StepGuard({
     const fallbackPath =
       ONBOARDING_STEPS.find((item) => canAccessStep(state, item.step))?.path ??
       "/onboarding/spend";
-    router.replace(href(fallbackPath));
-  }, [hydrated, href, router, state, step]);
+    router.replace(fallbackPath);
+  }, [hydrated, router, state, step]);
 
   if (!hydrated) {
     return (

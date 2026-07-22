@@ -4,7 +4,7 @@ import { getAuthUser } from "@/lib/auth/user";
 import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/client";
 import { getStripePriceId, isAppLocaleParam, TRIAL_PERIOD_DAYS } from "@/lib/stripe/prices";
-import { localizePath } from "@/lib/i18n/routing";
+import { getPathname } from "@/lib/i18n/navigation";
 import type { AppLocale } from "@/lib/i18n/config";
 
 export const dynamic = "force-dynamic";
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
   if (isSupabaseAuthConfigured()) {
     const user = await getAuthUser();
     if (!user) {
-      const loginUrl = `${localizePath(locale, "/login")}?next=${encodeURIComponent(localizePath(locale, "/pricing"))}`;
+      const loginUrl = `${getPathname({ locale: locale, href: "/login" })}?next=${encodeURIComponent(getPathname({ locale: locale, href: "/pricing" }))}`;
       return NextResponse.json(
         { error: "Sign in required before checkout.", loginUrl },
         { status: 401 },
@@ -75,8 +75,8 @@ export async function POST(request: Request) {
           ...(user ? { user_id: user.id } : {}),
         },
       },
-      success_url: `${siteUrl}${localizePath(locale, "/payment/success")}?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${siteUrl}${localizePath(locale, "/pricing")}`,
+      success_url: `${siteUrl}${getPathname({ locale: locale, href: "/payment/success" })}?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${siteUrl}${getPathname({ locale: locale, href: "/pricing" })}`,
       allow_promotion_codes: true,
       billing_address_collection: "auto",
       customer_email: user?.email ?? undefined,

@@ -1,4 +1,6 @@
 import { notFound } from "next/navigation";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { AnalyticsLocaleSync } from "@/components/i18n/AnalyticsLocaleSync";
 import { LocaleProvider } from "@/components/i18n/LocaleProvider";
 import { SiteJsonLd } from "@/components/marketing/SiteJsonLd";
@@ -23,14 +25,19 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
   const { locale: raw } = await params;
   if (!isAppLocale(raw)) notFound();
   const locale = raw as AppLocale;
+
+  setRequestLocale(locale);
+  const messages = await getMessages();
   const dictionary = getDictionary(locale);
 
   return (
-    <LocaleProvider locale={locale} dictionary={dictionary}>
-      <SiteJsonLd locale={locale} />
-      <AnalyticsLocaleSync />
-      {children}
-      <AnalyticsConsent />
-    </LocaleProvider>
+    <NextIntlClientProvider messages={messages}>
+      <LocaleProvider locale={locale} dictionary={dictionary}>
+        <SiteJsonLd locale={locale} />
+        <AnalyticsLocaleSync />
+        {children}
+        <AnalyticsConsent />
+      </LocaleProvider>
+    </NextIntlClientProvider>
   );
 }

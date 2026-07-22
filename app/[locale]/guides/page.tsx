@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/lib/i18n/navigation";
 import { notFound } from "next/navigation";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { Header } from "@/components/layout/Header";
@@ -7,7 +7,7 @@ import { Container } from "@/components/ui/Container";
 import { getGuidesUi, listGuides } from "@/lib/content/guides";
 import { isAppLocale, type AppLocale } from "@/lib/i18n/config";
 import { buildPageMetadata } from "@/lib/i18n/metadata";
-import { localizePath } from "@/lib/i18n/routing";
+import { getPathname } from "@/lib/i18n/navigation";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -54,7 +54,7 @@ export default async function GuidesHubPage({ params }: PageProps) {
             {guides.map((guide) => (
               <Link
                 key={guide.id}
-                href={localizePath(locale, `/guides/${guide.slug}`)}
+                href={getPathname({ locale: locale, href: `/guides/${guide.slug}` })}
                 className="group flex h-full flex-col rounded-[var(--radius-lg)] border border-border bg-card p-6 transition-colors hover:border-primary/40"
               >
                 <h2 className="text-lg font-semibold tracking-[-0.02em] text-foreground">

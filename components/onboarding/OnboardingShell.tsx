@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
-import Link from "next/link";
+import { Link } from "@/lib/i18n/navigation";
 import { CaretLeft } from "@phosphor-icons/react";
 import { Container } from "@/components/ui/Container";
 import { useLocale } from "@/components/i18n/LocaleProvider";
@@ -32,10 +32,10 @@ export function OnboardingShell({
   className,
 }: OnboardingShellProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const { t, href } = useLocale();
+  const { t } = useLocale();
   const total = ONBOARDING_STEPS.length;
   const progress = Math.min(step / total, 1);
-  const localizedBackHref = backHref ? href(backHref) : undefined;
+  const localizedBackHref = backHref;
 
   useEffect(() => {
     headingRef.current?.focus();
@@ -66,7 +66,7 @@ export function OnboardingShell({
               <span className="h-10 w-10" aria-hidden="true" />
             )}
             <Link
-              href={href("/")}
+              href={"/"}
               className="inline-flex items-center transition-opacity hover:opacity-80"
               aria-label={SITE.name}
             >

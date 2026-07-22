@@ -14,7 +14,7 @@ import {
 export function StickyMobileCTA() {
   const [visible, setVisible] = useState(false);
   const [consentReady, setConsentReady] = useState(false);
-  const { t, href } = useLocale();
+  const { t } = useLocale();
 
   useEffect(() => {
     const syncConsent = () => {
@@ -47,7 +47,7 @@ export function StickyMobileCTA() {
       )}
     >
       <Button
-        href={href("/onboarding/spend")}
+        href={"/onboarding/spend"}
         size="lg"
         className="w-full"
         showArrow={false}

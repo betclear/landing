@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Link } from "@/lib/i18n/navigation";
+import { useRouter } from "@/lib/i18n/navigation";
 import { useEffect, useId, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { List, SignOut, X } from "@phosphor-icons/react";
@@ -19,7 +19,7 @@ import { cn } from "@/lib/cn";
 const easeOut = [0.16, 1, 0.3, 1] as const;
 
 export function Header() {
-  const { locale, t, href } = useLocale();
+  const { locale, t } = useLocale();
   const router = useRouter();
   const { user, loading } = useAuthUser();
   const [open, setOpen] = useState(false);
@@ -34,22 +34,22 @@ export function Header() {
   const navLinks = useMemo(() => {
     if (locale === "br") {
       return [
-        { href: href("/#how-it-works"), label: t("nav.howItWorks") },
-        { href: href("/#protection"), label: t("nav.protection") },
-        { href: href("/guides"), label: t("nav.guides") },
-        { href: href("/support"), label: t("nav.support") },
-        { href: href("/#faq"), label: t("nav.faq") },
+        { href: "/#how-it-works", label: t("nav.howItWorks") },
+        { href: "/#protection", label: t("nav.protection") },
+        { href: "/guides", label: t("nav.guides") },
+        { href: "/support", label: t("nav.support") },
+        { href: "/#faq", label: t("nav.faq") },
       ];
     }
 
     return [
-      { href: href("/#how-it-works"), label: t("nav.howItWorks") },
-      { href: href("/#protection"), label: t("nav.protection") },
-      { href: href("/guides"), label: t("nav.guides") },
-      { href: href("/#pricing"), label: t("nav.pricing") },
-      { href: href("/#faq"), label: t("nav.faq") },
+      { href: "/#how-it-works", label: t("nav.howItWorks") },
+      { href: "/#protection", label: t("nav.protection") },
+      { href: "/guides", label: t("nav.guides") },
+      { href: "/#pricing", label: t("nav.pricing") },
+      { href: "/#faq", label: t("nav.faq") },
     ];
-  }, [href, locale, t]);
+  }, [locale, t]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -100,17 +100,17 @@ export function Header() {
   const startHref =
     authEnabled && user
       ? subscribed === true
-        ? href("/install")
-        : href("/pricing")
-      : href("/onboarding/spend");
-  const loginHref = href("/login");
+        ? "/install"
+        : "/pricing"
+      : "/onboarding/spend";
+  const loginHref = "/login";
 
   async function handleMobileSignOut() {
     setSigningOut(true);
     try {
       await signOutUser();
       close();
-      router.replace(href("/"));
+      router.replace("/");
       router.refresh();
     } finally {
       setSigningOut(false);
@@ -128,7 +128,7 @@ export function Header() {
         )}
       >
         <Link
-          href={href("/")}
+          href={"/"}
           className="inline-flex items-center transition-opacity hover:opacity-80"
           aria-label={SITE.name}
         >

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, useTransition } from "react";
-import { usePathname, useRouter } from "next/navigation";
 import { CaretDown } from "@phosphor-icons/react";
 import {
   LOCALE_COOKIE,
@@ -10,7 +9,7 @@ import {
   localeToCookieValue,
   type AppLocale,
 } from "@/lib/i18n/config";
-import { switchLocalePath } from "@/lib/i18n/routing";
+import { usePathname, useRouter } from "@/lib/i18n/navigation";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { cn } from "@/lib/cn";
 
@@ -103,11 +102,8 @@ export function LanguageSwitcher({
     setOpen(false);
     if (next === locale) return;
     setLocaleCookie(next);
-    const hash =
-      typeof window !== "undefined" ? window.location.hash : undefined;
-    const target = switchLocalePath(pathname, next, hash || undefined);
     startTransition(() => {
-      router.push(target);
+      router.replace(pathname, { locale: next });
     });
   }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/i18n/navigation";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { useLocale } from "@/components/i18n/LocaleProvider";
@@ -18,7 +18,7 @@ export function InstallDownloadButton({
   accessToken?: string | null;
   onStarted?: () => void;
 }) {
-  const { t, href } = useLocale();
+  const { t } = useLocale();
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const guideTimerRef = useRef<number | null>(null);
@@ -32,7 +32,7 @@ export function InstallDownloadButton({
 
     guideTimerRef.current = window.setTimeout(() => {
       guideTimerRef.current = null;
-      router.push(href(guidePath));
+      router.push(guidePath);
       setBusy(false);
     }, GUIDE_NAV_DELAY_MS);
   }

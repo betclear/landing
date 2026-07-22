@@ -1,9 +1,17 @@
+import { defineRouting } from "next-intl/routing";
 import {
   defaultLocale,
   isAppLocale,
   languageToLocale,
+  locales,
   type AppLocale,
 } from "@/lib/i18n/config";
+
+export const routing = defineRouting({
+  locales: [...locales],
+  defaultLocale,
+  localePrefix: "always",
+});
 
 /** Paths that should not receive a locale prefix */
 export const LOCALE_EXCLUDED_PREFIXES = [
@@ -12,19 +20,15 @@ export const LOCALE_EXCLUDED_PREFIXES = [
   "/auth/callback",
   "/_next",
   "/favicon.ico",
-] as const;
-
-/** Legacy root paths that permanently redirect to /en/... */
-export const LEGACY_REDIRECT_PATHS = [
-  "/onboarding",
-  "/install",
-  "/install-test",
-  "/privacy",
-  "/terms",
-  "/pricing",
-  "/login",
-  "/auth",
-  "/payment",
+  "/robots.txt",
+  "/sitemap.xml",
+  "/manifest.webmanifest",
+  "/llms.txt",
+  "/opengraph-image",
+  "/apple-icon",
+  "/icon",
+  "/apple-icon.png",
+  "/icon.png",
 ] as const;
 
 export function hasLocalePrefix(pathname: string): boolean {
@@ -49,56 +53,6 @@ export function isLocaleExcludedPath(pathname: string): boolean {
   return LOCALE_EXCLUDED_PREFIXES.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
-}
-
-/**
- * Build a localized path. Accepts absolute paths without locale prefix,
- * hash-only links, and mailto/external URLs (returned unchanged).
- */
-export function localizePath(
-  locale: AppLocale,
-  href: string,
-): string {
-  if (
-    !href ||
-    href.startsWith("mailto:") ||
-    href.startsWith("tel:") ||
-    href.startsWith("http://") ||
-    href.startsWith("https://") ||
-    href.startsWith("//")
-  ) {
-    return href;
-  }
-
-  if (href.startsWith("#")) {
-    return `/${locale}${href}`;
-  }
-
-  const [pathPart, hash] = href.split("#");
-  const path = pathPart || "/";
-  const hashSuffix = hash ? `#${hash}` : "";
-
-  if (hasLocalePrefix(path)) {
-    return `${path}${hashSuffix}`;
-  }
-
-  const normalized = path.startsWith("/") ? path : `/${path}`;
-  if (normalized === "/") {
-    return `/${locale}${hashSuffix}`;
-  }
-
-  return `/${locale}${normalized}${hashSuffix}`;
-}
-
-/** Switch locale while preserving the current path (without locale prefix). */
-export function switchLocalePath(
-  currentPathname: string,
-  targetLocale: AppLocale,
-  hash?: string,
-): string {
-  const bare = stripLocalePrefix(currentPathname);
-  const withHash = hash ? `${bare}${hash.startsWith("#") ? hash : `#${hash}`}` : bare;
-  return localizePath(targetLocale, withHash);
 }
 
 export function resolvePreferredLocale(options: {

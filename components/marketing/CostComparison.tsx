@@ -9,7 +9,7 @@ import { trackEvent } from "@/lib/analytics";
 import { getPlanDisplay } from "@/lib/stripe/prices";
 
 export function CostComparison() {
-  const { locale, t, href } = useLocale();
+  const { locale, t } = useLocale();
   const monthly = getPlanDisplay(locale, "monthly");
   const annual = getPlanDisplay(locale, "annual");
   const monthlyPrice = monthly.formattedAmount!;
@@ -56,7 +56,7 @@ export function CostComparison() {
         <Reveal delay={0.08}>
           <div className="mt-8">
             <Button
-              href={href("/onboarding/spend")}
+              href={"/onboarding/spend"}
               size="lg"
               onClick={() => trackEvent("cost_comparison_cta_clicked")}
             >

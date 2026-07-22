@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { BrandLogo } from "@/components/shared/BrandLogo";
@@ -9,14 +10,14 @@ import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 import { clearOnboardingState } from "@/lib/onboarding/storage";
 import { SITE } from "@/lib/constants";
-import Link from "next/link";
+import { Link } from "@/lib/i18n/navigation";
 
 type Status = "loading" | "error";
 
 export function PaymentSuccess() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
-  const { t, href } = useLocale();
+  const { t } = useLocale();
   const router = useRouter();
   const [status, setStatus] = useState<Status>("loading");
   const [retryToken, setRetryToken] = useState(0);
@@ -45,7 +46,7 @@ export function PaymentSuccess() {
           body: JSON.stringify({ sessionId }),
         });
 
-        let installPath = href("/install");
+        let installPath = "/install";
         if (successRes.ok) {
           const successData = (await successRes.json()) as { token?: string };
           if (successData.token) {
@@ -67,7 +68,7 @@ export function PaymentSuccess() {
     return () => {
       cancelled = true;
     };
-  }, [sessionId, retryToken, router, href]);
+  }, [sessionId, retryToken, router]);
 
   if (status === "loading") {
     return (
@@ -97,7 +98,7 @@ export function PaymentSuccess() {
       <header className="relative z-10 border-b border-border/60">
         <Container className="flex h-14 items-center">
           <Link
-            href={href("/")}
+            href={"/"}
             className="inline-flex items-center transition-opacity hover:opacity-80"
             aria-label={SITE.name}
           >
@@ -124,7 +125,7 @@ export function PaymentSuccess() {
                 {t("paymentSuccess.tryAgain")}
               </Button>
               <Button
-                href={href("/onboarding/pricing")}
+                href={"/onboarding/pricing"}
                 variant="secondary"
                 size="lg"
                 showArrow={false}

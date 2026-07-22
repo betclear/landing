@@ -1,9 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { languageToLocale } from "@/lib/i18n/config";
 import {
-  localizePath,
   resolvePreferredLocale,
-  switchLocalePath,
+  stripLocalePrefix,
 } from "@/lib/i18n/routing";
 import { formatCurrency, formatDate } from "@/lib/i18n/format";
 
@@ -14,22 +13,9 @@ describe("i18n routing", () => {
     expect(languageToLocale("br")).toBe("br");
   });
 
-  it("localizes paths", () => {
-    expect(localizePath("en", "/install")).toBe("/en/install");
-    expect(localizePath("br", "/onboarding/spend")).toBe(
-      "/br/onboarding/spend",
-    );
-    expect(localizePath("br", "/#how-it-works")).toBe("/br#how-it-works");
-    expect(localizePath("en", "mailto:hello@betclear.app")).toBe(
-      "mailto:hello@betclear.app",
-    );
-  });
-
-  it("switches locale while preserving path", () => {
-    expect(switchLocalePath("/en/install", "br")).toBe("/br/install");
-    expect(switchLocalePath("/br/onboarding/spend", "en")).toBe(
-      "/en/onboarding/spend",
-    );
+  it("strips locale prefixes", () => {
+    expect(stripLocalePrefix("/en/install")).toBe("/install");
+    expect(stripLocalePrefix("/br/onboarding/spend")).toBe("/onboarding/spend");
   });
 
   it("resolves preferred locale by cookie then country", () => {

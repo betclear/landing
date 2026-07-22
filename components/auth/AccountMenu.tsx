@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/i18n/navigation";
 import { CreditCard, SignOut } from "@phosphor-icons/react";
 import type { User } from "@supabase/supabase-js";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -22,7 +22,7 @@ export function AccountMenu({
   subscribed?: boolean;
 }) {
   const router = useRouter();
-  const { href, t } = useLocale();
+  const { t  } = useLocale();
   const reduce = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -54,7 +54,7 @@ export function AccountMenu({
     try {
       await signOutUser();
       setOpen(false);
-      router.replace(href("/"));
+      router.replace("/");
       router.refresh();
     } finally {
       setLoading(false);

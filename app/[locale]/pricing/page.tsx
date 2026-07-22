@@ -10,7 +10,7 @@ import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
 import { isAppLocale, type AppLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { buildPageMetadata } from "@/lib/i18n/metadata";
-import { localizePath } from "@/lib/i18n/routing";
+import { getPathname } from "@/lib/i18n/navigation";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -34,7 +34,7 @@ export default async function PricingPage({ params }: PageProps) {
   if (!isAppLocale(raw)) notFound();
   const locale = raw as AppLocale;
   const dict = getDictionary(locale);
-  const pricingPath = localizePath(locale, "/pricing");
+  const pricingPath = getPathname({ locale: locale, href: "/pricing" });
 
   const user = isSupabaseAuthConfigured()
     ? await requireAuthUser(pricingPath, locale)
@@ -66,7 +66,7 @@ export default async function PricingPage({ params }: PageProps) {
           <p className="mx-auto mt-10 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground">
             {dict.pricing.preferGuided}{" "}
             <a
-              href={localizePath(locale, "/onboarding/spend")}
+              href={getPathname({ locale: locale, href: "/onboarding/spend" })}
               className="font-medium text-foreground underline-offset-4 hover:underline"
             >
               {dict.pricing.beginOnboarding}

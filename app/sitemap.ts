@@ -3,7 +3,7 @@ import { SITE } from "@/lib/constants";
 import { postSlugs } from "@/lib/content/blog";
 import { guideSlugs } from "@/lib/content/guides";
 import { locales } from "@/lib/i18n/config";
-import { localizePath } from "@/lib/i18n/routing";
+import { getPathname } from "@/lib/i18n/navigation";
 
 const INDEXABLE_PATHS = [
   "/",
@@ -23,7 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const locale of locales) {
     for (const path of INDEXABLE_PATHS) {
       entries.push({
-        url: `${SITE.url}${localizePath(locale, path)}`,
+        url: `${SITE.url}${getPathname({ locale: locale, href: path })}`,
         lastModified: new Date(),
         changeFrequency: path === "/" || path === "/blog" ? "weekly" : "monthly",
         priority:
@@ -33,7 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     for (const slug of guideSlugs(locale)) {
       entries.push({
-        url: `${SITE.url}${localizePath(locale, `/guides/${slug}`)}`,
+        url: `${SITE.url}${getPathname({ locale: locale, href: `/guides/${slug}` })}`,
         lastModified: new Date(),
         changeFrequency: "monthly",
         priority: 0.7,
@@ -42,7 +42,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     for (const slug of postSlugs(locale)) {
       entries.push({
-        url: `${SITE.url}${localizePath(locale, `/blog/${slug}`)}`,
+        url: `${SITE.url}${getPathname({ locale: locale, href: `/blog/${slug}` })}`,
         lastModified: new Date(),
         changeFrequency: "monthly",
         priority: 0.7,

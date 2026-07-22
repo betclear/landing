@@ -10,7 +10,7 @@ import {
   isPlanId,
   TRIAL_PERIOD_DAYS,
 } from "@/lib/stripe/prices";
-import { localizePath } from "@/lib/i18n/routing";
+import { getPathname } from "@/lib/i18n/navigation";
 import type { AppLocale } from "@/lib/i18n/config";
 import { getAuthenticatedUser } from "@/lib/supabase/server-auth";
 
@@ -105,8 +105,8 @@ export async function POST(request: Request) {
           profile.last_gambling_date_is_approximate,
         ),
       },
-      success_url: `${appUrl}${localizePath(locale, "/payment/success")}?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${appUrl}${localizePath(locale, "/onboarding/pricing")}`,
+      success_url: `${appUrl}${getPathname({ locale: locale, href: "/payment/success" })}?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}${getPathname({ locale: locale, href: "/onboarding/pricing" })}`,
       allow_promotion_codes: true,
     });
 

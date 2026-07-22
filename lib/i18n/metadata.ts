@@ -3,20 +3,20 @@ import { SITE } from "@/lib/constants";
 import type { AppLocale } from "@/lib/i18n/config";
 import { localeConfig, locales } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { localizePath } from "@/lib/i18n/routing";
+import { getPathname } from "@/lib/i18n/navigation";
 
 export function buildAlternates(locale: AppLocale, path = "/") {
   const languages: Record<string, string> = {
-    "x-default": localizePath("en", path),
+    "x-default": getPathname({ locale: "en", href: path }),
   };
 
   for (const code of locales) {
     const hrefLang = localeConfig[code].language;
-    languages[hrefLang] = localizePath(code, path);
+    languages[hrefLang] = getPathname({ locale: code, href: path });
   }
 
   return {
-    canonical: localizePath(locale, path),
+    canonical: getPathname({ locale, href: path }),
     languages,
   };
 }
@@ -31,16 +31,22 @@ export function buildAlternatesFromPaths(
 ) {
   const enPath = pathByLocale.en ?? "/";
   const languages: Record<string, string> = {
-    "x-default": localizePath("en", enPath),
+    "x-default": getPathname({ locale: "en", href: enPath }),
   };
 
   for (const code of locales) {
     const hrefLang = localeConfig[code].language;
-    languages[hrefLang] = localizePath(code, pathByLocale[code] ?? "/");
+    languages[hrefLang] = getPathname({
+      locale: code,
+      href: pathByLocale[code] ?? "/",
+    });
   }
 
   return {
-    canonical: localizePath(locale, pathByLocale[locale] ?? "/"),
+    canonical: getPathname({
+      locale,
+      href: pathByLocale[locale] ?? "/",
+    }),
     languages,
   };
 }
@@ -84,7 +90,7 @@ export function buildPageMetadata(
       description: ogDescription,
       siteName: SITE.name,
       type: options.ogType ?? "website",
-      url: `${SITE.url}${localizePath(locale, ogPath)}`,
+      url: `${SITE.url}${getPathname({ locale, href: ogPath })}`,
       locale: localeConfig[locale].htmlLang.replace("-", "_"),
       images: [
         {

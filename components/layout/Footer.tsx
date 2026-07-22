@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/lib/i18n/navigation";
 import { Container } from "@/components/ui/Container";
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { useLocale } from "@/components/i18n/LocaleProvider";
@@ -9,25 +9,25 @@ import { openCookieSettings } from "@/lib/consent";
 import { SITE } from "@/lib/constants";
 
 export function Footer() {
-  const { t, href } = useLocale();
+  const { t } = useLocale();
 
   const productLinks = [
-    { href: href("/#how-it-works"), label: t("footer.howItWorks") },
-    { href: href("/guides"), label: t("footer.guides") },
-    { href: href("/blog"), label: "Blog" },
-    { href: href("/install"), label: t("footer.installation") },
-    { href: href("/#pricing"), label: t("footer.pricing") },
-    { href: href("/#faq"), label: t("footer.faq") },
+    { href: "/#how-it-works", label: t("footer.howItWorks") },
+    { href: "/guides", label: t("footer.guides") },
+    { href: "/blog", label: "Blog" },
+    { href: "/install", label: t("footer.installation") },
+    { href: "/#pricing", label: t("footer.pricing") },
+    { href: "/#faq", label: t("footer.faq") },
   ];
 
   const supportLinks = [
     {
-      href: href("/support"),
+      href: "/support",
       label: t("nav.support"),
       external: false,
     },
     {
-      href: href("/report-site"),
+      href: "/report-site",
       label: t("footer.reportSite"),
       external: false,
     },
@@ -36,8 +36,8 @@ export function Footer() {
       label: t("footer.contact"),
       external: false,
     },
-    { href: href("/privacy"), label: t("footer.privacy"), external: false },
-    { href: href("/terms"), label: t("footer.terms"), external: false },
+    { href: "/privacy", label: t("footer.privacy"), external: false },
+    { href: "/terms", label: t("footer.terms"), external: false },
     {
       href: "https://www.begambleaware.org/",
       label: t("footer.beGambleAware"),
@@ -56,7 +56,7 @@ export function Footer() {
         <div className="grid gap-12 md:grid-cols-[1.2fr_1fr_1fr]">
           <div>
             <Link
-              href={href("/")}
+              href={"/"}
               className="inline-flex items-center text-[#f5f7f3] transition-opacity hover:opacity-80"
               aria-label={SITE.name}
             >

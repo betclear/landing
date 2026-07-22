@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/i18n/navigation";
 import { ArrowSquareOut } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
@@ -33,7 +33,7 @@ const DURATION_LABEL_KEYS = {
 
 export function ProtectionPeriodStep() {
   const router = useRouter();
-  const { href, t } = useLocale();
+  const { t  } = useLocale();
   const { state, update, setStep, setPlan } = useOnboarding();
   const sliderId = useId();
   const questionId = useId();
@@ -82,7 +82,7 @@ export function ProtectionPeriodStep() {
       default_selection: months === 12 && defaultSelectionRef.current,
       preselected_plan: plan,
     });
-    router.push(href("/onboarding/pricing"));
+    router.push("/onboarding/pricing");
   }
 
   return (

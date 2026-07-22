@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/lib/i18n/navigation";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { BlogCta } from "@/components/blog/BlogCta";
 import { Container } from "@/components/ui/Container";
@@ -12,7 +12,7 @@ import {
 } from "@/lib/content/blog";
 import type { BlogUi } from "@/lib/content/blog";
 import type { AppLocale } from "@/lib/i18n/config";
-import { localizePath } from "@/lib/i18n/routing";
+import { getPathname } from "@/lib/i18n/navigation";
 
 type BlogArticleProps = {
   locale: AppLocale;
@@ -77,8 +77,8 @@ function Block({ block }: { block: BlogBlock }) {
 }
 
 export function BlogArticle({ locale, id, post, ui }: BlogArticleProps) {
-  const blogHref = localizePath(locale, "/blog");
-  const startHref = localizePath(locale, SITE.startHref);
+  const blogHref = getPathname({ locale: locale, href: "/blog" });
+  const startHref = getPathname({ locale: locale, href: SITE.startHref });
   const related = getRelatedPosts(locale, post, id);
   const minutes = readingMinutes(post);
   // Insert the conversion CTA after the intro so it sits high on most posts.
@@ -159,7 +159,7 @@ export function BlogArticle({ locale, id, post, ui }: BlogArticleProps) {
               {related.map(({ id: relatedId, post: relatedPost }) => (
                 <Link
                   key={relatedId}
-                  href={localizePath(locale, `/blog/${relatedPost.slug}`)}
+                  href={getPathname({ locale: locale, href: `/blog/${relatedPost.slug}` })}
                   className="group flex items-center justify-between gap-4 rounded-[var(--radius-md)] border border-border bg-card px-5 py-4 transition-colors hover:border-primary/40"
                 >
                   <span>

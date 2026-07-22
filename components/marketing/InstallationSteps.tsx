@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useInView } from "motion/react";
-import Link from "next/link";
+import { Link } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/marketing/SectionHeading";
@@ -13,7 +13,7 @@ import { trackEvent } from "@/lib/analytics";
 export function InstallationSteps() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
-  const { t, href, dictionary } = useLocale();
+  const { t, dictionary } = useLocale();
   const steps = dictionary.installSection.steps;
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export function InstallationSteps() {
             </div>
             <div className="flex flex-col gap-2 sm:items-end">
               <Button
-                href={href("/onboarding/spend")}
+                href={"/onboarding/spend"}
                 size="lg"
                 showArrow={false}
                 onClick={() =>
@@ -71,7 +71,7 @@ export function InstallationSteps() {
                 {t("installSection.cta")}
               </Button>
               <Link
-                href={href("/install")}
+                href={"/install"}
                 className="text-sm text-primary underline-offset-4 hover:underline"
                 onClick={() => {
                   trackEvent("installation_guide_opened");

@@ -1,7 +1,7 @@
 import { SITE } from "@/lib/constants";
 import type { BlogPost, BlogUi } from "@/lib/content/blog";
 import type { AppLocale } from "@/lib/i18n/config";
-import { localizePath } from "@/lib/i18n/routing";
+import { getPathname } from "@/lib/i18n/navigation";
 
 type BlogJsonLdProps = {
   locale: AppLocale;
@@ -12,8 +12,8 @@ type BlogJsonLdProps = {
 /** Article + BreadcrumbList structured data for a single blog post. */
 export function BlogJsonLd({ locale, post, ui }: BlogJsonLdProps) {
   const inLanguage = locale === "br" ? "pt-BR" : "en";
-  const url = `${SITE.url}${localizePath(locale, `/blog/${post.slug}`)}`;
-  const blogUrl = `${SITE.url}${localizePath(locale, "/blog")}`;
+  const url = `${SITE.url}${getPathname({ locale: locale, href: `/blog/${post.slug}` })}`;
+  const blogUrl = `${SITE.url}${getPathname({ locale: locale, href: "/blog" })}`;
   const image = `${SITE.url}${post.heroImage}`;
 
   const article = {
@@ -31,7 +31,7 @@ export function BlogJsonLd({ locale, post, ui }: BlogJsonLdProps) {
       "@type": "Organization",
       name: SITE.name,
       url: SITE.url,
-      logo: { "@type": "ImageObject", url: `${SITE.url}/icon` },
+      logo: { "@type": "ImageObject", url: `${SITE.url}/icon.png` },
     },
   };
 

@@ -19,7 +19,7 @@ type HeroProps = {
 
 export function Hero({ domainCountLabel }: HeroProps) {
   const reduce = useReducedMotion();
-  const { t, href } = useLocale();
+  const { t } = useLocale();
 
   useEffect(() => {
     trackEvent("homepage_viewed");
@@ -45,7 +45,7 @@ export function Hero({ domainCountLabel }: HeroProps) {
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Button
-              href={href("/onboarding/spend")}
+              href={"/onboarding/spend"}
               size="lg"
               onClick={() => {
                 trackEvent("hero_start_protection_clicked");
@@ -55,7 +55,7 @@ export function Hero({ domainCountLabel }: HeroProps) {
               {t("hero.primaryCta")}
             </Button>
             <Button
-              href={href("/#how-it-works")}
+              href={"/#how-it-works"}
               variant="secondary"
               size="lg"
               showArrow={false}

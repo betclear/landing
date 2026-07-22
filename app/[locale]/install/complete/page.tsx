@@ -1,17 +1,21 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound, redirect as nextRedirect } from "next/navigation";
+import { redirect } from "@/lib/i18n/navigation";
 import { headers } from "next/headers";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/ui/Container";
 import { CheckoutCompleteActions } from "@/components/install/CheckoutCompleteActions";
 import { grantAccessFromCheckoutSession } from "@/lib/stripe/access";
-import { isSafariUserAgent, isIosUserAgent } from "@/lib/stripe/browser";
+import {
+  isSafariUserAgent,
+  isIosUserAgent,
+  isAndroidUserAgent,
+} from "@/lib/stripe/browser";
 import { checkoutSuccessUrl } from "@/lib/stripe/config";
 import { isStripeConfigured } from "@/lib/stripe/client";
 import { isAppLocale, type AppLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { buildPageMetadata } from "@/lib/i18n/metadata";
-import { localizePath } from "@/lib/i18n/routing";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -46,24 +50,30 @@ export default async function InstallCompletePage({
   const dict = getDictionary(locale);
 
   if (!isStripeConfigured()) {
-    redirect(localizePath(locale, "/pricing"));
+    redirect({ href: "/pricing", locale });
   }
 
-  const { session_id: sessionId } = await searchParams;
-  if (!sessionId) {
-    redirect(localizePath(locale, "/pricing"));
+  const { session_id: sessionIdRaw } = await searchParams;
+  if (!sessionIdRaw) {
+    redirect({ href: "/pricing", locale });
   }
+  const sessionId = sessionIdRaw as string;
 
   const token = await grantAccessFromCheckoutSession(sessionId);
   if (!token) {
-    redirect(`${localizePath(locale, "/pricing")}?error=checkout`);
+    redirect({ href: "/pricing?error=checkout", locale });
   }
+  const accessToken = token as string;
 
   const requestHeaders = await headers();
   const userAgent = requestHeaders.get("user-agent") ?? "";
 
+  if (isAndroidUserAgent(userAgent)) {
+    redirect({ href: `/install/android?access=${encodeURIComponent(accessToken)}`, locale });
+  }
+
   if (isSafariUserAgent(userAgent)) {
-    redirect(checkoutSuccessUrl(sessionId));
+    nextRedirect(checkoutSuccessUrl(sessionId));
   }
 
   const handoffUrl = safariHandoffUrl(sessionId);

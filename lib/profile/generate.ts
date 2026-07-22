@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
+import { DOH_URL } from "@/lib/dns/config";
 
-const DNS_SERVER_URL = "https://dns.betclear.app/dns-query";
+const DNS_SERVER_URL = DOH_URL;
 const ROOT_IDENTIFIER = "app.betclear.protection";
 const DNS_IDENTIFIER = "app.betclear.protection.dns";
 

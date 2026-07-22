@@ -1,6 +1,6 @@
 import { SITE } from "@/lib/constants";
 import type { AppLocale } from "@/lib/i18n/config";
-import { localizePath } from "@/lib/i18n/routing";
+import { getPathname } from "@/lib/i18n/navigation";
 
 type SiteJsonLdProps = {
   locale: AppLocale;
@@ -13,7 +13,7 @@ export function SiteJsonLd({ locale }: SiteJsonLdProps) {
     "@type": "Organization",
     name: SITE.name,
     url: SITE.url,
-    logo: `${SITE.url}/icon`,
+    logo: `${SITE.url}/icon.png`,
     email: SITE.email,
     description: SITE.longDescription,
     sameAs: [] as string[],
@@ -23,7 +23,7 @@ export function SiteJsonLd({ locale }: SiteJsonLdProps) {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: SITE.name,
-    url: `${SITE.url}${localizePath(locale, "/")}`,
+    url: `${SITE.url}${getPathname({ locale: locale, href: "/" })}`,
     inLanguage: locale === "br" ? "pt-BR" : "en",
     publisher: {
       "@type": "Organization",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/i18n/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { useLocale } from "@/components/i18n/LocaleProvider";
@@ -11,7 +11,7 @@ type AccountActionsProps = {
 
 export function AccountActions({ email }: AccountActionsProps) {
   const router = useRouter();
-  const { href, t } = useLocale();
+  const { t  } = useLocale();
   const [loading, setLoading] = useState(false);
 
   async function signOut() {
@@ -19,7 +19,7 @@ export function AccountActions({ email }: AccountActionsProps) {
     try {
       await fetch("/api/auth/signout", { method: "POST" });
       router.replace(
-        `${href("/login")}?next=${encodeURIComponent(href("/pricing"))}`,
+        `${"/login"}?next=${encodeURIComponent("/pricing")}`,
       );
       router.refresh();
     } finally {

@@ -29,6 +29,9 @@ export const en = {
     installCompleteTitle: "Subscription Confirmed",
     installCompleteDescription:
       "Your BetClear subscription is active. Continue in Safari to install protection on your iPhone.",
+    installAndroidTitle: "Set up on Android",
+    installAndroidDescription:
+      "Turn on Private DNS on your Android phone to block gambling websites with BetClear encrypted DNS.",
     paymentSuccessTitle: "Payment confirmed",
     keywords: [
       "how to stop gambling",
@@ -556,6 +559,7 @@ export const en = {
     choosePlan: "Choose a plan",
     viewPricing: "View pricing",
     signIn: "Sign in",
+    usingAndroid: "Using Android?",
     manageBilling: "Manage billing",
     manageBillingPrompt:
       "Need to update your card, switch plans, or cancel?",
@@ -686,6 +690,63 @@ export const en = {
           "You will land on the install page. Tap Protect me and follow the iOS prompts.",
       },
     ],
+  },
+  installAndroid: {
+    eyebrow: "Android setup",
+    title: "Turn on Private DNS",
+    description:
+      "Android has built-in Private DNS. Point it at BetClear once and gambling websites stop loading across your phone — no app to install.",
+    hostnameLabel: "Private DNS provider hostname",
+    copyCta: "Copy hostname",
+    copiedCta: "Copied",
+    copyError: "Unable to copy. Long-press the hostname above and choose Copy.",
+    profileName: "BetClear Protection",
+    steps: [
+      {
+        title: "Open the Settings app on your Android phone.",
+        detail:
+          "If you can’t find the steps below, open Settings and search for “Private DNS”.",
+      },
+      {
+        title: "Go to Network & internet.",
+        detail:
+          "On Samsung phones this is under Connections → More connection settings. On other phones it may be Connections or Wi-Fi & network.",
+      },
+      {
+        title: "Tap Private DNS.",
+        detail: "It is usually near the bottom of the Network & internet screen.",
+      },
+      {
+        title: "Choose “Private DNS provider hostname”.",
+        detail: "Select the option that lets you type a custom hostname.",
+      },
+      {
+        title: "Enter the BetClear hostname.",
+        detail:
+          "Paste dns.betclear.app into the field. Use the Copy hostname button above so it’s exact.",
+      },
+      {
+        title: "Tap Save.",
+        detail:
+          "Private DNS now routes every DNS lookup on this phone through BetClear over an encrypted connection.",
+      },
+      {
+        title: "You're protected.",
+        detail:
+          "Gambling websites on this Android phone won't load anymore. The path to the next bet just got blocked.",
+      },
+    ],
+    next: "Next",
+    back: "Back",
+    doneCta: "Got it",
+    verifyTitle: "Check that it works",
+    verifyBody:
+      "Open a gambling website you know in your browser. If protection is active, it should fail to load. Everyday websites should keep working normally.",
+    troubleTitle: "Having trouble?",
+    troubleBody:
+      "Private DNS wording differs slightly by manufacturer and Android version. If you can’t find it, open Settings and search for “Private DNS”, or contact support and we’ll help you finish setup.",
+    contactSupport: "Contact support",
+    usingIphone: "Using an iPhone?",
   },
   login: {
     eyebrow: "Account",

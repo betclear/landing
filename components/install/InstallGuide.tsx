@@ -86,7 +86,7 @@ function fireConfetti() {
 }
 
 export function InstallGuide({ profileUrl }: InstallGuideProps) {
-  const { t, dictionary, href } = useLocale();
+  const { t, dictionary } = useLocale();
   const steps = dictionary.installGuide.steps;
   const [stepIndex, setStepIndex] = useState(0);
   const [copyState, setCopyState] = useState<"idle" | "copied" | "error">(
@@ -223,7 +223,7 @@ export function InstallGuide({ profileUrl }: InstallGuideProps) {
                 {t("installGuide.next")}
               </Button>
             ) : (
-              <Button href={href("/")} size="lg" showArrow={false}>
+              <Button href={"/"} size="lg" showArrow={false}>
                 {t("installGuide.doneCta")}
               </Button>
             )}

@@ -1,9 +1,9 @@
-import Link from "next/link";
+import { Link } from "@/lib/i18n/navigation";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { Container } from "@/components/ui/Container";
 import { getGuidesUi, listGuides } from "@/lib/content/guides";
 import type { AppLocale } from "@/lib/i18n/config";
-import { localizePath } from "@/lib/i18n/routing";
+import { getPathname } from "@/lib/i18n/navigation";
 
 type GuidesTeaserProps = {
   locale: AppLocale;
@@ -12,7 +12,7 @@ type GuidesTeaserProps = {
 export function GuidesTeaser({ locale }: GuidesTeaserProps) {
   const ui = getGuidesUi(locale);
   const guides = listGuides(locale).slice(0, 4);
-  const guidesHref = localizePath(locale, "/guides");
+  const guidesHref = getPathname({ locale: locale, href: "/guides" });
 
   return (
     <section className="py-20 sm:py-28" aria-labelledby="guides-teaser-heading">
@@ -42,7 +42,7 @@ export function GuidesTeaser({ locale }: GuidesTeaserProps) {
           {guides.map((guide) => (
             <Link
               key={guide.id}
-              href={localizePath(locale, `/guides/${guide.slug}`)}
+              href={getPathname({ locale: locale, href: `/guides/${guide.slug}` })}
               className="group flex h-full flex-col rounded-[var(--radius-lg)] border border-border bg-card p-5 transition-colors hover:border-primary/40"
             >
               <h3 className="text-base font-semibold tracking-[-0.02em] text-foreground">

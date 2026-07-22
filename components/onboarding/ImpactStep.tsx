@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
@@ -12,7 +12,7 @@ import { formatCurrencyAmount } from "@/lib/onboarding/currency";
 
 export function ImpactStep() {
   const router = useRouter();
-  const { href, t } = useLocale();
+  const { t  } = useLocale();
   const { state, setStep } = useOnboarding();
 
   const spend = state.monthlyGamblingSpend ?? 0;
@@ -28,7 +28,7 @@ export function ImpactStep() {
 
   function continueNext() {
     setStep(6);
-    router.push(href("/onboarding/protection-period"));
+    router.push("/onboarding/protection-period");
   }
 
   const dayWord =

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/lib/i18n/navigation";
 import { AppleLogo, EnvelopeSimple } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
@@ -83,7 +84,7 @@ function AuthButtonContent({
 export function AuthStep() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { locale, href, t } = useLocale();
+  const { locale, t } = useLocale();
   const { state, hydrated } = useOnboarding();
   const [mode, setMode] = useState<Mode>("choose");
   const [email, setEmail] = useState("");
@@ -96,9 +97,9 @@ export function AuthStep() {
   useEffect(() => {
     if (!hydrated) return;
     if (!canAccessStep(state, 6) || !isSpendValid(state.monthlyGamblingSpend) || !isTimeValid(state.weeklyGamblingHours)) {
-      router.replace(href("/onboarding/spend"));
+      router.replace("/onboarding/spend");
     }
-  }, [hydrated, href, router, state]);
+  }, [hydrated, router, state]);
 
   useEffect(() => {
     const authError = searchParams.get("error");
@@ -241,7 +242,7 @@ export function AuthStep() {
     try {
       const supabase = createBrowserSupabaseClient();
       const origin = window.location.origin;
-      const next = href("/auth");
+      const next = "/auth";
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
@@ -270,7 +271,7 @@ export function AuthStep() {
       });
 
       if (signIn.error) {
-        const next = href("/auth");
+        const next = "/auth";
         const signUp = await supabase.auth.signUp({
           email: email.trim(),
           password,

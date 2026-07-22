@@ -18,7 +18,7 @@ export function PricingSection() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.35 });
   const [plan, setPlan] = useState<PlanId>("annual");
-  const { locale, t, href, tList } = useLocale();
+  const { locale, t, tList } = useLocale();
   const features = tList("pricing.features");
   const annual = getPlanDisplay(locale, "annual");
   const monthly = getPlanDisplay(locale, "monthly");
@@ -131,7 +131,7 @@ export function PricingSection() {
             </ul>
 
             <Button
-              href={href("/onboarding/spend")}
+              href={"/onboarding/spend"}
               size="lg"
               className="mt-8 w-full"
               showArrow={false}

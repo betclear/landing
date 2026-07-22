@@ -2,7 +2,7 @@ import { SITE } from "@/lib/constants";
 import type { GuideContent } from "@/lib/content/guides";
 import type { GuidesUi } from "@/lib/content/guides/types";
 import type { AppLocale } from "@/lib/i18n/config";
-import { localizePath } from "@/lib/i18n/routing";
+import { getPathname } from "@/lib/i18n/navigation";
 
 type GuideJsonLdProps = {
   locale: AppLocale;
@@ -13,9 +13,9 @@ type GuideJsonLdProps = {
 /** Article + FAQPage + BreadcrumbList structured data for a single guide. */
 export function GuideJsonLd({ locale, guide, ui }: GuideJsonLdProps) {
   const inLanguage = locale === "br" ? "pt-BR" : "en";
-  const url = `${SITE.url}${localizePath(locale, `/guides/${guide.slug}`)}`;
-  const guidesUrl = `${SITE.url}${localizePath(locale, "/guides")}`;
-  const homeUrl = `${SITE.url}${localizePath(locale, "/")}`;
+  const url = `${SITE.url}${getPathname({ locale: locale, href: `/guides/${guide.slug}` })}`;
+  const guidesUrl = `${SITE.url}${getPathname({ locale: locale, href: "/guides" })}`;
+  const homeUrl = `${SITE.url}${getPathname({ locale: locale, href: "/" })}`;
 
   const article = {
     "@context": "https://schema.org",
@@ -32,7 +32,7 @@ export function GuideJsonLd({ locale, guide, ui }: GuideJsonLdProps) {
       "@type": "Organization",
       name: SITE.name,
       url: SITE.url,
-      logo: { "@type": "ImageObject", url: `${SITE.url}/icon` },
+      logo: { "@type": "ImageObject", url: `${SITE.url}/icon.png` },
     },
   };
 

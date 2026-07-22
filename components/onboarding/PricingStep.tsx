@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useRouter } from "@/lib/i18n/navigation";
+import { Link } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
@@ -17,7 +17,7 @@ import { cn } from "@/lib/cn";
 
 export function PricingStep() {
   const router = useRouter();
-  const { locale, href, t } = useLocale();
+  const { locale, t } = useLocale();
   const { state, setPlan, setStep, hydrated } = useOnboarding();
   const [busy, setBusy] = useState(false);
   const [defaultsApplied, setDefaultsApplied] = useState(false);
@@ -67,7 +67,7 @@ export function PricingStep() {
       protection_duration_months: state.protectionDurationMonths,
       preselected_plan: preselectedPlan,
     });
-    router.push(href("/auth"));
+    router.push("/auth");
   }
 
   const annualPrice = annual.formattedAmount!;
@@ -96,16 +96,16 @@ export function PricingStep() {
             {t("onboarding.pricing.cancelNote")}
           </p>
           <p className="text-center text-xs text-muted-foreground">
-            <Link href={href("/terms")} className="underline underline-offset-2">
+            <Link href={"/terms"} className="underline underline-offset-2">
               {t("common.terms")}
             </Link>
             {" · "}
-            <Link href={href("/privacy")} className="underline underline-offset-2">
+            <Link href={"/privacy"} className="underline underline-offset-2">
               {t("common.privacyPolicy")}
             </Link>
             {" · "}
             <Link
-              href={href("/terms#billing")}
+              href={"/terms#billing"}
               className="underline underline-offset-2"
             >
               {t("common.billingTerms")}

@@ -31,6 +31,9 @@ export const ptBR: Dictionary = {
     installCompleteTitle: "Assinatura confirmada",
     installCompleteDescription:
       "Sua assinatura BetClear está ativa. Continue no Safari para instalar a proteção no seu iPhone.",
+    installAndroidTitle: "Configurar no Android",
+    installAndroidDescription:
+      "Ative o DNS Privado no seu Android para bloquear sites de apostas com o DNS criptografado da BetClear.",
     paymentSuccessTitle: "Pagamento confirmado",
     keywords: [
       "como parar de apostar",
@@ -573,6 +576,7 @@ export const ptBR: Dictionary = {
     choosePlan: "Escolher um plano",
     viewPricing: "Ver preços",
     signIn: "Entrar",
+    usingAndroid: "Usa Android?",
     manageBilling: "Gerenciar cobrança",
     manageBillingPrompt:
       "Precisa atualizar o cartão, trocar de plano ou cancelar?",
@@ -703,6 +707,66 @@ export const ptBR: Dictionary = {
           "Você chegará à página de instalação. Toque em Me proteja e siga as instruções do iOS.",
       },
     ],
+  },
+  installAndroid: {
+    eyebrow: "Configuração no Android",
+    title: "Ative o DNS Privado",
+    description:
+      "O Android tem DNS Privado embutido. Aponte-o para a BetClear uma vez e os sites de apostas param de carregar em todo o telefone — sem instalar aplicativo.",
+    hostnameLabel: "Nome do host do provedor de DNS Privado",
+    copyCta: "Copiar host",
+    copiedCta: "Copiado",
+    copyError:
+      "Não foi possível copiar. Pressione e segure o host acima e escolha Copiar.",
+    profileName: "BetClear Protection",
+    steps: [
+      {
+        title: "Abra o app Ajustes no seu Android.",
+        detail:
+          "Se não encontrar os passos abaixo, abra Ajustes e pesquise por “DNS Privado”.",
+      },
+      {
+        title: "Vá em Rede e internet.",
+        detail:
+          "Em aparelhos Samsung fica em Conexões → Mais configurações de conexão. Em outros pode ser Conexões ou Wi-Fi e rede.",
+      },
+      {
+        title: "Toque em DNS Privado.",
+        detail:
+          "Geralmente fica perto do fim da tela Rede e internet.",
+      },
+      {
+        title: "Escolha “Nome do host do provedor de DNS Privado”.",
+        detail:
+          "Selecione a opção que permite digitar um nome de host personalizado.",
+      },
+      {
+        title: "Digite o host da BetClear.",
+        detail:
+          "Cole dns.betclear.app no campo. Use o botão Copiar host acima para ficar exato.",
+      },
+      {
+        title: "Toque em Salvar.",
+        detail:
+          "O DNS Privado agora encaminha todas as consultas de DNS deste telefone pela BetClear por uma conexão criptografada.",
+      },
+      {
+        title: "Você está protegido.",
+        detail:
+          "Os sites de apostas neste Android não vão mais carregar. O caminho para a próxima aposta acabou de ser bloqueado.",
+      },
+    ],
+    next: "Próximo",
+    back: "Voltar",
+    doneCta: "Entendi",
+    verifyTitle: "Confira se está funcionando",
+    verifyBody:
+      "Abra um site de apostas que você conhece no navegador. Se a proteção estiver ativa, ele não deve carregar. Sites do dia a dia devem continuar funcionando normalmente.",
+    troubleTitle: "Está com dificuldade?",
+    troubleBody:
+      "O texto do DNS Privado muda um pouco conforme o fabricante e a versão do Android. Se não encontrar, abra Ajustes e pesquise por “DNS Privado”, ou fale com o suporte que ajudamos você a concluir.",
+    contactSupport: "Falar com o suporte",
+    usingIphone: "Usa iPhone?",
   },
   login: {
     eyebrow: "Conta",
