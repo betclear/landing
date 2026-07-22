@@ -33,6 +33,7 @@ describe("parseOnboardingState", () => {
       lastGamblingDate: "2026-07-19",
       lastGamblingDateIsApproximate: false,
       selectedPlan: "monthly",
+      protectionDurationMonths: 3,
     });
 
     expect(parsed).toMatchObject({
@@ -43,6 +44,18 @@ describe("parseOnboardingState", () => {
       lastGamblingDate: "2026-07-19",
       lastGamblingDateIsApproximate: false,
       selectedPlan: "monthly",
+      protectionDurationMonths: 3,
     });
+  });
+
+  it("defaults protection duration to 12 months", () => {
+    const parsed = parseOnboardingState({
+      currentStep: 1,
+      currency: "USD",
+      selectedPlan: "annual",
+    });
+
+    expect(parsed?.protectionDurationMonths).toBe(12);
+    expect(parsed?.selectedPlan).toBe("annual");
   });
 });

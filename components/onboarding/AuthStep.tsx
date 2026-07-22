@@ -316,7 +316,7 @@ export function AuthStep() {
 
   return (
     <OnboardingShell
-      step={6}
+      step={7}
       backHref="/onboarding/pricing"
       title={t("onboarding.auth.title")}
       description={t("onboarding.auth.description")}

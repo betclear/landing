@@ -4,8 +4,10 @@ import {
 } from "@/lib/onboarding/currency";
 import {
   ONBOARDING_STORAGE_KEY,
+  isProtectionDurationMonths,
   type OnboardingState,
   type PlanId,
+  type ProtectionDurationMonths,
 } from "@/lib/onboarding/types";
 
 export function createDefaultOnboardingState(
@@ -18,6 +20,7 @@ export function createDefaultOnboardingState(
     weeklyGamblingHours: null,
     lastGamblingDate: null,
     lastGamblingDateIsApproximate: false,
+    protectionDurationMonths: 12,
     selectedPlan: "annual",
   };
 }
@@ -45,6 +48,11 @@ export function parseOnboardingState(raw: unknown): OnboardingState | null {
       : undefined;
   const base = createDefaultOnboardingState(normalizedCurrency);
 
+  const protectionDurationMonths: ProtectionDurationMonths =
+    isProtectionDurationMonths(data.protectionDurationMonths)
+      ? data.protectionDurationMonths
+      : base.protectionDurationMonths;
+
   return {
     currentStep:
       typeof data.currentStep === "number" && data.currentStep >= 1
@@ -66,6 +74,7 @@ export function parseOnboardingState(raw: unknown): OnboardingState | null {
         ? (data.lastGamblingDate ?? null)
         : null,
     lastGamblingDateIsApproximate: Boolean(data.lastGamblingDateIsApproximate),
+    protectionDurationMonths,
     selectedPlan: isPlanId(data.selectedPlan)
       ? data.selectedPlan
       : base.selectedPlan,
@@ -130,6 +139,7 @@ export function canAccessStep(state: OnboardingState, step: number): boolean {
   if (!hasDateAnswer(state)) return false;
   if (step === 4) return true;
   if (step === 5) return state.currentStep >= 4;
-  if (step >= 6) return state.currentStep >= 5;
+  if (step === 6) return state.currentStep >= 5;
+  if (step >= 7) return state.currentStep >= 6;
   return true;
 }

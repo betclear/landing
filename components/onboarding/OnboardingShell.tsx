@@ -13,6 +13,7 @@ import { ONBOARDING_STEPS } from "@/lib/onboarding/types";
 type OnboardingShellProps = {
   step: number;
   title: string;
+  eyebrow?: string;
   description?: string;
   backHref?: string;
   children: ReactNode;
@@ -23,6 +24,7 @@ type OnboardingShellProps = {
 export function OnboardingShell({
   step,
   title,
+  eyebrow,
   description,
   backHref,
   children,
@@ -98,6 +100,11 @@ export function OnboardingShell({
             className,
           )}
         >
+          {eyebrow ? (
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
+              {eyebrow}
+            </p>
+          ) : null}
           <h1
             ref={headingRef}
             tabIndex={-1}

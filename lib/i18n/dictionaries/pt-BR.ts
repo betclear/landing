@@ -413,16 +413,14 @@ export const ptBR: Dictionary = {
       description:
         "Inclua o tempo gastando apostando, conferindo resultados, pesquisando odds ou pensando em apostas em uma semana típica.",
       hoursLabel: "Horas por semana",
-      error: "Informe um número de horas maior que zero.",
+      error: "Escolha quanto tempo você passa apostando por semana.",
       continue: "Continuar",
       options: {
         lessThan2: "Menos de 2 horas / semana",
         twoToFive: "2–5 horas / semana",
         sixToTen: "6–10 horas / semana",
         tenPlus: "10+ horas / semana",
-        manual: "Informar horas por semana",
       },
-      manualPlaceholder: "ex.: 4",
     },
     lastGamble: {
       title: "Aproximadamente, quando foi a última vez que você apostou?",
@@ -473,6 +471,42 @@ export const ptBR: Dictionary = {
         "As estimativas são baseadas nas informações que você forneceu.",
       continue: "Proteger meu progresso",
     },
+    protectionPeriod: {
+      eyebrow: "Seu período de proteção",
+      title: "A recuperação leva mais do que algumas semanas.",
+      researchAria: "Insight de pesquisa sobre a duração da recuperação",
+      statValue: "14 meses",
+      statBody:
+        "Em um estudo com pessoas que haviam resolvido problemas graves com o jogo, a mediana do tempo de resolução foi de 14 meses.",
+      statClarification:
+        "A recuperação é diferente para cada pessoa. Esta pesquisa não significa que todo mundo precisa do mesmo tempo.",
+      sourcePrefix: "Fonte:",
+      sourceName: "Hodgins & el-Guebaly, Addiction, 2000",
+      viewResearch: "Ver pesquisa ↗",
+      question: "Por quanto tempo você quer que o BetClear te proteja?",
+      questionDescription:
+        "Escolha um período que dê tempo para essa decisão se tornar parte do dia a dia.",
+      oneMonth: "1 mês",
+      oneMonthLabel: "Proteção de curto prazo",
+      oneMonthDescription:
+        "Um ponto de partida se você ainda não está pronto para se comprometer por mais tempo.",
+      threeMonths: "3 meses",
+      threeMonthsLabel: "Construir impulso inicial",
+      threeMonthsDescription:
+        "Proteja-se enquanto começa a mudar suas rotinas.",
+      sixMonths: "6 meses",
+      sixMonthsLabel: "Compromisso mais forte",
+      sixMonthsDescription:
+        "Crie mais distância entre você e o jogo.",
+      twelveMonths: "12 meses",
+      twelveMonthsLabel: "Recomendado",
+      twelveMonthsDescription:
+        "Um ano inteiro de proteção ininterrupta, sem precisar tomar a decisão de novo todo mês.",
+      recommended: "Recomendado",
+      cancelNote:
+        "Você pode cancelar renovações futuras a qualquer momento. Sua proteção permanece ativa até o fim do período já pago.",
+      continue: "Continuar",
+    },
     pricing: {
       title: "Escolha seu plano de proteção",
       description: "Assine para liberar a instalação. Cancele quando quiser.",
@@ -484,6 +518,8 @@ export const ptBR: Dictionary = {
       savePercent: "Economize {percent}%",
       annualDescription: "{price} cobrado anualmente.",
       monthlyDescription: "{price} cobrado mensalmente.",
+      durationRecommendation:
+        "Recomendado para sua meta de proteção de 12 meses",
     },
     auth: {
       title: "Salve seu progresso",

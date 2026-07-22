@@ -27,6 +27,9 @@ export type AnalyticsEvent =
   | "onboarding_date_completed"
   | "onboarding_date_confirmed"
   | "onboarding_impact_viewed"
+  | "protection_period_viewed"
+  | "protection_period_selected"
+  | "protection_period_continued"
   | "onboarding_plan_selected"
   | "authentication_started"
   | "authentication_completed"
@@ -47,6 +50,10 @@ export type AnalyticsPayload = {
   question?: string;
   locale?: "en" | "pt-BR";
   market?: "general" | "BR";
+  selected_months?: number;
+  default_selection?: boolean;
+  protection_duration_months?: number;
+  preselected_plan?: "annual" | "monthly";
 };
 
 const BLOCKED_PAYLOAD_KEYS = new Set([

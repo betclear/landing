@@ -400,16 +400,14 @@ export const en = {
       description:
         "Include time spent placing bets, checking results, researching odds, or thinking about gambling in a typical week.",
       hoursLabel: "Hours per week",
-      error: "Enter a number of hours greater than zero.",
+      error: "Choose how much time you spend gambling per week.",
       continue: "Continue",
       options: {
         lessThan2: "Less than 2 hours / week",
         twoToFive: "2–5 hours / week",
         sixToTen: "6–10 hours / week",
         tenPlus: "10+ hours / week",
-        manual: "Enter hours per week",
       },
-      manualPlaceholder: "e.g. 4",
     },
     lastGamble: {
       title: "When did you last gamble?",
@@ -459,6 +457,42 @@ export const en = {
       estimatesNote: "Estimates are based on the information you provided.",
       continue: "Protect my progress",
     },
+    protectionPeriod: {
+      eyebrow: "Your protection period",
+      title: "Recovery takes longer than a few weeks.",
+      researchAria: "Research insight about recovery duration",
+      statValue: "14 months",
+      statBody:
+        "In one study of people who had resolved serious gambling problems, the median length of resolution was 14 months.",
+      statClarification:
+        "Recovery is different for everyone. This research does not mean every person needs the same amount of time.",
+      sourcePrefix: "Source:",
+      sourceName: "Hodgins & el-Guebaly, Addiction, 2000",
+      viewResearch: "View research ↗",
+      question: "How long do you want BetClear to protect you?",
+      questionDescription:
+        "Choose a period that gives your decision enough time to become part of everyday life.",
+      oneMonth: "1 month",
+      oneMonthLabel: "Short-term protection",
+      oneMonthDescription:
+        "A starting point if you are not ready to commit for longer.",
+      threeMonths: "3 months",
+      threeMonthsLabel: "Build initial momentum",
+      threeMonthsDescription:
+        "Protect yourself while you begin changing your routines.",
+      sixMonths: "6 months",
+      sixMonthsLabel: "Stronger commitment",
+      sixMonthsDescription:
+        "Create more distance between yourself and gambling.",
+      twelveMonths: "12 months",
+      twelveMonthsLabel: "Recommended",
+      twelveMonthsDescription:
+        "A full year of uninterrupted protection without needing to make the decision again each month.",
+      recommended: "Recommended",
+      cancelNote:
+        "You can cancel future renewals at any time. Your protection remains active until the end of the period you have already paid for.",
+      continue: "Continue",
+    },
     pricing: {
       title: "Choose your protection plan",
       description: "Subscribe to unlock installation. Cancel anytime.",
@@ -470,6 +504,8 @@ export const en = {
       savePercent: "Save {percent}%",
       annualDescription: "{price} billed annually.",
       monthlyDescription: "{price} billed monthly.",
+      durationRecommendation:
+        "Recommended for your 12-month protection goal",
     },
     auth: {
       title: "Save your progress",

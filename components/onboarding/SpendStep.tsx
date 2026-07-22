@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { CaretDown } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/Button";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
@@ -47,12 +48,13 @@ export function SpendStep() {
     if (value === "custom") {
       setCustomMode(true);
       setAmountText("");
+      setTouched(false);
       update({ monthlyGamblingSpend: null });
       return;
     }
     setCustomMode(false);
     setAmountText(String(value));
-    setTouched(true);
+    setTouched(false);
     update({ monthlyGamblingSpend: value });
   }
 
@@ -81,7 +83,6 @@ export function SpendStep() {
           size="lg"
           className="w-full justify-center"
           showArrow={false}
-          disabled={!valid}
           onClick={continueNext}
         >
           {t("onboarding.spend.continue")}
@@ -93,23 +94,31 @@ export function SpendStep() {
           <label className="sr-only" htmlFor="currency">
             {t("onboarding.spend.currencyLabel")}
           </label>
-          <select
-            id="currency"
-            value={currency}
-            onChange={(event) => {
-              const next = event.target.value.toUpperCase();
-              update({
-                currency: isSupportedCurrency(next) ? next : "USD",
-              });
-            }}
-            className="h-14 rounded-[18px] border border-border bg-card px-3 text-[15px] text-foreground"
-          >
-            {CURRENCY_OPTIONS.map((option) => (
-              <option key={option.code} value={option.code}>
-                {t(`onboarding.spend.currencyOptions.${option.code}`)}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              id="currency"
+              value={currency}
+              onChange={(event) => {
+                const next = event.target.value.toUpperCase();
+                update({
+                  currency: isSupportedCurrency(next) ? next : "USD",
+                });
+              }}
+              className="h-14 w-full appearance-none rounded-[18px] border border-border bg-card py-0 pl-3 pr-9 text-[15px] text-foreground"
+            >
+              {CURRENCY_OPTIONS.map((option) => (
+                <option key={option.code} value={option.code}>
+                  {t(`onboarding.spend.currencyOptions.${option.code}`)}
+                </option>
+              ))}
+            </select>
+            <CaretDown
+              size={14}
+              weight="bold"
+              aria-hidden="true"
+              className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+            />
+          </div>
 
           <div>
             <label className="sr-only" htmlFor="monthly-spend">
@@ -131,16 +140,19 @@ export function SpendStep() {
                 onChange={(event) => {
                   setCustomMode(true);
                   setAmountText(event.target.value);
-                  setTouched(true);
                 }}
-                onBlur={() => setTouched(true)}
+                onBlur={() => {
+                  if (customMode || amountText.trim()) setTouched(true);
+                }}
                 className={cn(
                   "h-14 w-full rounded-[18px] border bg-card pr-4 text-[15px] text-foreground placeholder:text-muted-foreground/70",
                   symbolPad,
                   showError ? "border-accent" : "border-border",
                 )}
                 aria-invalid={showError}
-                aria-describedby="spend-period spend-error"
+                aria-describedby={
+                  showError ? "spend-period spend-error" : "spend-period"
+                }
               />
             </div>
           </div>

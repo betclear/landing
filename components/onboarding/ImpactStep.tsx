@@ -28,7 +28,7 @@ export function ImpactStep() {
 
   function continueNext() {
     setStep(6);
-    router.push(href("/onboarding/pricing"));
+    router.push(href("/onboarding/protection-period"));
   }
 
   const dayWord =
