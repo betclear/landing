@@ -27,6 +27,7 @@ export function FAQ() {
           <SectionHeading
             title={t("faq.title")}
             description={t("faq.description")}
+            align="center"
           />
         </Reveal>
 

@@ -121,11 +121,16 @@ export function Header() {
     <header className="sticky top-0 z-40 px-4 pt-3 sm:px-6 sm:pt-4">
       <div
         className={cn(
-          "mx-auto flex h-14 max-w-[1200px] items-center justify-between rounded-full px-3 pl-5 transition-[background-color,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] sm:h-16 sm:px-4 sm:pl-6",
-          scrolled
-            ? "border border-border/80 bg-background/80 shadow-soft backdrop-blur-xl"
-            : "border border-transparent bg-transparent",
+          "relative mx-auto flex h-14 max-w-[1200px] items-center justify-between rounded-full px-3 pl-5 sm:h-16 sm:px-4 sm:pl-6",
         )}
+        style={{
+          backgroundColor: scrolled ? "#fff" : "rgba(255,255,255,0)",
+          boxShadow: scrolled
+            ? "0 1px 2px rgba(16,32,34,0.06), 0 14px 32px rgba(16,32,34,0.08)"
+            : "0 1px 2px rgba(16,32,34,0), 0 14px 32px rgba(16,32,34,0)",
+          transition:
+            "background-color 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s cubic-bezier(0.16,1,0.3,1)",
+        }}
       >
         <Link
           href={"/"}
@@ -137,21 +142,22 @@ export function Header() {
 
         <nav
           aria-label={t("common.primaryNav")}
-          className="hidden items-center gap-7 lg:flex"
+          className="pointer-events-none absolute inset-y-0 left-1/2 hidden -translate-x-1/2 items-center lg:flex"
         >
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
-            >
-              {link.label}
-            </Link>
-          ))}
+          <div className="pointer-events-auto flex items-center gap-6">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="header-nav-link transition-opacity duration-200 hover:opacity-70"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <LanguageSwitcher />
           {authEnabled && !loading && !user ? (
             <Button href={loginHref} variant="secondary" size="md" showArrow={false}>
               {t("nav.signIn")}
@@ -167,25 +173,14 @@ export function Header() {
           >
             {t("nav.startProtection")}
           </Button>
+          <LanguageSwitcher compact />
           {authEnabled && user ? (
             <AccountMenu user={user} subscribed={subscribed ?? false} />
           ) : null}
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
-          <Button
-            href={startHref}
-            size="md"
-            showArrow={false}
-            className="h-9 px-3 text-xs"
-            onClick={() =>
-              trackEvent("hero_start_protection_clicked", {
-                source: "header_mobile",
-              })
-            }
-          >
-            {t("nav.startShort")}
-          </Button>
+          <LanguageSwitcher compact />
           <motion.button
             type="button"
             aria-expanded={open}
@@ -195,7 +190,7 @@ export function Header() {
             onClick={() => setOpen((value) => !value)}
             whileTap={reduce ? undefined : { scale: 0.96 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border text-foreground"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground"
           >
             {open ? <X size={18} /> : <List size={18} />}
           </motion.button>
@@ -252,14 +247,11 @@ export function Header() {
                     key={link.href}
                     href={link.href}
                     onClick={close}
-                    className="rounded-[var(--radius-md)] px-3 py-3 text-sm text-muted-foreground transition-colors hover:bg-surface hover:text-foreground"
+                    className="header-nav-link rounded-[var(--radius-md)] px-3 py-3 transition-colors hover:bg-surface"
                   >
                     {link.label}
                   </Link>
                 ))}
-                <div className="px-3 py-2">
-                  <LanguageSwitcher />
-                </div>
                 {authEnabled && user ? (
                   <div className="mt-1 flex items-center justify-between gap-3 rounded-[var(--radius-md)] border border-border bg-surface px-3 py-2.5">
                     <span className="min-w-0">
@@ -281,24 +273,24 @@ export function Header() {
                     </button>
                   </div>
                 ) : null}
-                {authEnabled && !loading && !user ? (
-                  <Button
-                    href={loginHref}
-                    variant="secondary"
-                    className="w-full"
-                    size="md"
-                    showArrow={false}
-                    onClick={close}
-                  >
-                    {t("nav.signIn")}
-                  </Button>
-                ) : null}
-                <div className="pt-1">
+                <div className="mt-1 flex items-center gap-2">
+                  {authEnabled && !loading && !user ? (
+                    <Button
+                      href={loginHref}
+                      variant="secondary"
+                      size="md"
+                      showArrow={false}
+                      className="min-w-0 flex-1 px-3"
+                      onClick={close}
+                    >
+                      {t("nav.signIn")}
+                    </Button>
+                  ) : null}
                   <Button
                     href={startHref}
-                    className="w-full"
                     size="md"
                     showArrow={false}
+                    className="min-w-0 flex-1 px-3"
                     onClick={() => {
                       close();
                       trackEvent("hero_start_protection_clicked", {
@@ -308,6 +300,7 @@ export function Header() {
                   >
                     {t("nav.startProtection")}
                   </Button>
+                  <LanguageSwitcher compact />
                 </div>
               </div>
             </motion.div>

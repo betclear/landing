@@ -2,24 +2,24 @@ import type { Dictionary } from "./types";
 
 export const ptBR: Dictionary = {
   meta: {
-    homeTitle: "BetClear — Bloqueie sites de apostas no seu telefone",
+    homeTitle: "Bloquear sites de apostas",
     homeDescription:
       "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu telefone. Configure uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
-    homeOgTitle: "BetClear — Bloqueie sites de apostas no seu telefone",
+    homeOgTitle: "Bloquear sites de apostas | BetClear",
     homeOgDescription:
       "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu telefone. Configure uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
     homeOgImageAlt: "Bloqueador de sites de apostas BetClear no seu telefone",
-    homeTitle_ios: "BetClear — Bloqueie sites de apostas no iPhone",
+    homeTitle_ios: "Bloquear sites de apostas",
     homeDescription_ios:
       "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu iPhone. Instale uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
-    homeOgTitle_ios: "BetClear — Bloqueie sites de apostas no iPhone",
+    homeOgTitle_ios: "Bloquear sites de apostas | BetClear",
     homeOgDescription_ios:
       "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu iPhone. Instale uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
     homeOgImageAlt_ios: "Bloqueador de sites de apostas BetClear no iPhone",
-    homeTitle_android: "BetClear — Bloqueie sites de apostas no Android",
+    homeTitle_android: "Bloquear sites de apostas",
     homeDescription_android:
       "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu Android. Configure o DNS Privado uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
-    homeOgTitle_android: "BetClear — Bloqueie sites de apostas no Android",
+    homeOgTitle_android: "Bloquear sites de apostas | BetClear",
     homeOgDescription_android:
       "Quer parar de apostar? O BetClear bloqueia mais de 348.000 sites de apostas e bets no seu Android. Configure o DNS Privado uma vez, fique protegido automaticamente e comece com 7 dias grátis.",
     homeOgImageAlt_android: "Bloqueador de sites de apostas BetClear no Android",
@@ -103,7 +103,7 @@ export const ptBR: Dictionary = {
     support: "Suporte",
     faq: "Perguntas frequentes",
     guides: "Guias",
-    startProtection: "Começar proteção",
+    startProtection: "Começar",
     startShort: "Começar",
     signIn: "Entrar",
   },
@@ -136,7 +136,7 @@ export const ptBR: Dictionary = {
   },
   hero: {
     eyebrow: "Bloqueio de apostas para o seu telefone",
-    title: "Bloqueie {domainCount} sites de apostas.",
+    title: "Bloqueie {domainCount}|sites\u00A0de\u00A0apostas.",
     titleWithCount: "Bloqueie {domainCount} sites de apostas.",
     description:
       "O BetClear bloqueia o acesso a sites de apostas no seu telefone, tornando mais difícil fazer outra aposta quando o impulso aparece.",

@@ -1,15 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import {
-  BlockedSiteScreen,
-  GamblingAttemptScreen,
-  PhoneFrame,
-  ProtectionStatusScreen,
-} from "@/components/marketing/PhoneFrame";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 
@@ -17,33 +10,157 @@ type HeroProps = {
   domainCountLabel: string;
 };
 
+function measureFittedSize(
+  line1: string,
+  line2: string,
+  available: number,
+  styles: CSSStyleDeclaration,
+) {
+  const probe = document.createElement("span");
+  probe.style.cssText = [
+    "position:absolute",
+    "visibility:hidden",
+    "pointer-events:none",
+    "white-space:nowrap",
+    `font-family:${styles.fontFamily}`,
+    "font-weight:700",
+    "letter-spacing:-1.5px",
+  ].join(";");
+  document.body.appendChild(probe);
+
+  let lo = 28;
+  let hi = 72;
+  let best = lo;
+
+  while (lo <= hi) {
+    const mid = Math.floor((lo + hi) / 2);
+    probe.style.fontSize = `${mid}px`;
+    probe.textContent = line1;
+    const w1 = probe.getBoundingClientRect().width;
+    probe.textContent = line2;
+    const w2 = probe.getBoundingClientRect().width;
+    if (Math.max(w1, w2) <= available - 1) {
+      best = mid;
+      lo = mid + 1;
+    } else {
+      hi = mid - 1;
+    }
+  }
+
+  probe.remove();
+  return best;
+}
+
+function MobileHeroTitle({ line1, line2 }: { line1: string; line2: string }) {
+  const wrapRef = useRef<HTMLSpanElement>(null);
+  const [fontSize, setFontSize] = useState(40);
+
+  useLayoutEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+
+    const fit = () => {
+      const available = el.clientWidth;
+      if (available <= 0) return;
+      const next = measureFittedSize(
+        line1,
+        line2,
+        available,
+        getComputedStyle(el),
+      );
+      setFontSize((prev) => (prev === next ? prev : next));
+    };
+
+    fit();
+    void document.fonts.ready.then(fit);
+
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [line1, line2]);
+
+  return (
+    <span
+      ref={wrapRef}
+      style={{
+        display: "block",
+        width: "100%",
+        color: "#000",
+        fontWeight: 700,
+        fontSize,
+        letterSpacing: "-1.5px",
+        lineHeight: 1.05,
+        textAlign: "center",
+      }}
+      aria-hidden="true"
+    >
+      <span style={{ display: "block", whiteSpace: "nowrap" }}>{line1}</span>
+      <span style={{ display: "block", whiteSpace: "nowrap" }}>{line2}</span>
+    </span>
+  );
+}
+
 export function Hero({ domainCountLabel }: HeroProps) {
-  const reduce = useReducedMotion();
   const { t } = useLocale();
+  const [isMobile, setIsMobile] = useState(true);
+
+  const titleParts = t("hero.title", { domainCount: domainCountLabel }).split(
+    "|",
+  );
+  const titleLine1 = titleParts[0]?.trim() ?? "";
+  const titleLine2 = (titleParts[1] ?? "").trim().replace(/\u00A0/g, " ");
+  const fullTitle = [titleLine1, titleLine2].filter(Boolean).join(" ");
 
   useEffect(() => {
     trackEvent("homepage_viewed");
   }, []);
 
-  return (
-    <section className="relative overflow-hidden pb-14 pt-6 sm:pb-20 sm:pt-10">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-[-10%] h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,var(--glow),transparent_68%)]" />
-        <div className="absolute inset-0 marketing-grain opacity-25" />
-      </div>
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const sync = () => setIsMobile(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
-      <Container className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
-        <div className="max-w-xl">
-          <p className="text-[12px] font-medium uppercase tracking-[0.18em] text-primary">
-            {t("hero.eyebrow")}
-          </p>
-          <h1 className="mt-3 text-balance text-[2rem] font-semibold leading-[1.05] tracking-[-0.055em] text-foreground sm:text-5xl lg:text-[3.35rem] lg:leading-[1.02]">
-            {t("hero.title", { domainCount: domainCountLabel })}
-          </h1>
-          <p className="mt-4 max-w-[34rem] text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-            {t("hero.description")}
-          </p>
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+  return (
+    <section className="relative pb-14 pt-6 sm:pb-20 sm:pt-10">
+      <Container className="relative">
+        <div className="hero-content mx-auto max-w-xl text-center">
+          <div className="hero-copy">
+            <p className="hero-eyebrow mx-auto">{t("hero.eyebrow")}</p>
+
+            <h1
+              style={{
+                margin: 0,
+                width: "100%",
+                color: "#000",
+                fontWeight: 700,
+                textAlign: "center",
+                lineHeight: 1,
+              }}
+            >
+              <span className="sr-only">{fullTitle}</span>
+              {isMobile ? (
+                <MobileHeroTitle line1={titleLine1} line2={titleLine2} />
+              ) : (
+                <span
+                  aria-hidden="true"
+                  style={{
+                    fontSize: 60,
+                    letterSpacing: "-1.8px",
+                  }}
+                >
+                  {fullTitle}
+                </span>
+              )}
+            </h1>
+
+            <p className="hero-subtitle mx-auto max-w-[34rem] text-pretty">
+              {t("hero.description")}
+            </p>
+          </div>
+          <div className="hero-actions">
             <Button
               href={"/onboarding/spend"}
               size="lg"
@@ -67,54 +184,6 @@ export function Hero({ domainCountLabel }: HeroProps) {
               {t("hero.secondaryCta")}
             </Button>
           </div>
-          <p className="mt-3 text-sm text-muted-foreground">
-            {t("hero.microcopy")}
-          </p>
-        </div>
-
-        <div className="relative mx-auto w-full max-w-[420px]">
-          <div className="relative flex items-end justify-center">
-            <motion.div
-              className="relative z-20 w-[70%] max-w-[280px]"
-              initial={reduce ? false : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <PhoneFrame>
-                <BlockedSiteScreen />
-              </PhoneFrame>
-            </motion.div>
-
-            <motion.div
-              className="absolute left-0 top-8 hidden w-[42%] max-w-[180px] opacity-80 sm:block"
-              initial={reduce ? false : { opacity: 0, x: -16 }}
-              animate={{ opacity: 0.8, x: 0 }}
-              transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div className="scale-[0.88]">
-                <PhoneFrame>
-                  <GamblingAttemptScreen />
-                </PhoneFrame>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="absolute right-0 top-10 hidden w-[42%] max-w-[180px] sm:block"
-              initial={reduce ? false : { opacity: 0, x: 16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.75, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div className="scale-[0.88]">
-                <PhoneFrame>
-                  <ProtectionStatusScreen />
-                </PhoneFrame>
-              </div>
-            </motion.div>
-          </div>
-
-          <p className="mx-auto mt-5 max-w-sm rounded-full bg-card/80 px-4 py-2 text-center text-[12px] text-muted-foreground ring-1 ring-border">
-            {t("hero.visualCaption")}
-          </p>
         </div>
       </Container>
     </section>
