@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
 import { SITE } from "@/lib/constants";
@@ -62,6 +63,7 @@ export default async function RootLayout({
           {dictionary.common.skipToContent}
         </a>
         {children}
+        <Script src="/gclid.js" strategy="afterInteractive" />
       </body>
     </html>
   );

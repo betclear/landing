@@ -23,6 +23,7 @@
     "asn1js": "^3.0.10",
     "canvas-confetti": "^1.9.4",
     "firebase": "^12.16.0",
+    "google-ads-api": "^24.1.0",
     "motion": "^12.42.2",
     "next": "15.5.20",
     "next-intl": "^4.13.3",

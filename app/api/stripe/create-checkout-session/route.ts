@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import {
+  clickAttributionFromBody,
+  clickAttributionToMetadata,
+} from "@/lib/attribution/metadata";
+import {
   getRecoveryProfileByUserId,
   updateRecoveryProfileByUserId,
 } from "@/lib/onboarding/profile";
@@ -53,6 +57,8 @@ export async function POST(request: Request) {
     const stripe = getStripe();
     const priceId = getStripePriceId(plan, locale);
     const appUrl = getAppUrl();
+    const attribution = clickAttributionFromBody(body);
+    const clickMetadata = clickAttributionToMetadata(attribution);
 
     let customerId = profile.stripe_customer_id;
     if (!customerId) {
@@ -61,6 +67,7 @@ export async function POST(request: Request) {
         metadata: {
           user_id: user.id,
           userId: user.id,
+          ...clickMetadata,
         },
       });
       customerId = customer.id;
@@ -93,6 +100,7 @@ export async function POST(request: Request) {
           lastGamblingDateIsApproximate: String(
             profile.last_gambling_date_is_approximate,
           ),
+          ...clickMetadata,
         },
       },
       metadata: {
@@ -107,6 +115,7 @@ export async function POST(request: Request) {
         lastGamblingDateIsApproximate: String(
           profile.last_gambling_date_is_approximate,
         ),
+        ...clickMetadata,
       },
       success_url: `${appUrl}${getPathname({ locale: locale, href: "/payment/success" })}?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}${getPathname({ locale: locale, href: "/onboarding/pricing" })}`,

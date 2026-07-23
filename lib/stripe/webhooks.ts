@@ -1,5 +1,10 @@
 import type Stripe from "stripe";
 import { after } from "next/server";
+import {
+  clickIdsFromStripeMetadata,
+  hasClickAttribution,
+} from "@/lib/attribution/metadata";
+import { uploadPurchase, uploadTrial } from "@/lib/google-ads/conversions";
 import { createServiceClient } from "@/lib/supabase/server";
 import type { BillingPlan } from "@/lib/stripe/config";
 import {
@@ -260,6 +265,23 @@ export async function handleCheckoutSessionCompleted(
     userIdFromMetadata(subscription.metadata);
 
   await upsertFromStripeSubscription(subscription, { email, userId });
+
+  after(() => {
+    void (async () => {
+      const attribution = clickIdsFromStripeMetadata(session.metadata);
+      if (!hasClickAttribution(attribution) && !email) return;
+
+      const result = await uploadTrial({
+        attribution,
+        email,
+        orderId: session.id,
+      });
+
+      if (!result.ok) {
+        console.error("google ads trial upload failed", result.error);
+      }
+    })();
+  });
 }
 
 export async function handleSubscriptionUpdated(
@@ -321,4 +343,26 @@ export async function handleInvoicePaid(invoice: Stripe.Invoice) {
   const stripe = (await import("@/lib/stripe/client")).getStripe();
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
   await handleSubscriptionUpdated(subscription);
+
+  after(() => {
+    void (async () => {
+      if ((invoice.amount_paid ?? 0) <= 0) return;
+
+      const attribution = clickIdsFromStripeMetadata(subscription.metadata);
+      const email = invoice.customer_email ?? null;
+      if (!hasClickAttribution(attribution) && !email) return;
+
+      const result = await uploadPurchase({
+        attribution,
+        email,
+        orderId: invoice.id,
+        value: (invoice.amount_paid ?? 0) / 100,
+        currencyCode: (invoice.currency ?? "usd").toUpperCase(),
+      });
+
+      if (!result.ok) {
+        console.error("google ads purchase upload failed", result.error);
+      }
+    })();
+  });
 }

@@ -9,6 +9,7 @@ import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
+import { getClickAttribution } from "@/lib/attribution/client";
 import {
   canAccessStep,
   isSpendValid,
@@ -212,7 +213,11 @@ export function AuthStep() {
       const checkout = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: state.selectedPlan, locale }),
+        body: JSON.stringify({
+          plan: state.selectedPlan,
+          locale,
+          ...getClickAttribution(),
+        }),
       });
 
       const data = (await checkout.json()) as { url?: string; error?: string };

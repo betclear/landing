@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getClickAttribution } from "@/lib/attribution/client";
 import { Button } from "@/components/ui/Button";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import type { PlanConfig } from "@/lib/stripe/config";
@@ -22,7 +23,7 @@ export function PricingCards({ plans }: PricingCardsProps) {
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: planId, locale }),
+        body: JSON.stringify({ plan: planId, locale, ...getClickAttribution() }),
       });
 
       const data = (await response.json()) as {

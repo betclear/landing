@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { getSiteUrl, type BillingPlan } from "@/lib/stripe/config";
 import { getAuthUser } from "@/lib/auth/user";
+import {
+  clickAttributionFromBody,
+  clickAttributionToMetadata,
+} from "@/lib/attribution/metadata";
 import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/client";
 import { getStripePriceId, isAppLocaleParam, TRIAL_PERIOD_DAYS } from "@/lib/stripe/prices";
@@ -62,6 +66,8 @@ export async function POST(request: Request) {
     const stripe = getStripe();
     const siteUrl = getSiteUrl();
     const user = await getAuthUser();
+    const attribution = clickAttributionFromBody(body);
+    const clickMetadata = clickAttributionToMetadata(attribution);
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -72,6 +78,7 @@ export async function POST(request: Request) {
           app: "betclear",
           plan,
           locale,
+          ...clickMetadata,
           ...(user ? { user_id: user.id } : {}),
         },
       },
@@ -85,6 +92,7 @@ export async function POST(request: Request) {
         app: "betclear",
         plan,
         locale,
+        ...clickMetadata,
         ...(user ? { user_id: user.id } : {}),
       },
     });
