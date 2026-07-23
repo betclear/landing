@@ -15,6 +15,7 @@ from google.ads.googleads.errors import GoogleAdsException
 
 CUSTOMER_ID = os.environ.get("GOOGLE_ADS_CUSTOMER_ID", "8314947794")
 LOGIN_CUSTOMER_ID = os.environ.get("GOOGLE_ADS_LOGIN_CUSTOMER_ID", "1230399435")
+SIGNUP_ACTION_ID = os.environ.get("BETCLEAR_SIGNUP_CONVERSION_ACTION_ID", "7695195570")
 TRIAL_ACTION_ID = os.environ.get("BETCLEAR_TRIAL_CONVERSION_ACTION_ID", "7694794750")
 PURCHASE_ACTION_ID = os.environ.get(
     "BETCLEAR_PURCHASE_CONVERSION_ACTION_ID", "7694795221"
@@ -104,6 +105,18 @@ def upload_click_conversion(
             "errors": [err.message for err in e.failure.errors],
             "request_id": e.request_id,
         }
+
+
+def upload_signup(*, gclid: str = "", email: str = "", order_id: str = "", **kwargs) -> dict:
+    """Fire when the user creates an account / completes registration."""
+    return upload_click_conversion(
+        conversion_action_id=SIGNUP_ACTION_ID,
+        gclid=gclid,
+        email=email,
+        order_id=order_id or f"signup_{gclid or email}",
+        conversion_value=0.0,
+        **kwargs,
+    )
 
 
 def upload_trial(*, gclid: str = "", email: str = "", order_id: str = "", **kwargs) -> dict:

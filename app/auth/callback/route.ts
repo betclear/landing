@@ -1,4 +1,9 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
+import {
+  clickAttributionFromCookies,
+  isNewAuthUser,
+} from "@/lib/attribution/server";
+import { reportSignupConversion } from "@/lib/google-ads/report-signup";
 import { createServerSupabaseClient } from "@/lib/supabase/server-auth";
 import { isSupabaseAuthConfigured } from "@/lib/supabase/config";
 import { getLocaleFromPathname, hasLocalePrefix } from "@/lib/i18n/routing";
@@ -64,11 +69,22 @@ export async function GET(request: Request) {
   }
 
   const supabase = await createServerSupabaseClient();
-  const { error } = await supabase.auth.exchangeCodeForSession(code);
+  const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
   if (error) {
     console.error("auth callback error", error);
     return NextResponse.redirect(new URL(authErrorPath(next), origin));
+  }
+
+  const user = data.user;
+  if (user && isNewAuthUser(user)) {
+    after(() => {
+      void reportSignupConversion({
+        userId: user.id,
+        email: user.email,
+        cookieHeader: request.headers.get("cookie"),
+      });
+    });
   }
 
   return NextResponse.redirect(new URL(next, origin));

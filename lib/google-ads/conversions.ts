@@ -91,6 +91,24 @@ async function uploadClickConversion(options: {
   }
 }
 
+export async function uploadSignup(options: {
+  attribution: ClickAttribution;
+  email?: string | null;
+  orderId: string;
+  conversionDateTime?: Date;
+}): Promise<UploadResult> {
+  const config = getGoogleAdsConfig();
+  return uploadClickConversion({
+    conversionActionId: config.signupActionId,
+    attribution: options.attribution,
+    email: options.email,
+    orderId: options.orderId,
+    conversionValue: 0,
+    currencyCode: "USD",
+    conversionDateTime: options.conversionDateTime,
+  });
+}
+
 export async function uploadTrial(options: {
   attribution: ClickAttribution;
   email?: string | null;

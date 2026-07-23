@@ -6,7 +6,7 @@
 **Ads account (client):** `831-494-7794`  
 **MCC (login customer):** `123-039-9435`
 
-This doc describes the **exact** conversion setup already created in Google Ads and how to wire Stripe so trials and purchases appear in the Brazil Search campaign.
+This doc describes the **exact** conversion setup already created in Google Ads and how to wire the app + Stripe so sign-ups, trials, and purchases appear in the Brazil Search campaign.
 
 ---
 
@@ -16,14 +16,15 @@ Do **not** create new conversion actions unless names collide. Use these IDs:
 
 | Name | Conversion Action ID | Resource name | Primary for account goals | When to fire |
 |------|----------------------|---------------|---------------------------|--------------|
+| **BetClear Sign-up** | `7695195570` | `customers/8314947794/conversionActions/7695195570` | **Yes** | User creates an account / completes registration |
 | **BetClear Trial** | `7694794750` | `customers/8314947794/conversionActions/7694794750` | **Yes** | User starts free trial (Checkout completed with trial / subscription enters `trialing`) |
 | **BetClear Purchase** | `7694795221` | `customers/8314947794/conversionActions/7694795221` | No | First paid invoice / trial converts to paid |
 
 **Conversion type:** `UPLOAD_CLICKS` (server-side upload via Google Ads API — not a browser gtag label).
 
-**Campaign context:** Search campaign **Brazil** (`24045590598`) currently uses Manual CPC. After conversions flow reliably (2+ weeks), bidding can move to Maximize Conversions / tCPA using **BetClear Trial** as the primary goal.
+**Campaign context:** Search campaign **Brazil** (`24045590598`) currently uses Manual CPC. After conversions flow reliably (2+ weeks), bidding can move to Maximize Conversions / tCPA. Prefer **BetClear Trial** as the bidding goal; keep **Sign-up** for funnel reporting (and as a conversion). Coordinate with the media buyer before changing account-default goals.
 
-> Note: This Ads account also has Remo / offline upload primaries. For BetClear optimization, campaign conversion goals should prefer **BetClear Trial** (+ Purchase as secondary). Coordinate with the media buyer before changing account-default goals.
+> Note: This Ads account also has Remo / offline upload primaries. For BetClear optimization, campaign conversion goals should prefer **BetClear Trial** (+ Sign-up / Purchase as needed). If account creation and trial start happen in the **same** request, still fire both with **different** `order_id`s (e.g. `signup_{userId}` vs Stripe `session.id`) — or fire only Trial if you intentionally want one conversion per checkout.
 
 ---
 
@@ -35,6 +36,9 @@ User clicks Google Ad
         │
         ▼
 Frontend stores click IDs in first-party cookies (90 days)
+        │
+        ├─► Account created / registration succeeds
+        │     → upload BetClear Sign-up (pass gclid from cookie)
         │
         ▼
 Create Stripe Checkout Session
@@ -50,7 +54,7 @@ Stripe webhook
 Google Ads API: ConversionUploadService.UploadClickConversions
 ```
 
-**Why server-side (not only gtag):** Ad blockers, ITP, and in-app browsers drop client tags. Stripe webhooks + `gclid` in metadata are more reliable for subscription products.
+**Why server-side (not only gtag):** Ad blockers, ITP, and in-app browsers drop client tags. Server events + `gclid` (cookie → API / Stripe metadata) are more reliable.
 
 ---
 
@@ -153,9 +157,23 @@ const session = await stripe.checkout.sessions.create({
 
 ---
 
-## 5. Stripe webhooks → Google Ads upload
+## 5. App + Stripe → Google Ads upload
 
-### 5.1 Events to subscribe
+### 5.0 Sign-up (app event — not Stripe)
+
+Fire **BetClear Sign-up** (`7695195570`) when registration succeeds (user record created / auth signup complete).
+
+```text
+on account created:
+  read gclid/gbraid/wbraid from cookie (or request body)
+  upload BetClear Sign-up
+    conversion_action = .../7695195570
+    gclid, order_id = signup_{userId}, value = 0
+```
+
+Use a stable `order_id` such as `signup_{yourUserId}` so retries do not double-count.
+
+### 5.1 Stripe events to subscribe
 
 | Stripe event | Google Ads action | Value |
 |--------------|-------------------|-------|
@@ -166,6 +184,7 @@ Optional refinement:
 
 - If Checkout is payment-only (no trial), you may fire **Purchase** on `checkout.session.completed` instead of Trial.
 - If trial converts later, fire **Purchase** on the first non-zero `invoice.paid`.
+- If your product has **no separate registration** (account only exists after Checkout), fire Sign-up on the same `checkout.session.completed` **in addition to** Trial, with a different `order_id`.
 
 ### 5.2 Webhook endpoint (Stripe Dashboard)
 
@@ -178,6 +197,7 @@ Optional refinement:
 
 See [`server/upload_google_ads_conversion.py`](../server/upload_google_ads_conversion.py):
 
+- `upload_signup(gclid=..., email=..., order_id=...)` → Sign-up action  
 - `upload_trial(gclid=..., email=..., order_id=...)` → Trial action  
 - `upload_purchase(gclid=..., email=..., value=..., order_id=..., currency_code=...)` → Purchase action  
 
@@ -198,6 +218,13 @@ Example: `2026-07-23 09:15:00+00:00`
 ### 5.4 Pseudo-flow in your webhook handler
 
 ```text
+# --- App: registration ---
+on user signup success:
+  upload BetClear Sign-up
+    conversion_action = .../7695195570
+    gclid from cookie, order_id = signup_{userId}, value = 0
+
+# --- Stripe webhook ---
 verify Stripe signature
 
 if event.type == checkout.session.completed:
@@ -239,6 +266,7 @@ GOOGLE_ADS_CUSTOMER_ID=8314947794
 GOOGLE_APPLICATION_CREDENTIALS=/secure/path/adc.json
 # OR use OAuth refresh token style google-ads.yaml — pick one auth method
 
+BETCLEAR_SIGNUP_CONVERSION_ACTION_ID=7695195570
 BETCLEAR_TRIAL_CONVERSION_ACTION_ID=7694794750
 BETCLEAR_PURCHASE_CONVERSION_ACTION_ID=7694795221
 
@@ -276,6 +304,8 @@ Endpoint conceptually: `ConversionUploadService.UploadClickConversions`
 
 Purchase example — change action id to `7694795221` and set `conversionValue` to the paid amount in major currency units (e.g. `29.99`).
 
+Sign-up example — change action id to `7695195570`, `orderId` to `signup_{userId}`, `conversionValue` `0`.
+
 Official docs: [Upload click conversions](https://developers.google.com/google-ads/api/docs/conversions/upload-clicks)
 
 ---
@@ -285,9 +315,11 @@ Official docs: [Upload click conversions](https://developers.google.com/google-a
 | Step | Expected |
 |------|----------|
 | Open `https://betclear.app/?gclid=TEST123` | Cookie `_gclid=TEST123` |
+| Create account / complete registration | Upload **BetClear Sign-up** (`7695195570`); logs show accepted request |
 | Start Checkout | Session `metadata.gclid` = `TEST123` |
-| Complete test Checkout (Stripe test mode) | Webhook 200; logs show upload attempt |
+| Complete test Checkout (Stripe test mode) | Webhook 200; logs show Trial upload attempt |
 | Google Ads → Goals → Conversions → diagnostics / uploads | Request accepted (test gclid may not attribute to a real click) |
+| Real Ads click → real signup | **BetClear Sign-up** count increases within ~24h (often sooner) |
 | Real Ads click → real trial | **BetClear Trial** count increases within ~24h (often sooner) |
 | First paid invoice | **BetClear Purchase** with value |
 
@@ -316,11 +348,12 @@ Official docs: [Upload click conversions](https://developers.google.com/google-a
 Implementation is complete when:
 
 1. [ ] `gclid.js` (or equivalent) ships on all marketing + checkout entry pages  
-2. [ ] Stripe Checkout + Subscription metadata include `gclid` / `gbraid` / `wbraid`  
-3. [ ] Webhooks fire Trial + Purchase uploads to the conversion action IDs above  
-4. [ ] Staging test with Stripe test mode shows successful API responses  
-5. [ ] Within ~48h of real paid traffic, Google Ads shows **BetClear Trial** (and Purchase when charged)  
-6. [ ] Media buyer confirms Brazil campaign conversion goals point at BetClear actions  
+2. [ ] On successful registration, app uploads **BetClear Sign-up** (`7695195570`) with `gclid` + stable `order_id`  
+3. [ ] Stripe Checkout + Subscription metadata include `gclid` / `gbraid` / `wbraid`  
+4. [ ] Webhooks fire Trial + Purchase uploads to the conversion action IDs above  
+5. [ ] Staging test with Stripe test mode shows successful API responses  
+6. [ ] Within ~48h of real paid traffic, Google Ads shows **BetClear Sign-up** / **Trial** (and Purchase when charged)  
+7. [ ] Media buyer confirms Brazil campaign conversion goals point at BetClear actions  
 
 ---
 
@@ -343,6 +376,7 @@ Implementation is complete when:
 MCC_LOGIN_CUSTOMER_ID=1230399435
 ADS_CUSTOMER_ID=8314947794
 CAMPAIGN_BRAZIL_ID=24045590598
+CONVERSION_SIGNUP_ID=7695195570
 CONVERSION_TRIAL_ID=7694794750
 CONVERSION_PURCHASE_ID=7694795221
 LANDING=https://betclear.app

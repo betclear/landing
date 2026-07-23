@@ -17,6 +17,8 @@ export function getGoogleAdsConfig() {
     refreshToken: process.env.GOOGLE_ADS_REFRESH_TOKEN!,
     customerId: process.env.GOOGLE_ADS_CUSTOMER_ID ?? "8314947794",
     loginCustomerId: process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID ?? "1230399435",
+    signupActionId:
+      process.env.BETCLEAR_SIGNUP_CONVERSION_ACTION_ID ?? "7695195570",
     trialActionId:
       process.env.BETCLEAR_TRIAL_CONVERSION_ACTION_ID ?? "7694794750",
     purchaseActionId:

@@ -10,6 +10,7 @@ import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 import { getClickAttribution } from "@/lib/attribution/client";
+import { reportSignupAttribution } from "@/lib/attribution/report-signup-client";
 import {
   canAccessStep,
   isSpendValid,
@@ -290,6 +291,7 @@ export function AuthStep() {
         }
 
         if (signUp.data.session) {
+          reportSignupAttribution();
           await continueToCheckout();
           return;
         }
