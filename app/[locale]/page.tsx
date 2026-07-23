@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/marketing/Hero";
+import { HeroDevice } from "@/components/marketing/HeroDevice";
 import { TrustStrip } from "@/components/marketing/TrustStrip";
 import { BlockingDemo } from "@/components/marketing/BlockingDemo";
 import { FeatureStories } from "@/components/marketing/FeatureStories";
@@ -33,15 +34,20 @@ export async function generateMetadata({ params }: PageProps) {
   const userAgent = (await headers()).get("user-agent") ?? "";
   const platform = detectDevicePlatform(userAgent);
 
-  return buildPageMetadata(locale, {
-    path: "/",
-    title: translate(dict, "meta.homeTitle", undefined, platform),
-    description: translate(dict, "meta.homeDescription", undefined, platform),
-    ogTitle: translate(dict, "meta.homeOgTitle", undefined, platform),
-    ogDescription: translate(dict, "meta.homeOgDescription", undefined, platform),
-    ogImageAlt: translate(dict, "meta.homeOgImageAlt", undefined, platform),
-    keywords: dict.meta.keywords,
-  });
+  return {
+    ...buildPageMetadata(locale, {
+      path: "/",
+      title: translate(dict, "meta.homeTitle", undefined, platform),
+      description: translate(dict, "meta.homeDescription", undefined, platform),
+      ogTitle: translate(dict, "meta.homeOgTitle", undefined, platform),
+      ogDescription: translate(dict, "meta.homeOgDescription", undefined, platform),
+      ogImageAlt: translate(dict, "meta.homeOgImageAlt", undefined, platform),
+      keywords: dict.meta.keywords,
+    }),
+    title: {
+      absolute: translate(dict, "meta.homeOgTitle", undefined, platform),
+    },
+  };
 }
 
 export default async function HomePage({ params }: PageProps) {
@@ -58,6 +64,7 @@ export default async function HomePage({ params }: PageProps) {
       <Header />
       <main>
         <Hero domainCountLabel={stats.domainCountLabel} />
+        <HeroDevice />
         <TrustStrip domainCountLabel={stats.domainCountLabel} />
         <BlockingDemo />
         <FeatureStories />

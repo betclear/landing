@@ -94,7 +94,7 @@ export function LanguageSwitcher({
 
   const options = locales.map((code) => ({
     code,
-    label: code === "en" ? t("language.english") : t("language.portuguese"),
+    short: code === "en" ? "EN" : "BR",
   }));
   const current = options.find((option) => option.code === locale) ?? options[0];
 
@@ -141,20 +141,94 @@ export function LanguageSwitcher({
         aria-label={t("language.label")}
         onClick={() => setOpen((value) => !value)}
         className={cn(
-          "inline-flex items-center justify-center gap-1.5 rounded-full border text-sm font-medium leading-none tracking-[-0.01em] transition-colors",
-          // Match header CTA: Button size="md" is h-11
-          compact ? "h-9 gap-1 px-2.5" : "h-11 px-4",
+          "transition-colors disabled:opacity-60",
           isFooter
             ? "border-white/15 bg-white/5 text-[#f5f7f3] hover:bg-white/10"
-            : "border-border bg-card/80 text-foreground hover:bg-surface",
+            : compact
+              ? "hover:bg-black/[0.04]"
+              : "hover:bg-[#e8efe9]",
         )}
+        style={
+          isFooter
+            ? {
+                display: "inline-flex",
+                flexDirection: "row",
+                flexWrap: "nowrap",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: compact ? 4 : 6,
+                height: 40,
+                padding: compact ? "0 10px" : "0 16px",
+                borderRadius: 40,
+                borderWidth: 1,
+                borderStyle: "solid",
+                boxSizing: "border-box",
+                fontFamily:
+                  "var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif",
+                fontSize: 14,
+                fontStyle: "normal",
+                fontWeight: 600,
+                lineHeight: "18px",
+                whiteSpace: "nowrap",
+              }
+            : compact
+              ? {
+                  display: "inline-flex",
+                  flexDirection: "row",
+                  flexWrap: "nowrap",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 4,
+                  height: 40,
+                  padding: "0 12px",
+                  borderRadius: 40,
+                  border: "1px solid #D5E0DB",
+                  background: "transparent",
+                  color: "#0F2022",
+                  boxSizing: "border-box",
+                  whiteSpace: "nowrap",
+                }
+              : {
+                  display: "inline-flex",
+                  flexDirection: "row",
+                  flexWrap: "nowrap",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
+                  height: 40,
+                  padding: "0 16px",
+                  borderRadius: 40,
+                  border: "1px solid #d5e0db",
+                  background: "#fff",
+                  color: "#0F2022",
+                  boxSizing: "border-box",
+                  fontFamily:
+                    "var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif",
+                  fontSize: 14,
+                  fontStyle: "normal",
+                  fontWeight: 600,
+                  lineHeight: "18px",
+                  whiteSpace: "nowrap",
+                }
+        }
       >
         <FlagCircle locale={locale} />
-        {!compact ? (
-          <span className="max-w-[7.5rem] truncate sm:max-w-none">
-            {current.label}
+        {compact ? (
+          <span
+            style={{
+              fontFamily:
+                "var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif",
+              fontSize: 14,
+              fontWeight: 600,
+              lineHeight: "18px",
+              color: isFooter ? undefined : "#0F2022",
+            }}
+          >
+            {current.short}
           </span>
-        ) : null}
+        ) : (
+          <span>{current.short}</span>
+        )}
         <CaretDown
           size={12}
           weight="bold"
@@ -171,11 +245,12 @@ export function LanguageSwitcher({
           role="listbox"
           aria-label={t("language.label")}
           className={cn(
-            "absolute right-0 z-50 mt-2 min-w-[13rem] overflow-hidden rounded-[18px] border p-1.5 shadow-soft",
+            "absolute right-0 z-50 min-w-[7.5rem] overflow-hidden rounded-[18px] border p-1.5 shadow-soft",
             isFooter
               ? "border-white/10 bg-[#0d1719] text-[#f5f7f3]"
               : "border-border bg-card text-foreground",
           )}
+          style={{ top: "calc(100% + 8px)" }}
         >
           {options.map((option) => {
             const active = option.code === locale;
@@ -186,7 +261,7 @@ export function LanguageSwitcher({
                   disabled={pending}
                   onClick={() => switchTo(option.code)}
                   className={cn(
-                    "flex h-11 w-full items-center gap-2.5 rounded-full px-3 text-left text-sm font-medium leading-none tracking-[-0.01em] transition-colors",
+                    "flex h-10 w-full flex-nowrap items-center gap-2.5 rounded-full px-3 text-left text-[14px] font-semibold leading-[18px] tracking-[-0.01em] transition-colors text-[#0F2022]",
                     active
                       ? isFooter
                         ? "bg-white/10"
@@ -197,7 +272,7 @@ export function LanguageSwitcher({
                   )}
                 >
                   <FlagCircle locale={option.code} />
-                  <span>{option.label}</span>
+                  <span>{option.short}</span>
                 </button>
               </li>
             );

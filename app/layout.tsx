@@ -20,8 +20,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "BetClear — Block Gambling Websites on iPhone",
-    template: `%s — ${SITE.name}`,
+    default: "Block Gambling Websites | BetClear",
+    template: `%s | ${SITE.name}`,
   },
   description: SITE.longDescription,
   metadataBase: new URL(SITE.url),

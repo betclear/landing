@@ -1,23 +1,23 @@
 export const en = {
   meta: {
-    homeTitle: "BetClear — Block Gambling Websites on Your Phone",
+    homeTitle: "Block Gambling Websites",
     homeDescription:
       "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your phone. Set up once, stay protected automatically, and start with a 7-day free trial.",
-    homeOgTitle: "BetClear — Block Gambling Websites on Your Phone",
+    homeOgTitle: "Block Gambling Websites | BetClear",
     homeOgDescription:
       "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your phone. Set up once, stay protected automatically, and start with a 7-day free trial.",
     homeOgImageAlt: "BetClear gambling website blocker on your phone",
-    homeTitle_ios: "BetClear — Block Gambling Websites on iPhone",
+    homeTitle_ios: "Block Gambling Websites",
     homeDescription_ios:
       "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your iPhone. Install once, stay protected automatically, and start with a 7-day free trial.",
-    homeOgTitle_ios: "BetClear — Block Gambling Websites on iPhone",
+    homeOgTitle_ios: "Block Gambling Websites | BetClear",
     homeOgDescription_ios:
       "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your iPhone. Install once, stay protected automatically, and start with a 7-day free trial.",
     homeOgImageAlt_ios: "BetClear gambling website blocker on iPhone",
-    homeTitle_android: "BetClear — Block Gambling Websites on Android",
+    homeTitle_android: "Block Gambling Websites",
     homeDescription_android:
       "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your Android phone. Set up Private DNS once, stay protected automatically, and start with a 7-day free trial.",
-    homeOgTitle_android: "BetClear — Block Gambling Websites on Android",
+    homeOgTitle_android: "Block Gambling Websites | BetClear",
     homeOgDescription_android:
       "Want to stop gambling? BetClear blocks 348,000+ gambling and betting websites across your Android phone. Set up Private DNS once, stay protected automatically, and start with a 7-day free trial.",
     homeOgImageAlt_android: "BetClear gambling website blocker on Android",
@@ -101,8 +101,8 @@ export const en = {
     support: "Support",
     faq: "FAQ",
     guides: "Guides",
-    startProtection: "Start Protection",
-    startShort: "Start",
+    startProtection: "Get Started",
+    startShort: "Get Started",
     signIn: "Sign in",
   },
   footer: {
@@ -133,7 +133,7 @@ export const en = {
   },
   hero: {
     eyebrow: "Gambling blocking for your phone",
-    title: "Block {domainCount} gambling websites.",
+    title: "Block {domainCount}|gambling\u00A0websites.",
     titleWithCount: "Block {domainCount} gambling websites.",
     description:
       "BetClear blocks access to gambling websites across your phone, making it harder to place another bet when the urge hits.",
