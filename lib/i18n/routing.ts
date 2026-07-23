@@ -29,6 +29,7 @@ export const LOCALE_EXCLUDED_PREFIXES = [
   "/icon",
   "/apple-icon.png",
   "/icon.png",
+  "/gclid.js",
 ] as const;
 
 export function hasLocalePrefix(pathname: string): boolean {

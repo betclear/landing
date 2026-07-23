@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { languageToLocale } from "@/lib/i18n/config";
 import {
+  isLocaleExcludedPath,
   resolvePreferredLocale,
   stripLocalePrefix,
 } from "@/lib/i18n/routing";
@@ -16,6 +17,11 @@ describe("i18n routing", () => {
   it("strips locale prefixes", () => {
     expect(stripLocalePrefix("/en/install")).toBe("/install");
     expect(stripLocalePrefix("/br/onboarding/spend")).toBe("/onboarding/spend");
+  });
+
+  it("excludes static attribution script from locale prefixing", () => {
+    expect(isLocaleExcludedPath("/gclid.js")).toBe(true);
+    expect(isLocaleExcludedPath("/en/gclid.js")).toBe(false);
   });
 
   it("resolves preferred locale by cookie then country", () => {

@@ -64,7 +64,9 @@ export async function middleware(request: NextRequest) {
           ? "/icon.png"
           : bare === "/favicon.ico"
             ? "/favicon.ico"
-            : null;
+            : bare === "/gclid.js"
+              ? "/gclid.js"
+              : null;
 
     if (assetPath) {
       const url = request.nextUrl.clone();
@@ -94,7 +96,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|apple-icon|icon|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|apple-icon|icon|gclid\\.js|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
     "/(en|br)/apple-icon",
     "/(en|br)/apple-icon.png",
     "/(en|br)/icon",
