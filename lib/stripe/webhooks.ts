@@ -100,39 +100,14 @@ async function loadPreviousEntitlementState(customerId: string): Promise<{
   };
 }
 
-/**
- * When leaving a full-access status without converting, open a 24h DNS grace
- * window once (persisted as grace_ends_at).
- */
+/** Grace disabled — always clear grace_ends_at. */
 function resolveGraceEndsAt(options: {
   status: string;
   trialEndsAt: Date | null;
   previousGraceEndsAt: Date | null;
   previousWasFull: boolean;
 }): Date | null {
-  if (PREMIUM_STATUSES.has(options.status)) {
-    return null;
-  }
-
-  if (options.previousGraceEndsAt) {
-    return options.previousGraceEndsAt;
-  }
-
-  // First transition out of entitled status → start grace.
-  if (options.previousWasFull) {
-    return new Date(Date.now() + 1000 * 60 * 60 * 24);
-  }
-
-  // Cold start with expired trial still inside 24h of trial_end.
-  if (options.trialEndsAt) {
-    const graceFromTrial = new Date(
-      options.trialEndsAt.getTime() + 1000 * 60 * 60 * 24,
-    );
-    if (graceFromTrial.getTime() > Date.now()) {
-      return graceFromTrial;
-    }
-  }
-
+  void options;
   return null;
 }
 

@@ -1,6 +1,7 @@
 export type EntitlementMode = "full" | "grace_24h" | "none";
 
-export const GRACE_PERIOD_MS = 1000 * 60 * 60 * 24; // 24 hours
+/** No grace: cancel/unpaid cuts off DNS filtering immediately. */
+export const GRACE_PERIOD_MS = 0;
 
 const FULL_STATUSES = new Set(["active", "trialing", "past_due"]);
 
@@ -21,12 +22,9 @@ export type EntitlementResult = {
 /**
  * Derive entitlement from Stripe subscription state.
  * - full: active / trialing / past_due
- * - grace_24h: left full entitlement unpaid, still inside grace window
- * - none: everything else
+ * - none: everything else (no grace window)
  */
 export function computeEntitlement(input: EntitlementInput): EntitlementResult {
-  const now = input.now ?? new Date();
-
   if (FULL_STATUSES.has(input.status)) {
     return {
       mode: "full",
@@ -36,32 +34,10 @@ export function computeEntitlement(input: EntitlementInput): EntitlementResult {
     };
   }
 
-  // Leaving a trial without converting: open a 24h grace window once.
-  let graceEndsAt = input.previousGraceEndsAt ?? null;
-  if (
-    !graceEndsAt &&
-    input.trialEndsAt &&
-    input.trialEndsAt.getTime() <= now.getTime() &&
-    now.getTime() - input.trialEndsAt.getTime() < GRACE_PERIOD_MS
-  ) {
-    graceEndsAt = new Date(input.trialEndsAt.getTime() + GRACE_PERIOD_MS);
-  }
-
-  if (graceEndsAt && graceEndsAt.getTime() > now.getTime()) {
-    return {
-      mode: "grace_24h",
-      isPremium: true,
-      graceEndsAt,
-      filtersDns: true,
-    };
-  }
-
   return {
     mode: "none",
     isPremium: false,
-    graceEndsAt: graceEndsAt && graceEndsAt.getTime() <= now.getTime()
-      ? graceEndsAt
-      : null,
+    graceEndsAt: null,
     filtersDns: false,
   };
 }
