@@ -27,7 +27,9 @@ function clientPayload(clientId: string): AdGuardClientPayload {
   return {
     name: clientId,
     ids: [clientId],
-    tags: ["betclear"],
+    // AdGuard only accepts its built-in tag enum (e.g. device_phone).
+    // Custom tags like "betclear" return HTTP 400 "invalid tag".
+    tags: [],
     use_global_settings: false,
     filtering_enabled: true,
     parental_enabled: false,
