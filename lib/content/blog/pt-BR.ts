@@ -38,7 +38,7 @@ export const blogPtBr: BlogModule = {
       author: "BetClear",
       datePublished: "2025-09-26",
       dateModified: MODIFIED,
-      heroImage: "/blog/online-betting.png",
+      heroImage: "/blog/online-betting.webp",
       heroAlt:
         "Um celular virado para baixo sobre uma mesa de madeira junto a uma janela ao entardecer",
       keywords: [
@@ -99,7 +99,7 @@ export const blogPtBr: BlogModule = {
       author: "BetClear",
       datePublished: "2024-03-06",
       dateModified: MODIFIED,
-      heroImage: "/blog/how-to-stop-gambling.png",
+      heroImage: "/blog/how-to-stop-gambling.webp",
       heroAlt:
         "Uma pessoa caminhando por uma trilha à beira-mar em direção ao nascer do sol, simbolizando um recomeço",
       keywords: [
@@ -201,7 +201,7 @@ export const blogPtBr: BlogModule = {
       author: "Mike Sciandra",
       datePublished: "2024-01-19",
       dateModified: MODIFIED,
-      heroImage: "/blog/my-life-changed.png",
+      heroImage: "/blog/my-life-changed.webp",
       heroAlt:
         "Um homem em pé junto à janela ao amanhecer segurando uma xícara de café",
       keywords: [
@@ -278,7 +278,7 @@ export const blogPtBr: BlogModule = {
       author: "BetClear",
       datePublished: "2021-09-02",
       dateModified: MODIFIED,
-      heroImage: "/blog/gambling-self-help.png",
+      heroImage: "/blog/gambling-self-help.webp",
       heroAlt:
         "Um diário aberto e uma caneta ao lado de uma xícara de chá sob a luz suave da manhã",
       keywords: [
@@ -344,7 +344,7 @@ export const blogPtBr: BlogModule = {
       author: "Jamie",
       datePublished: "2021-05-01",
       dateModified: MODIFIED,
-      heroImage: "/blog/jamie-story.png",
+      heroImage: "/blog/jamie-story.webp",
       heroAlt: "Um campo de golfe tranquilo ao amanhecer com neblina",
       keywords: [
         "história de recuperação",

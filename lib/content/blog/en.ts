@@ -38,7 +38,7 @@ export const blogEn: BlogModule = {
       author: "BetClear",
       datePublished: "2025-09-26",
       dateModified: MODIFIED,
-      heroImage: "/blog/online-betting.png",
+      heroImage: "/blog/online-betting.webp",
       heroAlt:
         "A smartphone lying face-down on a wooden table by a window at dusk",
       keywords: [
@@ -99,7 +99,7 @@ export const blogEn: BlogModule = {
       author: "BetClear",
       datePublished: "2024-03-06",
       dateModified: MODIFIED,
-      heroImage: "/blog/how-to-stop-gambling.png",
+      heroImage: "/blog/how-to-stop-gambling.webp",
       heroAlt:
         "A person walking along a coastal path toward a calm sunrise, symbolising a fresh start",
       keywords: [
@@ -201,7 +201,7 @@ export const blogEn: BlogModule = {
       author: "Mike Sciandra",
       datePublished: "2024-01-19",
       dateModified: MODIFIED,
-      heroImage: "/blog/my-life-changed.png",
+      heroImage: "/blog/my-life-changed.webp",
       heroAlt: "A man standing by a window at sunrise holding a cup of coffee",
       keywords: [
         "gambling recovery story",
@@ -277,7 +277,7 @@ export const blogEn: BlogModule = {
       author: "BetClear",
       datePublished: "2021-09-02",
       dateModified: MODIFIED,
-      heroImage: "/blog/gambling-self-help.png",
+      heroImage: "/blog/gambling-self-help.webp",
       heroAlt: "An open journal and pen beside a cup of tea in soft morning light",
       keywords: [
         "gambling self-help",
@@ -342,7 +342,7 @@ export const blogEn: BlogModule = {
       author: "Jamie",
       datePublished: "2021-05-01",
       dateModified: MODIFIED,
-      heroImage: "/blog/jamie-story.png",
+      heroImage: "/blog/jamie-story.webp",
       heroAlt: "A quiet golf course at misty dawn",
       keywords: [
         "gambling recovery story",
