@@ -9,6 +9,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import type { BillingPlan } from "@/lib/stripe/config";
 import {
   computeEntitlement,
+  GRACE_PERIOD_MS,
   type EntitlementMode,
 } from "@/lib/entitlement/mode";
 import { syncDnsFilteringForOwner } from "@/lib/devices/installs";
@@ -100,14 +101,38 @@ async function loadPreviousEntitlementState(customerId: string): Promise<{
   };
 }
 
-/** Grace disabled — always clear grace_ends_at. */
+/**
+ * Open / preserve a 24h grace window once (persisted as grace_ends_at).
+ */
 function resolveGraceEndsAt(options: {
   status: string;
   trialEndsAt: Date | null;
   previousGraceEndsAt: Date | null;
   previousWasFull: boolean;
 }): Date | null {
-  void options;
+  if (PREMIUM_STATUSES.has(options.status)) {
+    return null;
+  }
+
+  if (options.previousGraceEndsAt) {
+    return options.previousGraceEndsAt;
+  }
+
+  // First transition out of entitled status → start grace.
+  if (options.previousWasFull) {
+    return new Date(Date.now() + GRACE_PERIOD_MS);
+  }
+
+  // Cold start with expired trial still inside 24h of trial_end.
+  if (options.trialEndsAt) {
+    const graceFromTrial = new Date(
+      options.trialEndsAt.getTime() + GRACE_PERIOD_MS,
+    );
+    if (graceFromTrial.getTime() > Date.now()) {
+      return graceFromTrial;
+    }
+  }
+
   return null;
 }
 
@@ -142,7 +167,9 @@ async function upsertSubscriptionState(
     void syncDnsFilteringForOwner({
       userId,
       stripeCustomerId: row.stripe_customer_id,
-      filtersDns: row.entitlement_mode === "full" || row.entitlement_mode === "grace_24h",
+      filtersDns:
+        row.entitlement_mode === "full" ||
+        row.entitlement_mode === "grace_24h",
     });
   });
 }
