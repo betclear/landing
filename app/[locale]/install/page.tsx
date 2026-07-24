@@ -8,7 +8,7 @@ import { InstallActions } from "@/components/install/InstallActions";
 import { InstallDownloadButton } from "@/components/install/InstallDownloadButton";
 import { EntitlementNotice } from "@/components/install/EntitlementNotice";
 import { InstallPageTracker } from "@/components/onboarding/InstallPageTracker";
-import { hasPaywallAccess, profileDownloadPath } from "@/lib/stripe/access";
+import { hasPaywallAccess } from "@/lib/stripe/access";
 import { isAndroidUserAgent } from "@/lib/stripe/browser";
 import { isAppLocale, type AppLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -51,8 +51,6 @@ export default async function InstallPage({ params, searchParams }: PageProps) {
     redirect({ href: "/pricing", locale });
   }
 
-  const profileUrl = profileDownloadPath(access);
-
   return (
     <>
       <Header />
@@ -69,10 +67,7 @@ export default async function InstallPage({ params, searchParams }: PageProps) {
             {dict.install.description}
           </p>
 
-          <InstallDownloadButton
-            profileUrl={profileUrl}
-            accessToken={access}
-          />
+          <InstallDownloadButton accessToken={access} />
 
           <EntitlementNotice locale={locale} accessToken={access} />
 

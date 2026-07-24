@@ -99,7 +99,7 @@ export function InstallGuide({ profileUrl }: InstallGuideProps) {
   const visual = STEP_VISUALS[stepIndex];
 
   useEffect(() => {
-    trackEvent("installation_guide_opened", { step: "post-download" });
+    trackEvent("installation_guide_opened", { source: "guide" });
   }, []);
 
   useEffect(() => {
@@ -212,8 +212,23 @@ export function InstallGuide({ profileUrl }: InstallGuideProps) {
           )}
 
           <div className="mt-8 flex flex-col gap-3">
+            {isFirst ? (
+              <Button
+                href={profileUrl}
+                size="lg"
+                showArrow={false}
+                onClick={() =>
+                  trackEvent("profile_download_clicked", {
+                    source: "guide_step_1",
+                  })
+                }
+              >
+                {t("installGuide.downloadCta")}
+              </Button>
+            ) : null}
             {!isLast ? (
               <Button
+                variant={isFirst ? "secondary" : "primary"}
                 size="lg"
                 showArrow={false}
                 onClick={() =>

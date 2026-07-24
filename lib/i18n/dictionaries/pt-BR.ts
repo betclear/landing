@@ -807,7 +807,7 @@ export const ptBR: Dictionary = {
     eyebrow: "Configuração no iPhone",
     title: "Instalar proteção BetClear",
     description:
-      "Abra esta página no Safari no seu iPhone e toque em Me proteja para baixar o perfil e ver as instruções passo a passo.",
+      "Abra esta página no Safari no seu iPhone e toque em Me proteja para ver as instruções passo a passo. Você baixa o perfil no passo 1.",
     downloadCta: "Me proteja",
     openDirectly: "Ou abra diretamente:",
     subscribeRequired:
@@ -839,7 +839,7 @@ export const ptBR: Dictionary = {
       {
         title: "Baixar",
         detail:
-          "Toque em Me proteja no Safari. Permita o download do perfil de configuração quando solicitado.",
+          "No guia de instalação, toque em Baixar perfil no Safari. Permita o download do perfil de configuração quando solicitado.",
       },
       {
         title: "Abrir Ajustes",
@@ -878,8 +878,9 @@ export const ptBR: Dictionary = {
     profileName: "BetClear Protection",
     steps: [
       {
-        title: "Abra o app Ajustes no seu dispositivo.",
-        detail: "",
+        title: "Baixe o perfil e, em seguida, abra o app Ajustes.",
+        detail:
+          "Toque em Baixar perfil abaixo no Safari e permita o download quando solicitado. Depois abra Ajustes.",
       },
       {
         title: 'No topo de Ajustes, toque em “Perfil Baixado”.',
@@ -916,6 +917,7 @@ export const ptBR: Dictionary = {
     next: "Próximo",
     back: "Voltar",
     doneCta: "Entendi",
+    downloadCta: "Baixar perfil",
     downloadAgain: "Baixar perfil novamente",
     troubleDownloadTitle: "Problemas para baixar o BetClear?",
     troubleDownloadBody:
@@ -953,7 +955,7 @@ export const ptBR: Dictionary = {
       {
         title: "Instalar",
         detail:
-          "Você chegará à página de instalação. Toque em Me proteja e siga as instruções do iOS.",
+          "Você chegará à página de instalação. Toque em Me proteja, baixe o perfil no passo 1 e siga as instruções do iOS.",
       },
     ],
   },

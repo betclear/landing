@@ -781,7 +781,7 @@ export const en = {
     eyebrow: "iPhone setup",
     title: "Install BetClear Protection",
     description:
-      "Open this page in Safari on your iPhone, then tap Protect me to download the profile and see step-by-step install instructions.",
+      "Open this page in Safari on your iPhone, then tap Protect me for step-by-step install instructions. You’ll download the profile in step 1.",
     downloadCta: "Protect me",
     openDirectly: "Or open directly:",
     subscribeRequired:
@@ -813,7 +813,7 @@ export const en = {
       {
         title: "Download",
         detail:
-          "Tap Protect me in Safari. Allow the configuration profile download when prompted.",
+          "In the install guide, tap Download profile in Safari. Allow the configuration profile download when prompted.",
       },
       {
         title: "Open Settings",
@@ -852,8 +852,9 @@ export const en = {
     profileName: "BetClear Protection",
     steps: [
       {
-        title: "Open the settings app on your device.",
-        detail: "",
+        title: "Download the profile, then open the Settings app.",
+        detail:
+          "Tap Download profile below in Safari and allow the download when prompted. Then open Settings.",
       },
       {
         title: 'At the top of Settings, tap “Profile Downloaded”.',
@@ -890,6 +891,7 @@ export const en = {
     next: "Next",
     back: "Back",
     doneCta: "Got it",
+    downloadCta: "Download profile",
     downloadAgain: "Download profile again",
     troubleDownloadTitle: "Having trouble downloading BetClear?",
     troubleDownloadBody:
@@ -927,7 +929,7 @@ export const en = {
       {
         title: "Install",
         detail:
-          "You will land on the install page. Tap Protect me and follow the iOS prompts.",
+          "You will land on the install page. Tap Protect me, download the profile in step 1, and follow the iOS prompts.",
       },
     ],
   },
